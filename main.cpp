@@ -115,11 +115,11 @@ bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn 
 			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 81 EC 48 01 00 00 57"),
 			&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
 		);
-#else // Linux
-		MH_CreateHook(
-			Memory::Scanner::Scan(CLIENTDLL, "55 89 E5 57 56 53 81 EC 5C 01 00 00 8B 5D"),
-			&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
-		);
+#else // Linux. I believe the sig for linux is incorrect and I need to spend a bit more time to confirm its the right one.
+		//MH_CreateHook( 
+		//	Memory::Scanner::Scan(CLIENTDLL, "55 89 E5 57 56 53 81 EC 5C 01 00 00 8B 5D"),
+		//	&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
+		//);
 #endif // _WIN32
 
 		MH_EnableHook(MH_ALL_HOOKS);
