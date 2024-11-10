@@ -35,10 +35,7 @@ void Log(int level, bool dev, const char* pMsgFormat, ...)
 	char completeMsg[1024];
 	V_snprintf(completeMsg, sizeof(completeMsg), "(WorkshopStopper9000 PLUGIN): %s\n", szFormattedText);
 
-	if (dev && !wss9000_developer.GetBool())
-	{
-		return;
-	}
+	if (dev && !wss9000_developer.GetBool()) { return; }
 
 	switch (level)
 	{
@@ -115,11 +112,7 @@ bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn 
 			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 81 EC 48 01 00 00 57"),
 			&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
 		);
-#else // Linux. I believe the sig for linux is incorrect and I need to spend a bit more time to confirm its the right one.
-		//MH_CreateHook( 
-		//	Memory::Scanner::Scan(CLIENTDLL, "55 89 E5 57 56 53 81 EC 5C 01 00 00 8B 5D"),
-		//	&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
-		//);
+#else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself.
 #endif // _WIN32
 
 		MH_EnableHook(MH_ALL_HOOKS);
@@ -140,7 +133,7 @@ bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn 
 //---------------------------------------------------------------------------------
 void CWSS9000Plugin::Unload(void)
 {
-	// If the plugin errors for some reason, prevent it from unloading to get what the error was.
+	// If the plugin errors for some reason, prevent it from unloading.
 	if (m_bNoUnload)
 	{
 		m_bNoUnload = false;
