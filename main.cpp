@@ -10,15 +10,14 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+void Log(int level, bool dev, const char* pMsgFormat, ...);
+ConVar wss9000_developer("wss9000_developer", "0", FCVAR_NONE, "Enable for developer messages.");
+
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
 CWSS9000Plugin g_WSS9000Plugin;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CWSS9000Plugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_WSS9000Plugin);
-
-// Debug ConVars
-ConVar wss9000_enable("wss9000_enable", "1", FCVAR_NONE, "Whether or not  the WorkshopStopper9000 interlocking workshop stopping mechanism.");
-ConVar wss9000_developer("wss9000_developer", "0", FCVAR_NONE, "Enable for developer messages.");
 
 //---------------------------------------------------------------------------------
 // Purpose: Logging for the plugin by adding a prefix and line break.
@@ -101,6 +100,7 @@ bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn 
 	Log(0, true, "Connecting tier libraries...");
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
+	ConVar_Register(0);
 	
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
