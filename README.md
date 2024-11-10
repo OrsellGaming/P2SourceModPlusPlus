@@ -4,7 +4,7 @@
 
 One issue plaguing Source Mods for Portal 2 is the issue where the game sees that the workshop folder is empty, so it re-downloads ***ALL*** of the user's subscribed workshop maps into the Source Mods maps folder. There has been no proper way to stop this from happening, so here is a plugin to solve the issue!
 
-Take the downloaded `addons.zip` and simply extract its folder into the base directory of your Source Mod. Portal 2 should automatically start the plugin up with the game and thus stop the game from downloading workshop maps. That's it. This took about 20 minutes to make, so please create an Issue post if there are any issues. I'll get to it within the next 20 years.
+Download the latest `addons.zip` under the `Releases` tab on GitHub and extract its folder into the base directory of your Source Mod. Portal 2 should automatically start the plugin up with the game and thus stop the game from downloading workshop maps. You should be able to see a message in the developer console from the plugin if it loaded. That's it. This took about 20 minutes to make, so please create an Issue post if there are any issues. I'll get to it within the next 20 years.
 
 **As of writing, 11/09/2024, the plugin is only compatible with Windows. The signature scanner it uses still needs to be compatible with Linux, plus overall, the way the P2:MM plugin is structured (this plugin is built off of the P2:MM plugin as a base), it's impossible to compile for Linux anyway. Literally 1984, I know, but I don't have enough time or experience to figure it out by myself. Linux users should still be able to get away with using Proton or similar to be able to use the plugin's Windows `.dll`. Hopefully, one day, this can be fixed...**
 
