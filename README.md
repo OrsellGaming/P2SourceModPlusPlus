@@ -10,8 +10,8 @@ Download the latest `addons.zip` under the `Releases` tab on GitHub and extract 
 
 ***
 Please credit Orsell/OrsellGaming, Nanoman2525, and NULLderef, or the `Portal 2: Multiplayer Mod Team` if you use this plugin or its code in any way with your Source Mod.
-You must also include this repository and the P2:MM's License (see below) files with the plugin.
-Both files should be included with the `addon.zip` file you download to get the plugin.
+You must also include this repository and P2:MM's license (see below) files with the plugin.
+Both licenses should be included with the `addon.zip` file you download to get the plugin.
 ***
 
 ```
