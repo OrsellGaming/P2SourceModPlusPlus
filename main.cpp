@@ -158,7 +158,6 @@ void CWSS9000Plugin::SetCommandClient(int index) {}
 void CWSS9000Plugin::ServerActivate(edict_t* pEdictList, int edictCount, int clientMax) {}
 void CWSS9000Plugin::LevelInit(char const* pMapName) {}
 PLUGIN_RESULT CWSS9000Plugin::ClientCommand(edict_t* pEntity, const CCommand& args) { return PLUGIN_CONTINUE; }
-void CWSS9000Plugin::FireGameEvent(IGameEvent* event) {}
 void CWSS9000Plugin::ClientActive(edict_t* pEntity) {}
 void CWSS9000Plugin::GameFrame(bool simulating) {}
 void CWSS9000Plugin::LevelShutdown(void) {}

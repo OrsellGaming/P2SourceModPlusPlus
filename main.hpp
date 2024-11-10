@@ -6,9 +6,7 @@
 //===========================================================================//
 
 #include "minhook/include/MinHook.h"
-#include "eiface.h"
 #include "cdll_int.h"
-#include "igameevents.h"
 #include "engine/iserverplugin.h"
 
 #include "scanner.hpp"
@@ -57,9 +55,6 @@ public:
 	virtual void			OnEdictFreed(const edict_t* edict);
 	virtual bool			BNetworkCryptKeyCheckRequired(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, bool bClientWantsToUseCryptKey);
 	virtual bool			BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan);
-
-	// IGameEventListener2 methods
-	virtual void			FireGameEvent(IGameEvent* event);
 
 private:
 
