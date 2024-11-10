@@ -1,0 +1,34 @@
+name: MSBuild
+
+on:
+  push
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild into PATH
+      uses: microsoft/setup-msbuild@v2
+      with:
+          # Version of Visual Studio to search; defaults to latest if not specified
+          vs-version: "latest"
+          # The preferred processor architecture of MSBuild. Can be either "x86", "x64", or "arm64". "x64" is only available from Visual Studio version 17.0 and later.
+          msbuild-architecture: "x86"
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration="Release" .
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: workshopstopper9000
+        path: Release/workshopstopper9000.dll
