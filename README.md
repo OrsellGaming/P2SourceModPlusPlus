@@ -1,6 +1,6 @@
 # ***WorkshopStopper9000***
 
-## ***A Source Engine Plugin for Portal 2 Source Mods to stop workshop maps from downloading.***
+## ***A Source Engine Plugin for Portal 2 Source Mods to stop workshop maps from downloading!***
 
 One issue plaguing Source Mods for Portal 2 is the issue where the game sees that the workshop folder is empty, so it re-downloads ***ALL*** of the user's subscribed workshop maps into the Source Mods maps folder. There has been no proper way to stop this from happening, so here is a plugin to solve the issue!
 
