@@ -1,15 +1,18 @@
 # ***WorkshopStopper9000***
 
-## ***A Source Engine Plugin for Portal 2 Source Mods to stop workshop maps downloading.***
+## ***A Source Engine Plugin for Portal 2 Source Mods to stop workshop maps from downloading.***
 
-One issue that plagues Source Mods for Portal 2 is the issue where the game sees that the workshop folder is empty, so it re-downloads ***ALL*** of the users workshop maps into the Source Mods maps folder. There has been no proper way to stop this from happening, so here is a plugin to solve the issue!
+One issue plaguing Source Mods for Portal 2 is the issue where the game sees that the workshop folder is empty, so it re-downloads ***ALL*** of the user's subscribed workshop maps into the Source Mods maps folder. There has been no proper way to stop this from happening, so here is a plugin to solve the issue!
 
-Simply stick this plugin and its respective `.vdc` file into a `addons` folder in the Source Mod's game directory, and Portal 2 should automatically start the plugin up with the game and thus stop the game from downloading workshop maps. That's pretty much it. This took about 20 minutes to make, so if there are any issues, make a Issue post. I'll get to it within the next 20 years.
+Stick this plugin and its respective `.vdc` file into an `addons` folder in the Source Mod's game directory, and Portal 2 should automatically start the plugin up with the game and thus stop the game from downloading workshop maps. That's it. This took about 20 minutes to make, so please create an Issue post if there are any issues. I'll get to it within the next 20 years.
 
-**As of writing, 11/09/2024, the plugin is only able compatible for Windows, the signature scanner needs to be made compatible for Linux still. Apologizes for any inconvenience.**
+**As of writing, 11/09/2024, the plugin is only compatible with Windows. The signature scanner it uses still needs to be compatible with Linux, and I have yet to get the right signature anyway. Apologies for any inconvenience.**
 
 ```
-Please give credit to Orsell/OrsellGaming, Nanoman2525, and NULLderef, as well as the Portal 2: Multiplayer Mod Team (plugin is built off some of the P2:MM plugin's code) if you use this plugin or use its code in any way with your Source Mod. You also need to include this repository's and the P2:MM's License (see below).
+Please give credit to Orsell/OrsellGaming, Nanoman2525, and NULLderef,
+as well as the Portal 2: Multiplayer Mod Team (the plugin is built off some of the P2:MM plugin's code)
+if you use this plugin or its code in any way with your Source Mod.
+You must also include this repository and the P2:MM's License (see below).
 ```
 
 ```
