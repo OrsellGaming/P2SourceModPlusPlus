@@ -4,14 +4,13 @@
 // Purpose: WorkshopStopper9000 plugin
 // 
 //===========================================================================//
-
 #include "main.hpp"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 void Log(int level, bool dev, const char* pMsgFormat, ...);
-ConVar wss9000_developer("wss9000_developer", "0", FCVAR_NONE, "Enable for developer messages.");
+ConVar wss9000_developer("wss9000_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
@@ -164,7 +163,7 @@ void CWSS9000Plugin::LevelShutdown(void) {}
 void CWSS9000Plugin::Pause(void) {}
 void CWSS9000Plugin::UnPause(void) {}
 void CWSS9000Plugin::ClientDisconnect(edict_t* pEntity) {}
-void CWSS9000Plugin::ClientFullyConnect(edict_t* pEntity) {} // Purpose: Called when a player is fully connected to the server. Player entity still has not spawned in so manipulation is not possible.
+void CWSS9000Plugin::ClientFullyConnect(edict_t* pEntity) {}
 void CWSS9000Plugin::ClientPutInServer(edict_t* pEntity, char const* playername) {}
 void CWSS9000Plugin::ClientSettingsChanged(edict_t* pEdict) {}
 PLUGIN_RESULT CWSS9000Plugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxrejectlen) { return PLUGIN_CONTINUE; }

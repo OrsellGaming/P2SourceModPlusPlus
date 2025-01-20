@@ -4,7 +4,6 @@
 // Purpose: Portal 2: Multiplayer Mod server plugin memory scanner
 // 
 //===========================================================================//
-
 #include "scanner.hpp"
 
 #ifdef _WIN32

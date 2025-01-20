@@ -4,21 +4,13 @@
 // Purpose: WorkshopStopper9000 plugin
 // 
 //===========================================================================//
-
-#include "minhook/include/MinHook.h"
 #include "cdll_int.h"
 #include "engine/iserverplugin.h"
+#include "minhook/include/MinHook.h"
 
 #include "scanner.hpp"
 
-#ifdef _WIN32
-#pragma once
-#include <Windows.h>
-#endif
-
-#include <sstream>
-
-#define WSS9000_PLUGIN_VERSION "1.0.0" // Update this when a new version of the plugin is released
+#define WSS9000_PLUGIN_VERSION "1.0.0" // Update this when a new version of the plugin is released.
 #define WSS9000_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
 
 //---------------------------------------------------------------------------------
@@ -31,7 +23,7 @@ public:
 	CWSS9000Plugin();
 	~CWSS9000Plugin();
 
-	// IServerPluginCallbacks methods
+	// IServerPluginCallbacks methods.
 	virtual bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
 	virtual void			Unload(void);
 	virtual void			Pause(void);
@@ -57,9 +49,8 @@ public:
 	virtual bool			BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan);
 
 private:
-
+	// Plugin state member variables.
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
 };
-
 extern CWSS9000Plugin g_WSS9000Plugin;
