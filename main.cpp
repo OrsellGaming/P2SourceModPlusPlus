@@ -1,7 +1,7 @@
 //===========================================================================//
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
-// Purpose: WorkshopStopper9000 plugin
+// Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
 #include "main.hpp"
@@ -10,43 +10,49 @@
 #include "tier0/memdbgon.h"
 
 void Log(int level, bool dev, const char* pMsgFormat, ...);
-ConVar wss9000_developer("wss9000_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
+ConVar p2sm_developer("p2sm_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
-CWSS9000Plugin g_WSS9000Plugin;
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CWSS9000Plugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_WSS9000Plugin);
+CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_P2SMPlusPlusPlugin);
 
 //---------------------------------------------------------------------------------
 // Purpose: Logging for the plugin by adding a prefix and line break.
 // Max character limit of 1024 characters.	
-// level:	0 = Msg/DevMsg, 1 = Warning/DevWarning
+// level:	0 = Msg/DevMsg, 1 = Warning/DevWarning, 2 = Error WILL STOP ENGINE!
 //---------------------------------------------------------------------------------
 void Log(int level, bool dev, const char* pMsgFormat, ...)
 {
+	if (dev && !p2sm_developer.GetBool() && level != 2) return; // Stop developer messages when p2mm_developer isn't enabled.
+
+	// Take our log message and format any arguments it has into the message.
 	va_list argptr;
-	char szFormattedText[1024];
+	char szFormattedText[1024] = { 0 };
 	va_start(argptr, pMsgFormat);
 	V_vsnprintf(szFormattedText, sizeof(szFormattedText), pMsgFormat, argptr);
 	va_end(argptr);
 
-	char completeMsg[1024];
-	V_snprintf(completeMsg, sizeof(completeMsg), "(WorkshopStopper9000 PLUGIN): %s\n", szFormattedText);
-
-	if (dev && !wss9000_developer.GetBool()) { return; }
+	// Add a header to the log message.
+	char completeMsg[1024] = { 0 };
+	V_snprintf(completeMsg, sizeof(completeMsg), "(P2SourceModPlusPlus PLUGIN): %s\n", szFormattedText);
 
 	switch (level)
 	{
 	case 0:
-		ConColorMsg(WSS9000_PLUGIN_CONSOLE_COLOR, completeMsg);
+		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
 		return;
 	case 1:
 		Warning(completeMsg);
 		return;
+	case 2:
+		Warning("(P2SourceModPlusPlus PLUGIN):\n!!!ERROR ERROR ERROR!!!:\nA FATAL ERROR OCCURED WITH THE ENGINE:\n%s", completeMsg);
+		Error(completeMsg);
+		return;
 	default:
-		Warning("(WorkshopStopper9000 PLUGIN): Log level set outside of 0-1, \"%i\", defaulting to ConColorMsg().\n", level);
-		ConColorMsg(WSS9000_PLUGIN_CONSOLE_COLOR, completeMsg);
+		Warning("(P2SourceModPlusPlus PLUGIN): Log level set outside of 0-1, \"%i\". Defaulting to level 0.\n", level);
+		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
 		return;
 	}
 }
@@ -54,7 +60,7 @@ void Log(int level, bool dev, const char* pMsgFormat, ...)
 //---------------------------------------------------------------------------------
 // Purpose: constructor
 //---------------------------------------------------------------------------------
-CWSS9000Plugin::CWSS9000Plugin()
+CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 {
 	this->m_bPluginLoaded = false;
 	this->m_bNoUnload = false;	  // If we fail to load, we don't want to run anything on Unload() to get what the error was.
@@ -63,17 +69,19 @@ CWSS9000Plugin::CWSS9000Plugin()
 //---------------------------------------------------------------------------------
 // Purpose: destructor
 //---------------------------------------------------------------------------------
-CWSS9000Plugin::~CWSS9000Plugin() {}
+CP2SMPlusPlusPlugin::~CP2SMPlusPlusPlugin() {}
 
 //---------------------------------------------------------------------------------
 // Purpose: Description of plugin outputted when the "plugin_print" console command is executed.
 //---------------------------------------------------------------------------------
-const char* CWSS9000Plugin::GetPluginDescription(void)
+const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 {
-	return "WorkshopStopper9000 Plugin | Plugin Version: " WSS9000_PLUGIN_VERSION;
+	return "P2SourceModPlusPlus Plugin | Plugin Version: " P2SMPLUSPLUS_PLUGIN_VERSION;
 }
 
-// STOP THEM WORKSHOP DOWNLOADS!
+//---------------------------------------------------------------------------------
+// Purpose: Stop the UGC manager from automatically download workshop maps.
+//---------------------------------------------------------------------------------
 class CUGCFileRequestManager;
 void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisptr);
 void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisptr) { return; }
@@ -82,7 +90,7 @@ void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thi
 // Purpose: Called when the plugin is loaded, initialization process.
 //			Loads the interfaces we need from the engine and applies our patches.
 //---------------------------------------------------------------------------------
-bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
+bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
 	if (m_bPluginLoaded)
 	{
@@ -130,7 +138,7 @@ bool CWSS9000Plugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn 
 //---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is turning off/unloading.
 //---------------------------------------------------------------------------------
-void CWSS9000Plugin::Unload(void)
+void CP2SMPlusPlusPlugin::Unload(void)
 {
 	// If the plugin errors for some reason, prevent it from unloading.
 	if (m_bNoUnload)
@@ -153,24 +161,24 @@ void CWSS9000Plugin::Unload(void)
 // Purpose: Unused callbacks
 //---------------------------------------------------------------------------------
 #pragma region UNUSED_CALLBACKS
-void CWSS9000Plugin::SetCommandClient(int index) {}
-void CWSS9000Plugin::ServerActivate(edict_t* pEdictList, int edictCount, int clientMax) {}
-void CWSS9000Plugin::LevelInit(char const* pMapName) {}
-PLUGIN_RESULT CWSS9000Plugin::ClientCommand(edict_t* pEntity, const CCommand& args) { return PLUGIN_CONTINUE; }
-void CWSS9000Plugin::ClientActive(edict_t* pEntity) {}
-void CWSS9000Plugin::GameFrame(bool simulating) {}
-void CWSS9000Plugin::LevelShutdown(void) {}
-void CWSS9000Plugin::Pause(void) {}
-void CWSS9000Plugin::UnPause(void) {}
-void CWSS9000Plugin::ClientDisconnect(edict_t* pEntity) {}
-void CWSS9000Plugin::ClientFullyConnect(edict_t* pEntity) {}
-void CWSS9000Plugin::ClientPutInServer(edict_t* pEntity, char const* playername) {}
-void CWSS9000Plugin::ClientSettingsChanged(edict_t* pEdict) {}
-PLUGIN_RESULT CWSS9000Plugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxrejectlen) { return PLUGIN_CONTINUE; }
-PLUGIN_RESULT CWSS9000Plugin::NetworkIDValidated(const char* pszUserName, const char* pszNetworkID) { return PLUGIN_CONTINUE; }
-void CWSS9000Plugin::OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue) {}
-void CWSS9000Plugin::OnEdictAllocated(edict_t* edict) {}
-void CWSS9000Plugin::OnEdictFreed(const edict_t* edict) {}
-bool CWSS9000Plugin::BNetworkCryptKeyCheckRequired(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, bool bClientWantsToUseCryptKey) { return false; }
-bool CWSS9000Plugin::BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan) { return true; }
+void CP2SMPlusPlusPlugin::SetCommandClient(int index) {}
+void CP2SMPlusPlusPlugin::ServerActivate(edict_t* pEdictList, int edictCount, int clientMax) {}
+void CP2SMPlusPlusPlugin::LevelInit(char const* pMapName) {}
+PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientCommand(edict_t* pEntity, const CCommand& args) { return PLUGIN_CONTINUE; }
+void CP2SMPlusPlusPlugin::ClientActive(edict_t* pEntity) {}
+void CP2SMPlusPlusPlugin::GameFrame(bool simulating) {}
+void CP2SMPlusPlusPlugin::LevelShutdown(void) {}
+void CP2SMPlusPlusPlugin::Pause(void) {}
+void CP2SMPlusPlusPlugin::UnPause(void) {}
+void CP2SMPlusPlusPlugin::ClientDisconnect(edict_t* pEntity) {}
+void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity) {}
+void CP2SMPlusPlusPlugin::ClientPutInServer(edict_t* pEntity, char const* playername) {}
+void CP2SMPlusPlusPlugin::ClientSettingsChanged(edict_t* pEdict) {}
+PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxrejectlen) { return PLUGIN_CONTINUE; }
+PLUGIN_RESULT CP2SMPlusPlusPlugin::NetworkIDValidated(const char* pszUserName, const char* pszNetworkID) { return PLUGIN_CONTINUE; }
+void CP2SMPlusPlusPlugin::OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue) {}
+void CP2SMPlusPlusPlugin::OnEdictAllocated(edict_t* edict) {}
+void CP2SMPlusPlusPlugin::OnEdictFreed(const edict_t* edict) {}
+bool CP2SMPlusPlusPlugin::BNetworkCryptKeyCheckRequired(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, bool bClientWantsToUseCryptKey) { return false; }
+bool CP2SMPlusPlusPlugin::BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan) { return true; }
 #pragma endregion

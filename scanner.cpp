@@ -405,7 +405,7 @@ namespace Memory {
 		void* addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(target_module), patternBytes);
 		if (!addr)
 		{
-			Log(1, false, "Failed to replace pattern! Turn on wss9000_developer for more info...");
+			Log(1, false, "Failed to replace pattern! Turn on p2sm_developer for more info...");
 			Log(1, true, "Target Module: %s", target_module.c_str());
 			Log(1, true, "Pattern Bytes To Find: %s", patternBytes.c_str());
 			Log(1, true, "Bytes To Replace Pattern Bytes With: %s", replace_with.c_str());

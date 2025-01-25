@@ -1,7 +1,7 @@
 //===========================================================================//
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
-// Purpose: WorkshopStopper9000 plugin
+// Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
 #include "cdll_int.h"
@@ -10,18 +10,18 @@
 
 #include "scanner.hpp"
 
-#define WSS9000_PLUGIN_VERSION "1.0.0" // Update this when a new version of the plugin is released.
-#define WSS9000_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
+#define P2SMPLUSPLUS_PLUGIN_VERSION "1.0.0" // Update this when a new version of the plugin is released.
+#define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
 
 //---------------------------------------------------------------------------------
-// Purpose: Portal 2: Multiplayer Mod server plugin class
+// Purpose: P2SourceModPlusPlus server plugin class
 //---------------------------------------------------------------------------------
 
-class CWSS9000Plugin : public IServerPluginCallbacks
+class CP2SMPlusPlusPlugin : public IServerPluginCallbacks
 {
 public:
-	CWSS9000Plugin();
-	~CWSS9000Plugin();
+	CP2SMPlusPlusPlugin();
+	~CP2SMPlusPlusPlugin();
 
 	// IServerPluginCallbacks methods.
 	virtual bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
@@ -53,4 +53,4 @@ private:
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
 };
-extern CWSS9000Plugin g_WSS9000Plugin;
+extern CP2SMPlusPlusPlugin g_WSS9000Plugin;
