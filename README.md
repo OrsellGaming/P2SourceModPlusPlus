@@ -11,6 +11,8 @@
 * **(NOT IMPLEMENTED)** Option to turn on or off Puzzlemaker functionality. Most mods don't use the puzzlemaker, but it still loads in. The plugin will try to disable as much of it as possible so console is not filled with any puzzlemaker related errors or messages or any other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 Source Mods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps that have more parts than Door Prize and Smash TV.
+* **(NOT IMPLEMENTED)** Use of player flashlight without needing cheats enabled.
+* **(NOT IMPLEMENTED)** By default have env_screenoverlay entities not need the `r_screenoverlay` ConVar be enabled.
 
 ### Download and Install Instructions:
 
