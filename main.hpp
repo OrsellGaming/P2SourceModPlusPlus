@@ -4,14 +4,13 @@
 // Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
-#include "cdll_int.h"
-#include "engine/iserverplugin.h"
-#include "minhook/include/MinHook.h"
 
-#include "scanner.hpp"
+#pragma once
 
 #define P2SMPLUSPLUS_PLUGIN_VERSION "1.0.0" // Update this when a new version of the plugin is released.
 #define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
+
+#include "engine/iserverplugin.h"
 
 //---------------------------------------------------------------------------------
 // Purpose: P2SourceModPlusPlus server plugin class
@@ -21,7 +20,7 @@ class CP2SMPlusPlusPlugin : public IServerPluginCallbacks
 {
 public:
 	CP2SMPlusPlusPlugin();
-	~CP2SMPlusPlusPlugin();
+	virtual ~CP2SMPlusPlusPlugin() = default;
 
 	// IServerPluginCallbacks methods.
 	virtual bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
@@ -35,10 +34,10 @@ public:
 	virtual void			LevelShutdown(void);
 	virtual void			ClientActive(edict_t* pEntity);
 	virtual void			ClientDisconnect(edict_t* pEntity);
-	virtual void			ClientPutInServer(edict_t* pEntity, char const* playername);
+	virtual void			ClientPutInServer(edict_t* pEntity, char const* playerName);
 	virtual void			SetCommandClient(int index);
 	virtual void			ClientSettingsChanged(edict_t* pEdict);
-	virtual PLUGIN_RESULT	ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxrejectlen);
+	virtual PLUGIN_RESULT	ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxRejectLen);
 	virtual void			ClientFullyConnect(edict_t* pEntity);
 	virtual PLUGIN_RESULT	ClientCommand(edict_t* pEntity, const CCommand& args);
 	virtual PLUGIN_RESULT	NetworkIDValidated(const char* pszUserName, const char* pszNetworkID);

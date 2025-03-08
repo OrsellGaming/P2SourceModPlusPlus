@@ -4,18 +4,23 @@
 // Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
+
 #include "main.hpp"
+#include "scanner.hpp"
+
+#include "cdll_int.h"
+#include "minhook/include/MinHook.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 void Log(int level, bool dev, const char* pMsgFormat, ...);
-ConVar p2sm_developer("p2sm_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
+static ConVar p2sm_developer("p2sm_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
-CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;
+static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_P2SMPlusPlusPlugin);
 
 //---------------------------------------------------------------------------------
@@ -28,11 +33,11 @@ void Log(int level, bool dev, const char* pMsgFormat, ...)
 	if (dev && !p2sm_developer.GetBool() && level != 2) return; // Stop developer messages when p2mm_developer isn't enabled.
 
 	// Take our log message and format any arguments it has into the message.
-	va_list argptr;
+	va_list argPtr;
 	char szFormattedText[1024] = { 0 };
-	va_start(argptr, pMsgFormat);
-	V_vsnprintf(szFormattedText, sizeof(szFormattedText), pMsgFormat, argptr);
-	va_end(argptr);
+	va_start(argPtr, pMsgFormat);
+	V_vsnprintf(szFormattedText, sizeof(szFormattedText), pMsgFormat, argPtr);
+	va_end(argPtr);
 
 	// Add a header to the log message.
 	char completeMsg[1024] = { 0 };
@@ -53,7 +58,6 @@ void Log(int level, bool dev, const char* pMsgFormat, ...)
 	default:
 		Warning("(P2SourceModPlusPlus PLUGIN): Log level set outside of 0-1, \"%i\". Defaulting to level 0.\n", level);
 		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
-		return;
 	}
 }
 
@@ -67,11 +71,6 @@ CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 }
 
 //---------------------------------------------------------------------------------
-// Purpose: destructor
-//---------------------------------------------------------------------------------
-CP2SMPlusPlusPlugin::~CP2SMPlusPlusPlugin() {}
-
-//---------------------------------------------------------------------------------
 // Purpose: Description of plugin outputted when the "plugin_print" console command is executed.
 //---------------------------------------------------------------------------------
 const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
@@ -83,8 +82,8 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 // Purpose: Stop the UGC manager from automatically download workshop maps.
 //---------------------------------------------------------------------------------
 class CUGCFileRequestManager;
-void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisptr);
-void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisptr) { return; }
+static void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisPtr);
+static void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr) { } // Simply do nothing so that nothing gets updated and therefore nothing gets downloaded.
 
 //---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is loaded, initialization process.
@@ -117,7 +116,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 #if _WIN32
 		MH_CreateHook(
 			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 81 EC 48 01 00 00 57"),
-			&CUGCFileRequestManager__Update_hook, (void**)&CUGCFileRequestManager__Update_orig
+			&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
 		);
 #else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself.
 #endif // _WIN32
@@ -149,7 +148,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 
 	Log(0, false, "Unloading Plugin...");
 
-	Log(0, true, "Disconnecting hooked functions and uninitializing MinHook...");
+	Log(0, true, "Disconnecting hooked functions and un-initializing MinHook...");
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 
@@ -172,9 +171,9 @@ void CP2SMPlusPlusPlugin::Pause(void) {}
 void CP2SMPlusPlusPlugin::UnPause(void) {}
 void CP2SMPlusPlusPlugin::ClientDisconnect(edict_t* pEntity) {}
 void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity) {}
-void CP2SMPlusPlusPlugin::ClientPutInServer(edict_t* pEntity, char const* playername) {}
+void CP2SMPlusPlusPlugin::ClientPutInServer(edict_t* pEntity, char const* playerName) {}
 void CP2SMPlusPlusPlugin::ClientSettingsChanged(edict_t* pEdict) {}
-PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxrejectlen) { return PLUGIN_CONTINUE; }
+PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxRejectLen) { return PLUGIN_CONTINUE; }
 PLUGIN_RESULT CP2SMPlusPlusPlugin::NetworkIDValidated(const char* pszUserName, const char* pszNetworkID) { return PLUGIN_CONTINUE; }
 void CP2SMPlusPlusPlugin::OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue) {}
 void CP2SMPlusPlusPlugin::OnEdictAllocated(edict_t* edict) {}
