@@ -52,4 +52,3 @@ private:
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
 };
-extern CP2SMPlusPlusPlugin g_WSS9000Plugin;
