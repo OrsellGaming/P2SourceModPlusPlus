@@ -2,12 +2,22 @@
 
 ## ***A Source Engine Plugin for Portal 2 Source Mods that fixes and adds some QoL features for them!***
 
-> I originally planned `WorkshopStopper9000` to simply fix the workshop downloading issue, but I hope to add a bit more features and fixes so now it has become `P2SourceModPlusPlus`. Hopefully I can implement some good features that will be used by the community until the fated day Portal 2: Community Edition is released. Basically this is gonna be a temporarily solution for mod makers.
+> I originally planned `WorkshopStopper9000` to simply fix the workshop downloading issue, but I hope to add a bit more features and fixes so now it has become `P2SourceModPlusPlus`. Hopefully I can implement some good features that will be used by the community until the fated day Portal 2: Community Edition is released. Basically this is gonna be a temporarily solution for mod makers. Once P2:CE's public beta and/or release occurs, I will most likely not work on this anymore as most of the stuff here is fixed over there.
+
+> [!WARNING]
+> This plugin was designed in mind for SourceMods, meaning mods loaded through the `sourcemods` folder in Steam. Not for Portal 2 mods that are on Steam.
+>
+> While this plugin should be fine for a Steam Portal 2 mod, note that:
+> 1. I do not know if Valve will allows such modifications on the Steam platform, especially if it's involving one of their games.
+> 2. Compatibility will not be 100% so expect bugs or other issues.
+> 3. I am not responsible if anything bad happens to your mod's place on Steam if you are using this plugin with your mod.
+>
+> I will in the future try and add custom elements that will involve interactions with Steam's API, like achievements, but for now don't expect this to properly work with Steam mods. Plus again, in the end, P2:CE will do this properly in the future.
 
 ### Features Implemented/Plan to Implement:
 
 * Stopped workshop maps from being downloaded by the game because the workshop folder isn't on path for Source Mods. Because of this it tries to get ***ALL*** of them at once, which caused the game to be unstable and on occasion crash.
-* **(NOT IMPLEMENTED)** Fix human NPC movement so they don't jitter when they move.
+* Fix human NPC movement so they don't jitter when they move.
 * **(NOT IMPLEMENTED)** Option to turn on or off Puzzlemaker functionality. Most mods don't use the puzzlemaker, but it still loads in. The plugin will try to disable as much of it as possible so console is not filled with any puzzlemaker related errors or messages or any other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 Source Mods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps that have more parts than Door Prize and Smash TV.

@@ -104,6 +104,11 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
 	ConVar_Register(0);
+
+	// cl_localnetworkbackdoor is causing NPCs to not move correctly thanks to Valve networking "optimizations".
+	// Turn it off, nothing else should turn it back automatically while in game.
+	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
+		lnbCVar->SetValue(0);
 	
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
