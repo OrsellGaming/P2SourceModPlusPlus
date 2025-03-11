@@ -5,7 +5,7 @@
 // 
 //===========================================================================//
 
-#include "main.hpp"
+#include "p2sm.hpp"
 #include "scanner.hpp"
 
 #include "cdll_int.h"
