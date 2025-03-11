@@ -109,6 +109,13 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	// Turn it off, nothing else should turn it back automatically while in game.
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(0);
+
+	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow 
+	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
+	{
+		screenCVar->RemoveFlags(FCVAR_CHEAT);
+		screenCVar->SetValue(1);
+	}
 	
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
