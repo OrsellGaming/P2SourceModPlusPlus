@@ -17,12 +17,13 @@
 ### Features Implemented/Plan to Implement:
 
 * Stopped workshop maps from being downloaded by the game because the workshop folder isn't on path for Source Mods. Because of this it tries to get ***ALL*** of them at once, which caused the game to be unstable and on occasion crash.
-* Fix human NPC movement so they don't jitter when they move.
-* **(NOT IMPLEMENTED)** Option to turn on or off Puzzlemaker functionality. Most mods don't use the puzzlemaker, but it still loads in. The plugin will try to disable as much of it as possible so console is not filled with any puzzlemaker related errors or messages or any other additional bloat.
+* Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
+* Made `r_screenoverlay` ConVar be enabled by default and not need cheats so `env_screenoverlay` entities can work correctly without `sv_cheats` being needed.
+* **(NOT IMPLEMENTED)** Option to turn on or off puzzle maker functionality. Most mods don't use the puzzle maker, but it still loads in. The plugin will try to disable as much of it as possible so console is not filled with any puzzlemaker related errors or messages or any other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 Source Mods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps that have more parts than Door Prize and Smash TV.
 * **(NOT IMPLEMENTED)** Use of player flashlight without needing cheats enabled.
-* **(NOT IMPLEMENTED)** By default have env_screenoverlay entities not need the `r_screenoverlay` ConVar be enabled.
+* **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. Have not confirmed this myself, and have never noticed it in general myself.
 
 ### Download and Install Instructions:
 
