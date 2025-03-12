@@ -6,10 +6,12 @@
 //===========================================================================//
 
 #include "p2sm.hpp"
-#include "scanner.hpp"
+#include "globals.hpp"
+#include "scanner.hpp" // Memory scanner
 
-#include "cdll_int.h"
-#include "minhook/include/MinHook.h"
+#include "cdll_int.h" // Client interfacing
+#include "eiface.h" // Server interfacing
+#include "minhook/include/MinHook.h" // MinHook
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
