@@ -6,7 +6,6 @@
 //===========================================================================//
 
 #include "p2sm.hpp"
-#include "globals.hpp"
 #include "scanner.hpp" // Memory scanner
 
 #include "cdll_int.h" // Client interfacing
