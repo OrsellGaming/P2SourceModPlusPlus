@@ -4,13 +4,9 @@
 // Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
-
 #pragma once
 
 #include "engine/iserverplugin.h"
-
-#define P2SMPLUSPLUS_PLUGIN_VERSION "1.1.0" // Update this when a new version of the plugin is released.
-#define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
 
 //---------------------------------------------------------------------------------
 // Purpose: P2SourceModPlusPlus server plugin class
@@ -52,3 +48,5 @@ private:
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
 };
+
+static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;

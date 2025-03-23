@@ -1,11 +1,12 @@
 //===========================================================================//
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
-// Purpose: P2SourceModPlusPlus plugin
+// Purpose: P2SourceMod++ Plugin
 // 
 //===========================================================================//
 
 #include "p2sm.hpp"
+#include "globals.hpp"
 #include "scanner.hpp" // Memory scanner
 
 #include "cdll_int.h" // Client interfacing
@@ -15,52 +16,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-void Log(int level, bool dev, const char* pMsgFormat, ...);
-static ConVar p2sm_developer("p2sm_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
-
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
-static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_P2SMPlusPlusPlugin);
-
-//---------------------------------------------------------------------------------
-// Purpose: Logging for the plugin by adding a prefix and line break.
-// Max character limit of 1024 characters.	
-// level:	0 = Msg/DevMsg, 1 = Warning/DevWarning, 2 = Error WILL STOP ENGINE!
-//---------------------------------------------------------------------------------
-void Log(int level, bool dev, const char* pMsgFormat, ...)
-{
-	if (dev && !p2sm_developer.GetBool() && level != 2) return; // Stop developer messages when p2mm_developer isn't enabled.
-
-	// Take our log message and format any arguments it has into the message.
-	va_list argPtr;
-	char szFormattedText[1024] = { 0 };
-	va_start(argPtr, pMsgFormat);
-	V_vsnprintf(szFormattedText, sizeof(szFormattedText), pMsgFormat, argPtr);
-	va_end(argPtr);
-
-	// Add a header to the log message.
-	char completeMsg[1024] = { 0 };
-	V_snprintf(completeMsg, sizeof(completeMsg), "(P2SourceModPlusPlus PLUGIN): %s\n", szFormattedText);
-
-	switch (level)
-	{
-	case 0:
-		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
-		return;
-	case 1:
-		Warning(completeMsg);
-		return;
-	case 2:
-		Warning("(P2SourceModPlusPlus PLUGIN):\n!!!ERROR ERROR ERROR!!!:\nA FATAL ERROR OCCURED WITH THE ENGINE:\n%s", completeMsg);
-		Error(completeMsg);
-		return;
-	default:
-		Warning("(P2SourceModPlusPlus PLUGIN): Log level set outside of 0-1, \"%i\". Defaulting to level 0.\n", level);
-		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
-	}
-}
 
 //---------------------------------------------------------------------------------
 // Purpose: constructor
@@ -81,10 +40,11 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 
 //---------------------------------------------------------------------------------
 // Purpose: Stop the UGC manager from automatically download workshop maps.
+//			Simply do nothing so that nothing gets updated and therefore nothing gets downloaded.
+//			!WARNING! This makes the game extremely unstable if the plugin is unloaded while the game is running.
 //---------------------------------------------------------------------------------
-class CUGCFileRequestManager;
 static void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisPtr);
-static void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr) { } // Simply do nothing so that nothing gets updated and therefore nothing gets downloaded.
+static void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr) { } 
 
 //---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is loaded, initialization process.
@@ -94,24 +54,41 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 {
 	if (m_bPluginLoaded)
 	{
-		Log(1, false, "Already loaded!");
+		Log(WARNING, false, "Already loaded!");
 		m_bNoUnload = true;
 		return false;
 	}
 
-	Log(0, false, "Loading plugin...");
+	Log(INFO, false, "Loading plugin...");
 
-	Log(0, true, "Connecting tier libraries...");
+	Log(INFO, true, "Connecting tier libraries...");
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
 	ConVar_Register(0);
+
+	Log(INFO, true, "Loading interfaces...");
+	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
+	if (!engineServer)
+	{
+		Log(WARNING, false, "Unable to load engineServer!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+
+	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
+	if (!engineClient)
+	{
+		Log(WARNING, false, "Unable to load engineClient!");
+		this->m_bNoUnload = true;
+		return false;
+	}
 
 	// cl_localnetworkbackdoor is causing NPCs to not move correctly thanks to Valve networking "optimizations".
 	// Turn it off, nothing else should turn it back automatically while in game.
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(0);
 
-	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow 
+	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
 	{
 		screenCVar->RemoveFlags(FCVAR_CHEAT);
@@ -122,7 +99,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
 	try {
 		// MinHook initialization and hooking
-		Log(0, true, "Initializing MinHook and hooking functions...");
+		Log(INFO, true, "Initializing MinHook and hooking functions...");
 		MH_Initialize();
 
 		// STOP THEM WORKSHOP DOWNLOADS: MinHook Edition
@@ -136,10 +113,10 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 
 		MH_EnableHook(MH_ALL_HOOKS);
 
-		Log(0, false, "Loaded plugin! Hooray! :D");
+		Log(INFO, false, "Loaded plugin! Yay! :D");
 		m_bPluginLoaded = true;
 	} catch (const std::exception& ex) {
-		Log(0, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
+		Log(INFO, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
 		this->m_bNoUnload = true;
 		return false;
 	}
@@ -159,14 +136,15 @@ void CP2SMPlusPlusPlugin::Unload(void)
 		return;
 	}
 
-	Log(0, false, "Unloading Plugin...");
+	Log(INFO, false, "Unloading Plugin...");
 
-	Log(0, true, "Disconnecting hooked functions and un-initializing MinHook...");
+	Log(INFO, true, "Disconnecting hooked functions and un-initializing MinHook...");
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 
 	m_bPluginLoaded = false;
-	Log(0, false, "Plugin unloaded! Goodbye!");
+	Log(INFO, false, "Plugin unloaded! Goodbye!");
+}
 }
 
 //---------------------------------------------------------------------------------
