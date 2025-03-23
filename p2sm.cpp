@@ -94,6 +94,11 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		screenCVar->RemoveFlags(FCVAR_CHEAT);
 		screenCVar->SetValue(1);
 	}
+
+	// Make switching between players in splitscreen when testing easier by removing
+	// the need for cheats to change the current player under control.
+	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
+		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 	
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
@@ -145,6 +150,12 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	m_bPluginLoaded = false;
 	Log(INFO, false, "Plugin unloaded! Goodbye!");
 }
+
+void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity)
+{
+	// Make sure the r_drawscreenoverlay is enabled for connecting clients.
+	engineServer->ClientCommand(pEntity, "r_drawscreenoverlay 1");
+	Log(WARNING, true, "r_drawscreenoverlay set!");
 }
 
 //---------------------------------------------------------------------------------
@@ -161,7 +172,6 @@ void CP2SMPlusPlusPlugin::LevelShutdown(void) {}
 void CP2SMPlusPlusPlugin::Pause(void) {}
 void CP2SMPlusPlusPlugin::UnPause(void) {}
 void CP2SMPlusPlusPlugin::ClientDisconnect(edict_t* pEntity) {}
-void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity) {}
 void CP2SMPlusPlusPlugin::ClientPutInServer(edict_t* pEntity, char const* playerName) {}
 void CP2SMPlusPlusPlugin::ClientSettingsChanged(edict_t* pEdict) {}
 PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxRejectLen) { return PLUGIN_CONTINUE; }
