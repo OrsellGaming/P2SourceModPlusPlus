@@ -54,7 +54,7 @@ CBasePlayer* UTIL_PlayerByIndex(const int playerIndex)
 //---------------------------------------------------------------------------------
 // Purpose: Show on screen message to players. msg_dest are definSed macros in globals.hpp.
 //---------------------------------------------------------------------------------
-void UTIL_ClientPrint(CBasePlayer* player, int msg_dest, const char* msg_name, const char* param1, const char* param2, const char* param3, const char* param4)
+void UTIL_ClientPrint(CBasePlayer* player, const int msg_dest, const char* msg_name, const char* param1, const char* param2, const char* param3, const char* param4)
 {
 	static auto ClientPrint_ = reinterpret_cast<void (__cdecl*)(CBasePlayer*, int, const char*, const char*, const char*, const char*, const char*)>(Memory::Scanner::Scan<void*>(SERVERDLL, "55 8B EC 83 EC 20 56 8B 75 08 85 F6 74 4C"));
 	ClientPrint_(player, msg_dest, msg_name, param1, param2, param3, param4);

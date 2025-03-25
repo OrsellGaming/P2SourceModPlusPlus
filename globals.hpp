@@ -117,7 +117,7 @@ public:
 
 	int GetRecipientCount() const override { return recipientCount; }
 
-	int GetRecipientIndex(int slot) const override
+	int GetRecipientIndex(const int slot) const override
 	{
 		return (slot < 0 || slot >= recipientCount) ? -1 : recipients[slot];
 	}
@@ -172,7 +172,7 @@ inline int ENTINDEX(CBaseEntity* pEnt)
 //---------------------------------------------------------------------------------
 // Purpose: Entity index to entity edict. Taken from utils.h.
 //---------------------------------------------------------------------------------
-inline edict_t* INDEXENT(int iEdictNum)
+inline edict_t* INDEXENT(const int iEdictNum)
 {
 	Assert(iEdictNum >= 0 && iEdictNum < MAX_EDICTS);
 	if (g_pGlobals->pEdicts)

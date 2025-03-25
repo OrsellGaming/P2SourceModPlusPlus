@@ -9,9 +9,10 @@
 > This plugin was designed in mind for SourceMods, meaning mods loaded through the `sourcemods` folder in Steam. Not for Portal 2 mods that are on Steam.
 >
 > While this plugin should be ok for a Steam Portal 2 mod, note that:
+>
 > 1. I do not know if Valve will allow such modifications on the Steam platform, especially if it involves one of their games.
 > 2. Compatibility will not be 100%, so expect bugs or other issues.
-> 3. If you are using this plugin with your mod, I am not responsible if anything bad happens to your mod's place on Steam.
+> 3. If you are using this plugin with your mod, I am not responsible if anything bad happens to your mod's page on Steam.
 >
 > I will, in the future, try to add custom elements involving interactions with Steam's API, like achievements, but for now, I don't expect this to work correctly with Steam mods. Plus, in the end, P2:CE will do this properly in the future.
 
@@ -24,7 +25,8 @@
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 Source Mods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps and have more parts than Door Prize and Smash TV.
 * **(NOT IMPLEMENTED)** Use of player flashlight without needing cheats enabled.
-* **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not confirmed this, and have never noticed it in general.
+* **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not confirmed this myself, and have never noticed it in general.
+* **(NOT IMPLEMENTED)** When in water, the player is pushed to the world's origin.
 
 ### Download and Install Instructions:
 

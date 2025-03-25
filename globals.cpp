@@ -49,18 +49,18 @@ void Log(const LogLevel level, const bool dev, const char* pMsgFormat, ...)
 
 	switch (level)
 	{
-	case 0:
+	case (INFO):
 		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
 		return;
-	case 1:
+	case (WARNING):
 		Warning(completeMsg);
 		return;
-	case 2:
+	case (ERRORR):
 		Warning("(P2SourceMod++ PLUGIN):\n!!!ERROR ERROR ERROR!!!:\nA FATAL ERROR OCCURED WITH THE ENGINE:\n%s", completeMsg);
 		Error(completeMsg);
 		return;
 	default:
-		Warning("(P2SourceMod++ PLUGIN): Log level set outside of 0-1, \"%i\". Defaulting to level 0.\n", level);
+		Warning("(P2SourceMod++ PLUGIN): Log level set outside of INFO-ERRORR, \"%i\". Defaulting to level INFO.\n", level);
 		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
 	}
 }
@@ -193,7 +193,7 @@ bool IsBot(const int playerIndex)
 	player_info_t playerInfo;
 	if (!engineServer->GetPlayerInfo(playerIndex, &playerInfo))
 	{
-		Log(INFO, true, R"(Couldn't retrieve player info of player index "%i" in IsBot!)", playerIndex);
+		Log(WARNING, true, R"(Couldn't retrieve player info of player index "%i" in IsBot!)", playerIndex);
 		return false;
 	}
 
