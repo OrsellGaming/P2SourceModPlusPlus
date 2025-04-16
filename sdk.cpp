@@ -30,7 +30,38 @@ void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisPtr)
 	CPortal_Player__PlayerDeathThink_orig(thisPtr);
 }
 
+//---------------------------------------------------------------------------------
+// Purpose: Change out the original Flashlight turn and off with our versions.
+//			TODO: Have flashlight on and off sound work again.
+//---------------------------------------------------------------------------------
+bool (__fastcall* CPortal_Player__FlashlightTurnOn_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
+bool __fastcall CPortal_Player__FlashlightTurnOn_hook(CPortal_Player* thisPtr,  void* edx, bool playSound)
 {
+	const int playerIndex = ENTINDEX(reinterpret_cast<CBaseEntity*>(thisPtr));
+	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
+	{
+		Log(WARNING, false, "CPortal_Player::FlashlightTurnOn was called with a invalid player!");
+		return false;
+	}
+	
+	CPortal_Player__SetFlashlightState(playerIndex, true);
+	// engineServer->EmitAmbientSound(playerIndex)
+	return true;
+}
+
+void (__fastcall* CPortal_Player__FlashlightTurnOff_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
+void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,  void* edx, bool playSound)
+{
+	const int playerIndex = ENTINDEX(reinterpret_cast<CBaseEntity*>(thisPtr));
+	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
+	{
+		Log(WARNING, false, "CPortal_Player::FlashlightTurnOff was called with a invalid player!");
+		return;
+	}
+	
+	CPortal_Player__SetFlashlightState(playerIndex, false);
+	// engineServer->EmitAmbientSound(playerIndex)
+	return;
 }
 
 ///			 Interfaced UTIL Functions			\\\
