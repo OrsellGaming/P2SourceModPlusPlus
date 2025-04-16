@@ -18,7 +18,7 @@
 > 
 > I will, in the future, try to add custom elements involving interactions with Steam's API, like achievements, but for now, I don't expect this to work correctly with Steam mods. Plus, in the end, P2:CE will do this properly in the future.
 
-### Features Implemented/Plan to Implement:
+### Features Implemented/Potentially Plan to Implement:
 
 * Stopped workshop maps from being downloaded by the game because the workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
 * Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
