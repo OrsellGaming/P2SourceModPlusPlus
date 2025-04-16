@@ -4,6 +4,7 @@
 // Purpose: Portal 2: Multiplayer Mod server plugin memory scanner
 // 
 //===========================================================================//
+
 #include "scanner.hpp"
 
 #ifdef _WIN32
@@ -17,10 +18,10 @@
 #include <sstream>
 #include <filesystem>
 
+#include "globals.hpp"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
-
-extern void Log(int level, bool dev, const char* pMsgFormat, ...);
 
 namespace Memory {
 #ifndef _WIN32
@@ -405,10 +406,10 @@ namespace Memory {
 		void* addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(target_module), patternBytes);
 		if (!addr)
 		{
-			Log(1, false, "Failed to replace pattern! Turn on p2sm_developer for more info...");
-			Log(1, true, "Target Module: %s", target_module.c_str());
-			Log(1, true, "Pattern Bytes To Find: %s", patternBytes.c_str());
-			Log(1, true, "Bytes To Replace Pattern Bytes With: %s", replace_with.c_str());
+			Log(WARNING, false, "Failed to replace pattern! Turn on p2sm_developer for more info...");
+			Log(WARNING, true, "Target Module: %s", target_module.c_str());
+			Log(WARNING, true, "Pattern Bytes To Find: %s", patternBytes.c_str());
+			Log(WARNING, true, "Bytes To Replace Pattern Bytes With: %s", replace_with.c_str());
 			return;
 		}
 

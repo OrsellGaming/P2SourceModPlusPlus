@@ -18,7 +18,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <span>
 #include <unordered_map>
 
 namespace Memory {
