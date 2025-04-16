@@ -31,10 +31,6 @@ typedef struct
 extern void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisptr);
 void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisptr);
 
-// UTIL_GetLocalPlayer Dedicated Server Fix Hook.
-// Hook does follow original naming convention so it can be used like a function.
-extern CBasePlayer* (__cdecl* UTIL_GetLocalPlayer_orig)();
-CBasePlayer* __cdecl UTIL_GetLocalPlayer();
 
 //---------------------------------------------------------------------------------
 // Interfaced game functions.

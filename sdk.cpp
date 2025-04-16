@@ -30,13 +30,7 @@ void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisPtr)
 	CPortal_Player__PlayerDeathThink_orig(thisPtr);
 }
 
-// Fix UTIL_GetLocalPlayer() so Portal 2 can work on dedicated servers.
-CBasePlayer* (__cdecl* UTIL_GetLocalPlayer_orig)();
-CBasePlayer* __cdecl UTIL_GetLocalPlayer()
 {
-	if (engineServer->IsDedicatedServer())
-		return nullptr;
-	return UTIL_GetLocalPlayer_orig();
 }
 
 ///			 Interfaced UTIL Functions			\\\
