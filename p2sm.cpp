@@ -7,6 +7,7 @@
 
 #include "p2sm.hpp"
 #include "globals.hpp"
+#include "sdk.hpp"
 #include "scanner.hpp" // Memory scanner
 
 #include "cdll_int.h" // Client interfacing
@@ -72,6 +73,72 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	if (!hWnd)
 		Log(WARNING, false, "Failed to find game window!");
 	
+	// big ol' try catch because game has a TerminateProcess handler for exceptions...
+	// why this wasn't here is mystifying, - 10/2024 NULLderef
+	try {
+
+		Log(INFO, true, "Executing game patches...");
+#if _WIN32
+		// When a player, both client or host, goes through a linked_portal_door entity in multiplayer, the host will crash. This fixes that.
+		Log(INFO, true, "Fixing linked portal doors for multiplayer...");
+		Memory::ReplacePattern("server", "0F B6 87 04 05 00 00 8B 16", "EB 14 87 04 05 00 00 8B 16");
+
+		// Increase runtime max from 0.03 to 0.05.
+		// Helps add some more leeway to some things we do in VScript without the engine complaining and shutting down the rest of the script.
+		Log(INFO, true, "Patching max runtime for VScript...");
+		Memory::ReplacePattern("vscript", "00 00 00 E0 51 B8 9E 3F", "9a 99 99 99 99 99 a9 3f");
+#else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
+#endif
+
+#if _WIN32
+		// MinHook initialization and hooking.
+		Log(INFO, true, "Initializing MinHook and hooking functions...");
+		MH_Initialize();
+		
+		// Hook the death think function so players can be spawned immediate when the p2sm_instantrespawn ConVar is on.
+		Log(INFO, true, "Hooking CPortal_Player::PlayerDeathThink...");
+		MH_CreateHook(
+			Memory::Scanner::Scan(SERVERDLL, "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B ?? 89 6C 24 ?? 8B EC A1 ?? ?? ?? ?? F3 0F 10 40 ?? F3 0F 58 05 ?? ?? ?? ?? 83 EC 28 56 57 6A 00 51 8B F1 F3 0F 11 04 24 E8 ?? ?? ?? ?? 6A 03"),
+			&CPortal_Player__PlayerDeathThink_hook, reinterpret_cast<void**>(&CPortal_Player__PlayerDeathThink_orig)
+		);
+
+		// Hook flashlight functions.
+		Log(INFO, true, "Hooking CPortal_Player::FlashlightTurnOn...");
+		MH_CreateHook(
+			Memory::Scanner::Scan(SERVERDLL, "A1 ?? ?? ?? ?? 8B 50 ?? 83 7A ?? ?? 75"),
+			&CPortal_Player__FlashlightTurnOn_hook, reinterpret_cast<void**>(&CPortal_Player__FlashlightTurnOn_orig)
+		);
+		Log(INFO, true, "Hooking CPortal_Player::FlashlightTurnOff...");
+		MH_CreateHook(
+			Memory::Scanner::Scan(SERVERDLL, "A1 ?? ?? ?? ?? 8B 50 ?? 83 7A ?? ?? 74 ?? 8B 81"),
+			&CPortal_Player__FlashlightTurnOff_hook, reinterpret_cast<void**>(&CPortal_Player__FlashlightTurnOff_orig)
+		);
+		
+		// Stop workshop map downloads by not returning false on the download request.
+		Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
+		MH_CreateHook(
+			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 8B 45 ?? 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45"),
+			&CWorkshopManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CWorkshopManager__CreateFileDownloadRequest_orig)
+		);
+
+		// Stop env_projectedtexture entities from getting disabled when more than one is active.
+		//! Engine limit still exists though with a max of eight env_projectedtextures.
+		//Log(INFO, true, "Hooking CEnvProjectedTexture::EnforceSingleProjectionRules...");
+		//! Currently crashes, hook is incorrect most likely even though I checked sig is correct and parameters match up with what is in code.
+		// MH_CreateHook(
+		// 	Memory::Scanner::Scan(SERVERDLL, "55 8B EC 83 EC 14 53 56 57 68 B8 6F 5D 10"),
+		// 	&CEnvProjectedTexture__EnforceSingleProjectionRules_hook, reinterpret_cast<void**>(&CEnvProjectedTexture__EnforceSingleProjectionRules_orig)
+		// );
+#else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
+#endif // _WIN32
+
+		MH_EnableHook(MH_ALL_HOOKS);
+	} catch (const std::exception& ex) {
+		Log(INFO, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
+		//this->m_bNoUnload = true;
+		return false;
+	}
+
 	Log(INFO, true, "Connecting tier libraries...");
 	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
 	ConnectTier1Libraries(&interfaceFactory, 1);
@@ -144,31 +211,8 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 	
-	// big ol' try catch because game has a TerminateProcess handler for exceptions...
-	// why this wasn't here is mystifying, - 10/2024 NULLderef
-	try {
-		// MinHook initialization and hooking
-		Log(INFO, true, "Initializing MinHook and hooking functions...");
-		MH_Initialize();
-
-		// STOP THEM WORKSHOP DOWNLOADS: MinHook Edition
-#if _WIN32
-		MH_CreateHook(
-			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 81 EC 48 01 00 00 57"),
-			&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
-		);
-#else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself.
-#endif // _WIN32
-
-		MH_EnableHook(MH_ALL_HOOKS);
-
-		Log(INFO, false, "Loaded plugin! Yay! :D");
-		m_bPluginLoaded = true;
-	} catch (const std::exception& ex) {
-		Log(INFO, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
-		this->m_bNoUnload = true;
-		return false;
-	}
+	Log(INFO, false, "Loaded plugin! Yay! :D");
+	m_bPluginLoaded = true;
 
 	return true;
 }
@@ -187,6 +231,54 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	}
 
 	Log(INFO, false, "Unloading Plugin...");
+	
+	try
+	{
+#if _WIN32
+		Log(INFO, true, "Un-patching game patches...");
+		
+		Log(INFO, true, "Un-patching linked portal doors...");
+		Memory::ReplacePattern("server", "EB 14 87 04 05 00 00 8B 16", "0F B6 87 04 05 00 00 8B 16");
+
+		Log(INFO, true, "Un-patching max runtime for VScript...");
+		Memory::ReplacePattern("vscript", "00 00 00 00 00 00 E0 3F", "00 00 00 E0 51 B8 9E 3F");
+		
+		Log(INFO, true, "Disconnecting hooked functions and un-initializing MinHook...");
+		MH_DisableHook(MH_ALL_HOOKS);
+		MH_Uninitialize();
+#else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
+#endif
+	}
+	catch (const std::exception& ex)
+	{
+		assert(0 && "Failed to fully unload!");
+		Log(INFO, false, R"(Encountered error when unload plugin! :( Exception: "%s")", ex.what());
+		Log(ERRORR, false, "P2:MM failed to unload!\nGame has to be shutdown as possibly some other patches/hooks are still connected which can cause issues!");
+	}
+
+	// Turn every ConVar/ConCommand back to normal.
+	Log(INFO, true, "Reverting changed ConVars and ConCommands...");
+
+	Log(INFO, true, "cl_localnetworkbackdoor...");
+	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
+		lnbCVar->SetValue(0);
+	
+	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
+	Log(INFO, true, "r_drawscreenoverlay...");
+	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
+	{
+		screenCVar->RemoveFlags(FCVAR_CHEAT);
+		screenCVar->SetValue(1);
+	}
+
+	// Make switching between players in splitscreen when testing easier by removing
+	// the need for cheats to change the current player under control.
+	Log(INFO, true, "in_forceuser...");
+	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
+		ifuCVar->RemoveFlags(FCVAR_CHEAT);
+
+	Log(INFO, true, "Unregistering ConVars and ConCommands...");
+	ConVar_Unregister();
 
 	Log(INFO, true, "Disconnecting tier libraries...");
 	DisconnectTier2Libraries();
