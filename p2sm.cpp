@@ -81,41 +81,74 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		Log(WARNING, false, "Failed to find game window!");
 	
 	Log(INFO, true, "Connecting tier libraries...");
+	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
+
+	Log(INFO, true, "Registering plugin ConVars and ConCommands...");
 	ConVar_Register(0);
 
+	// Make sure that all the interfaces needed are loaded and usable.
 	Log(INFO, true, "Loading interfaces...");
+	Log(INFO, true, "Loading engineServer...");
 	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
 	if (!engineServer)
 	{
+		assert(0 && "Unable to load engineServer!");
 		Log(WARNING, false, "Unable to load engineServer!");
 		this->m_bNoUnload = true;
 		return false;
 	}
 
+	Log(INFO, true, "Loading engineClient...");
 	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
 	if (!engineClient)
 	{
+		assert(0 && "Unable to load engineClient!");
 		Log(WARNING, false, "Unable to load engineClient!");
 		this->m_bNoUnload = true;
 		return false;
 	}
 
+	Log(INFO, true, "Loading g_pPlayerInfoManager...");
+	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, 0));
+	if (!g_pPlayerInfoManager)
+	{
+		assert(0 && "Unable to load g_pPlayerInfoManager!");
+		Log(WARNING, false, "Unable to load g_pPlayerInfoManager!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+	
+	Log(INFO, true, "Loading g_pGlobals...");
+	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
+	if (!g_pGlobals)
+	{
+		assert(0 && "Unable to load g_pGlobals!");
+		Log(WARNING, false, "Unable to load g_pGlobals!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+
+	Log(INFO, true, "Updating/Fixing game ConVars and ConCommands...");
+
 	// cl_localnetworkbackdoor is causing NPCs to not move correctly thanks to Valve networking "optimizations".
 	// Turn it off, nothing else should turn it back automatically while in game.
+	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(0);
-
+	
 	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
+	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
 	{
 		screenCVar->RemoveFlags(FCVAR_CHEAT);
 		screenCVar->SetValue(1);
 	}
-
+	
 	// Make switching between players in splitscreen when testing easier by removing
 	// the need for cheats to change the current player under control.
+	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 	
@@ -163,9 +196,9 @@ void CP2SMPlusPlusPlugin::Unload(void)
 
 	Log(INFO, false, "Unloading Plugin...");
 
-	Log(INFO, true, "Disconnecting hooked functions and un-initializing MinHook...");
-	MH_DisableHook(MH_ALL_HOOKS);
-	MH_Uninitialize();
+	Log(INFO, true, "Disconnecting tier libraries...");
+	DisconnectTier2Libraries();
+	DisconnectTier1Libraries();
 
 	m_bPluginLoaded = false;
 	Log(INFO, false, "Plugin unloaded! Goodbye!");

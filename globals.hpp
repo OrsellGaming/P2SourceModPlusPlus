@@ -11,6 +11,7 @@
 #include "cdll_int.h"
 #include "vscript/ivscript.h"
 #include "engine/iserverplugin.h"
+#include "game/server/iplayerinfo.h"
 #include "public/steam/steamclientpublic.h"
 #include "irecipientfilter.h"
 
@@ -85,7 +86,7 @@ static HWND hWnd;
 extern IVEngineServer*			engineServer;
 extern IVEngineClient*			engineClient;
 extern CGlobalVars*				g_pGlobals;
-// extern IPlayerInfoManager*	g_pPlayerInfoManager;
+extern IPlayerInfoManager*		g_pPlayerInfoManager;
 // extern IScriptVM*			g_pScriptVM;
 // extern IServerTools*			g_pServerTools;
 // extern IGameEventManager2*	g_pGameEventManager_;
