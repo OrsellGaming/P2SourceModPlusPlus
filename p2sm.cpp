@@ -40,14 +40,6 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 }
 
 //---------------------------------------------------------------------------------
-// Purpose: Stop the UGC manager from automatically download workshop maps.
-//			Simply do nothing so that nothing gets updated and therefore nothing gets downloaded.
-//			!WARNING! This makes the game extremely unstable if the plugin is unloaded while the game is running.
-//---------------------------------------------------------------------------------
-static void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisPtr);
-static void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr) { } 
-
-//---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is loaded, initialization process.
 //			Loads the interfaces we need from the engine and applies our patches.
 //---------------------------------------------------------------------------------

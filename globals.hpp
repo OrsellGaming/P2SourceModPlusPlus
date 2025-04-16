@@ -23,7 +23,8 @@
 class CBasePlayer;
 class CPortal_Player;
 class CBaseEntity;
-class CUGCFileRequestManager;
+class CWorkshopManager;
+class CEnvProjectedTexture;
 
 // Color macros for console printing.
 #define P2SMPLUSPLUS_PLUGIN_VERSION "1.1.0" // Update this when a new version of the plugin is released.

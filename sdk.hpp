@@ -28,14 +28,36 @@ typedef struct
 //---------------------------------------------------------------------------------
 
 // Respawn Hooks.
-extern void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisptr);
-void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisptr);
+extern void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisPtr);
+void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisPtr);
 
 // Flashlight Hooks.
 extern bool (__fastcall* CPortal_Player__FlashlightTurnOn_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
 bool __fastcall CPortal_Player__FlashlightTurnOn_hook(CPortal_Player* thisPtr,  void* edx, bool playSound);
 extern void (__fastcall* CPortal_Player__FlashlightTurnOff_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
 void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,  void* edx, bool playSound);
+
+// Workshop download stopping hooks.
+extern bool (__fastcall* CWorkshopManager__CreateFileDownloadRequest_orig)(CWorkshopManager* thisPtr, void* edx,
+	uint64 hFileHandle, 
+	uint64 fileID,
+	const char *lpszDirectory, 
+	const char *lpszFilename, 
+	uint32 unPriority, 
+	uint32 unTimeLastUpdated, 
+	bool bForceUpdate);
+bool  __fastcall CWorkshopManager__CreateFileDownloadRequest_hook(CWorkshopManager* thisPtr, void* edx,
+	uint64 hFileHandle, 
+	uint64 fileID,
+	const char *lpszDirectory, 
+	const char *lpszFilename, 
+	uint32 unPriority, 
+	uint32 unTimeLastUpdated, 
+	bool bForceUpdate);
+
+// env_projectedtexture enforcement function hook.
+// extern void (__fastcall* CEnvProjectedTexture__EnforceSingleProjectionRules_orig)(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement);
+// void  __fastcall CEnvProjectedTexture__EnforceSingleProjectionRules_hook(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement);
 
 //---------------------------------------------------------------------------------
 // Interfaced game functions.
