@@ -4,6 +4,7 @@
 // Purpose: Global functions & variables used repeatedly throughout the plugin
 // 
 //===========================================================================//
+
 #pragma once
 
 #include "eiface.h"
@@ -38,19 +39,19 @@ class CUGCFileRequestManager;
 // Thanks to Nanoman2525 for this.
 #define FOR_ALL_CONSOLE_COMMANDS(pCommandVarName) \
     ConCommandBase* m_pConCommandList = *reinterpret_cast<ConCommandBase**>((uintptr_t)g_pCVar + 0x30); /* CCvar::m_pConCommandList */ \
-    for (ConCommandBase* pCommandVarName = m_pConCommandList; \
-	pCommandVarName; pCommandVarName = *reinterpret_cast<ConCommandBase**>(reinterpret_cast<uintptr_t>(pCommandVarName) + 0x04)) /* ConCommandBase::m_pNext (private variable) */
+    for (ConCommandBase* (pCommandVarName) = m_pConCommandList; \
+	pCommandVarName; (pCommandVarName) = *reinterpret_cast<ConCommandBase**>(reinterpret_cast<uintptr_t>(pCommandVarName) + 0x04)) /* ConCommandBase::m_pNext (private variable) */
 
 // Macro to iterate through all players on the server.
 #define FOR_ALL_PLAYERS(i) \
-	for (int i = 1; i <= CURPLAYERCOUNT(); i++)
+	for (int (i) = 1; (i) <= CURPLAYERCOUNT(); (i)++)
 
 // Log levels for all log functions.
 typedef enum LogLevels : std::uint8_t
 {
 	INFO = 0,
 	WARNING,
-	ERRORR // Have to use ERRORR because of include by Windows API. Yeah I know, I hate it too.
+	ERRORR // Have to use ERRORR because of macro by the Windows API. Yeah I know, I hate it too.
 } LogLevel;
 
 

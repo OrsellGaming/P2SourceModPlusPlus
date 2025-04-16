@@ -4,6 +4,7 @@
 // Purpose: Interfaced functions and hooks from the Portal 2 engine for the plugin to use.
 // 
 //===========================================================================//
+
 #pragma once
 
 #include "globals.hpp"

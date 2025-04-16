@@ -4,6 +4,7 @@
 // Purpose: P2SourceModPlusPlus plugin
 // 
 //===========================================================================//
+
 #pragma once
 
 #include "engine/iserverplugin.h"
