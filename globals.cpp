@@ -25,7 +25,7 @@ IPlayerInfoManager*		g_pPlayerInfoManager = nullptr;
 //IServerPluginHelpers*	g_pPluginHelpers = nullptr;
 // IFileSystem*				g_pFileSystem;
 
-static ConVar p2sm_developer("p2sm_developer", "0", FCVAR_HIDDEN, "Enable for developer messages.");
+static ConVar p2sm_developer("p2sm_developer", "0", FCVAR_NONE, "Enable for developer messages.");
 
 //---------------------------------------------------------------------------------
 // Purpose: Logging for the plugin by adding a prefix and line break.
