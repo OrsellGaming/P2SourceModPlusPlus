@@ -259,23 +259,23 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	// Turn every ConVar/ConCommand back to normal.
 	Log(INFO, true, "Reverting changed ConVars and ConCommands...");
 
+	// NPC's will move jankly again.
 	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
-		lnbCVar->SetValue(0);
+		lnbCVar->SetValue(1);
 	
-	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
+	// Cheats flag readded, disabled.
 	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
 	{
-		screenCVar->RemoveFlags(FCVAR_CHEAT);
-		screenCVar->SetValue(1);
+		screenCVar->AddFlags(FCVAR_CHEAT);
+		screenCVar->SetValue(0);
 	}
 
-	// Make switching between players in splitscreen when testing easier by removing
-	// the need for cheats to change the current player under control.
+	// Need cheats to switch again.
 	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
-		ifuCVar->RemoveFlags(FCVAR_CHEAT);
+		ifuCVar->AddFlags(FCVAR_CHEAT);
 
 	Log(INFO, true, "Unregistering ConVars and ConCommands...");
 	ConVar_Unregister();
