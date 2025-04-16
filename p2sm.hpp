@@ -44,6 +44,9 @@ public:
 	virtual bool			BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan);
 
 private:
+	// Windows API Window Handle
+	HWND m_hWnd;
+	
 	// Plugin state member variables.
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
