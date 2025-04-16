@@ -4,6 +4,7 @@
 // Purpose: Interfaced functions and hooks from the Portal 2 engine for the plugin to use.
 // 
 //===========================================================================//
+
 #include "sdk.hpp"
 
 #include "scanner.hpp"
@@ -12,19 +13,21 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not.");
+static ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");
 
-// For hooking onto the function that is called before a player respawns to skip the delay
-// that is usual there and instead force a instant respawn of the player.
-void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisptr);
-void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisptr)
+//---------------------------------------------------------------------------------
+// Purpose: For hooking onto the function that is called before a player respawns to skip the delay
+//			that is usual there and instead force a instant respawn of the player.
+//---------------------------------------------------------------------------------
+void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisPtr);
+void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisPtr)
 {
 	if (p2sm_instantrespawn.GetBool())
 	{
-		CPortal_Player__RespawnPlayer(ENTINDEX(reinterpret_cast<CBaseEntity*>(thisptr)));
+		CPortal_Player__RespawnPlayer(ENTINDEX(reinterpret_cast<CBaseEntity*>(thisPtr)));
 		return;
 	}
-	CPortal_Player__PlayerDeathThink_orig(thisptr);
+	CPortal_Player__PlayerDeathThink_orig(thisPtr);
 }
 
 // Fix UTIL_GetLocalPlayer() so Portal 2 can work on dedicated servers.
@@ -39,7 +42,7 @@ CBasePlayer* __cdecl UTIL_GetLocalPlayer()
 ///			 Interfaced UTIL Functions			\\\
 
 //---------------------------------------------------------------------------------
-// Purpose: Get the player's base class with it's entity index. Thanks to Nanoman2525 for this.
+// Purpose: Get the player's base class with its entity index. Thanks to Nanoman2525 for this.
 //---------------------------------------------------------------------------------
 CBasePlayer* UTIL_PlayerByIndex(const int playerIndex)
 {
