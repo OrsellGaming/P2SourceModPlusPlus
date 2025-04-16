@@ -6,6 +6,7 @@
 > I originally planned `WorkshopStopper9000` to fix the workshop downloading issue, but I hope to add more features and fixes, so now it has become `P2SourceModPlusPlus`. I hope to implement some good features the community will use until the fated day Portal 2: Community Edition (P2:CE) is released. This plugin will act as a temporary solution for mod makers. Once P2:CE's public beta and/or release occurs, I will probably not work on this anymore, as most of the stuff here is fixed over there.
 
 > [!WARNING]
+> This plugin was designed in mind for SourceMods, meaning mods loaded through the `sourcemods` folder in Steam. Not for Portal 2 mods that are on Steam's store and can be installed through Steam.
 >
 > While this plugin should be ok for a Steam Portal 2 mod, note that:
 >
@@ -22,16 +23,20 @@
 * Stopped workshop maps from being downloaded by the game because the workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
 * Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
 * Made `r_screenoverlay` ConVar be enabled by default and not need cheats so `env_screenoverlay` entities can work correctly without `sv_cheats` being needed.
-* Added a ConVar to enable instant respawns for multiplayer.
-* **(NOT IMPLEMENTED)** Fixed the player flashlight impulse ConCommand not needing cheats enabled. All that is needed is a key binded to `impulse 100`.
+* Added a ConVar to enable instant respawns for multiplayer. Simply skips those moments in the third person death cam.
+* Fixed linked portal doors causing crashes on multiplayer when players enter them.
+* Increased the max VScript VM runtime so that VScript operations like `for` and `while` loops run without problems. This helps give more leeway in doing things in VScript without the engine complaining and shutting down the rest of the script, spewing errors in the console. While it depends on how the script was programmed and what it is doing, I occasionally notice this, and this fix helps eliminate it.
+* Fixed the player flashlight impulse ConCommand, so it no longer requires cheats to be enabled. All that is needed is a key bound to `impulse 100`. However, the flashlight doesn't work perfectly with portals, snapping to odd positions when moving through and unable to shine through portals.
 * **(NOT IMPLEMENTED)** Add a ConVar to disable multiplayer death icons.
-* **(NOT IMPLEMENTED)** Fixed linked portal doors causing crashes on multiplayer when players enter them.
 * **(NOT IMPLEMENTED)** Allow more than one env_projectedtexture to be on at once. Engine limit of eight is still enforced however!
 * **(NOT IMPLEMENTED)** Option to turn on or off puzzle maker functionality. Most mods don't use the puzzle maker, but it still loads in. The plugin will try to disable as much of it as possible so the console is not filled with any puzzle-maker-related errors, messages, or other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 SourceMods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps and have more parts than Door Prize and Smash TV.
 * **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not been able to confirmed this, and have never noticed it in general.
 * **(NOT IMPLEMENTED)** When in water, the player is pushed to the world's origin.
+* **(NOT IMPLEMENTED)** Fix SourceMods only getting small 2 MB of memory for material system render context allocation, increasing it to 6 MB. This might happen if this every gets ported to SAR or P2SRM.
+* **(NOT IMPLEMENTED)** Linux support.
+* **(NOT IMPLEMENTED)** Implement some VScript functions and hooks to capture certain events, turn ConVars on or off, as well fixing and adding new VScript functions.
 
 ### Download and Install Instructions:
 
