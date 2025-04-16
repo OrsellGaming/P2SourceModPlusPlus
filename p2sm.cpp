@@ -26,7 +26,7 @@ EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, I
 //---------------------------------------------------------------------------------
 CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 {
-	this->m_hWnd = nullptr;
+	hWnd = nullptr;
 	this->m_bPluginLoaded = false;
 	this->m_bNoUnload = false;	  // If we fail to load, we don't want to run anything on Unload() to get what the error was.
 }
@@ -76,8 +76,8 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	Log(INFO, false, "Loading plugin...");
 
 	Log(INFO, true, "Grabbing game window handle...");
-	this->m_hWnd = FindWindow("Valve001", nullptr);
-	if (!this->m_hWnd)
+	hWnd = FindWindow("Valve001", nullptr);
+	if (!hWnd)
 		Log(WARNING, false, "Failed to find game window!");
 	
 	Log(INFO, true, "Connecting tier libraries...");
@@ -157,7 +157,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	if (m_bNoUnload)
 	{
 		m_bNoUnload = false;
-		MessageBox(this->m_hWnd, "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
+		MessageBox(hWnd, "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
 		return;
 	}
 
