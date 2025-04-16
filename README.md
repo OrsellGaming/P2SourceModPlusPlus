@@ -23,11 +23,15 @@
 * Stopped workshop maps from being downloaded by the game because the workshop folder isn't on path for Source Mods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
 * Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
 * Made `r_screenoverlay` ConVar be enabled by default and not need cheats so `env_screenoverlay` entities can work correctly without `sv_cheats` being needed.
+* Added a ConVar to enable instant respawns for multiplayer.
+* **(NOT IMPLEMENTED)** Fixed the player flashlight impulse ConCommand not needing cheats enabled. All that is needed is a key binded to `impulse 100`.
+* **(NOT IMPLEMENTED)** Add a ConVar to disable multiplayer death icons.
+* **(NOT IMPLEMENTED)** Fixed linked portal doors causing crashes on multiplayer when players enter them.
+* **(NOT IMPLEMENTED)** Allow more than one env_projectedtexture to be on at once. Engine limit of eight is still enforced however!
 * **(NOT IMPLEMENTED)** Option to turn on or off puzzle maker functionality. Most mods don't use the puzzle maker, but it still loads in. The plugin will try to disable as much of it as possible so the console is not filled with any puzzle-maker-related errors, messages, or other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 Source Mods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps and have more parts than Door Prize and Smash TV.
-* **(NOT IMPLEMENTED)** Use of player flashlight without needing cheats enabled.
-* **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not confirmed this myself, and have never noticed it in general.
+* **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not been able to confirmed this, and have never noticed it in general.
 * **(NOT IMPLEMENTED)** When in water, the player is pushed to the world's origin.
 
 ### Download and Install Instructions:
