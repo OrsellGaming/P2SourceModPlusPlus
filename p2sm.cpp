@@ -72,12 +72,63 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	hWnd = FindWindow("Valve001", nullptr);
 	if (!hWnd)
 		Log(WARNING, false, "Failed to find game window!");
+
+	Log(INFO, true, "Connecting tier libraries...");
+	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
+	ConnectTier1Libraries(&interfaceFactory, 1);
+	ConnectTier2Libraries(&interfaceFactory, 1);
+
+	Log(INFO, true, "Registering plugin ConVars and ConCommands...");
+	ConVar_Register(0);
+
+	// Make sure that all the interfaces needed are loaded and usable.
+	Log(INFO, true, "Loading interfaces...");
+	Log(INFO, true, "Loading engineServer...");
+	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
+	if (!engineServer)
+	{
+		assert(0 && "Unable to load engineServer!");
+		Log(WARNING, false, "Unable to load engineServer!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+
+	Log(INFO, true, "Loading engineClient...");
+	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
+	if (!engineClient)
+	{
+		assert(0 && "Unable to load engineClient!");
+		Log(WARNING, false, "Unable to load engineClient!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+
+	Log(INFO, true, "Loading g_pPlayerInfoManager...");
+	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, 0));
+	if (!g_pPlayerInfoManager)
+	{
+		assert(0 && "Unable to load g_pPlayerInfoManager!");
+		Log(WARNING, false, "Unable to load g_pPlayerInfoManager!");
+		this->m_bNoUnload = true;
+		return false;
+	}
+	
+	Log(INFO, true, "Loading g_pGlobals...");
+	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
+	if (!g_pGlobals)
+	{
+		assert(0 && "Unable to load g_pGlobals!");
+		Log(WARNING, false, "Unable to load g_pGlobals!");
+		this->m_bNoUnload = true;
+		return false;
+	}
 	
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
 	try {
 
 		Log(INFO, true, "Executing game patches...");
+		
 #if _WIN32
 		// When a player, both client or host, goes through a linked_portal_door entity in multiplayer, the host will crash. This fixes that.
 		Log(INFO, true, "Fixing linked portal doors for multiplayer...");
@@ -135,56 +186,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		MH_EnableHook(MH_ALL_HOOKS);
 	} catch (const std::exception& ex) {
 		Log(INFO, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
-		//this->m_bNoUnload = true;
-		return false;
-	}
-
-	Log(INFO, true, "Connecting tier libraries...");
-	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
-	ConnectTier1Libraries(&interfaceFactory, 1);
-	ConnectTier2Libraries(&interfaceFactory, 1);
-
-	Log(INFO, true, "Registering plugin ConVars and ConCommands...");
-	ConVar_Register(0);
-
-	// Make sure that all the interfaces needed are loaded and usable.
-	Log(INFO, true, "Loading interfaces...");
-	Log(INFO, true, "Loading engineServer...");
-	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
-	if (!engineServer)
-	{
-		assert(0 && "Unable to load engineServer!");
-		Log(WARNING, false, "Unable to load engineServer!");
-		this->m_bNoUnload = true;
-		return false;
-	}
-
-	Log(INFO, true, "Loading engineClient...");
-	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
-	if (!engineClient)
-	{
-		assert(0 && "Unable to load engineClient!");
-		Log(WARNING, false, "Unable to load engineClient!");
-		this->m_bNoUnload = true;
-		return false;
-	}
-
-	Log(INFO, true, "Loading g_pPlayerInfoManager...");
-	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, 0));
-	if (!g_pPlayerInfoManager)
-	{
-		assert(0 && "Unable to load g_pPlayerInfoManager!");
-		Log(WARNING, false, "Unable to load g_pPlayerInfoManager!");
-		this->m_bNoUnload = true;
-		return false;
-	}
-	
-	Log(INFO, true, "Loading g_pGlobals...");
-	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
-	if (!g_pGlobals)
-	{
-		assert(0 && "Unable to load g_pGlobals!");
-		Log(WARNING, false, "Unable to load g_pGlobals!");
+		assert(0);
 		this->m_bNoUnload = true;
 		return false;
 	}
