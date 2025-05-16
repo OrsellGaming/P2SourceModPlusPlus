@@ -20,9 +20,6 @@
 
 #include "globals.hpp"
 
-// memdbgon must be the last include file in a .cpp file!!!
-#include "tier0/memdbgon.h"
-
 namespace Memory {
 #ifndef _WIN32
 	inline void __cpuidex(int cpuid[4], int function, int subleaf) {

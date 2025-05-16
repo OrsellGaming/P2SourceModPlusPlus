@@ -10,9 +10,6 @@
 #include "scanner.hpp"
 #include "p2sm.hpp"
 
-// memdbgon must be the last include file in a .cpp file!!!
-#include "tier0/memdbgon.h"
-
 static ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");
 
 //---------------------------------------------------------------------------------

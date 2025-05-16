@@ -9,9 +9,6 @@
 #include "sdk.hpp"
 #include "p2sm.hpp"
 
-// memdbgon must be the last include file in a .cpp file!!!
-#include "tier0/memdbgon.h"
-
 //---------------------------------------------------------------------------------
 // Interfaces from the engine.
 //---------------------------------------------------------------------------------

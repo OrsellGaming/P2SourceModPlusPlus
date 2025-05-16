@@ -14,9 +14,6 @@
 #include "eiface.h" // Server interfacing
 #include "minhook/include/MinHook.h" // MinHook
 
-// memdbgon must be the last include file in a .cpp file!!!
-#include "tier0/memdbgon.h"
-
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
