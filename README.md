@@ -37,6 +37,8 @@
 * **(NOT IMPLEMENTED)** Fix SourceMods only getting a small 2 MB of memory for material system render context allocation, increasing it to 6 MB. This could happen if this gets ported to SAR or P2SRM.
 * **(NOT IMPLEMENTED)** Linux support.
 * **(NOT IMPLEMENTED)** Implement some VScript functions and hooks to capture specific events, turn ConVars on or off, and fix and add new VScript functions.
+* **(NOT IMPLEMENTED)** Make main menu backgrounds switch accordingly to the act number indicated in the map name ("sp_a3").
+* **(NOT IMPLEMENTED)** Have a config file to turn specific fixes and features on or off.
 
 ### Download and Install Instructions:
 
