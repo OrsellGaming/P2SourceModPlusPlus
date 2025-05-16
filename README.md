@@ -6,7 +6,7 @@
 > I originally planned `WorkshopStopper9000` to fix the workshop downloading issue, but I hope to add more features and fixes, so now it has become `P2SourceModPlusPlus`. I plan to implement some good features the community will use until the fated day Portal 2: Community Edition (P2:CE) is released. This plugin will act as a temporary solution for mod makers. Once P2:CE's public beta and/or release occurs, I will probably not work on this anymore, as most of the stuff here is fixed over there.
 
 > [!WARNING]
-> This plugin was designed in mind for SourceMods, meaning mods loaded through the `sourcemods` folder in Steam. This is not for Portal 2 mods on Steam's store, which can be installed through Steam.
+> This plugin was designed with SourceMods in mind, meaning mods loaded through the `sourcemods` folder in Steam. This is not for Portal 2 mods on Steam's store, which can be installed through Steam.
 >
 > While this plugin should be ok for a Steam Portal 2 mod, note that:
 >
@@ -20,7 +20,7 @@
 
 ### Features Implemented/Potentially Plan to Implement:
 
-* Stopped workshop maps from being downloaded by the game because the base game's workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
+* ***CURRENTLY BROKEN!!! Sorry!*** Stopped workshop maps from being downloaded by the game because the base game's workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
 * Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
 * Made `r_screenoverlay` ConVar be enabled by default and not need cheats so `env_screenoverlay` entities can work correctly without `sv_cheats` being needed.
 * Added a ConVar to enable instant respawns for multiplayer. Skips those moments in the third-person death cam before respawn.
@@ -39,6 +39,7 @@
 * **(NOT IMPLEMENTED)** Implement some VScript functions and hooks to capture specific events, turn ConVars on or off, and fix and add new VScript functions.
 * **(NOT IMPLEMENTED)** Make main menu backgrounds switch accordingly to the act number indicated in the map name ("sp_a3").
 * **(NOT IMPLEMENTED)** Have a config file to turn specific fixes and features on or off.
+* **(NOT IMPLEMENTED)** Reimplement/fix map backgrounds for Portal 2.
 
 ### Download and Install Instructions:
 
