@@ -84,7 +84,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
 	if (!engineServer)
 	{
-		assert(0 && "Unable to load engineServer!");
+		assert(false && "Unable to load engineServer!");
 		Log(WARNING, false, "Unable to load engineServer!");
 		this->m_bNoUnload = true;
 		return false;
@@ -94,7 +94,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
 	if (!engineClient)
 	{
-		assert(0 && "Unable to load engineClient!");
+		assert(false && "Unable to load engineClient!");
 		Log(WARNING, false, "Unable to load engineClient!");
 		this->m_bNoUnload = true;
 		return false;
@@ -104,7 +104,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, 0));
 	if (!g_pPlayerInfoManager)
 	{
-		assert(0 && "Unable to load g_pPlayerInfoManager!");
+		assert(false && "Unable to load g_pPlayerInfoManager!");
 		Log(WARNING, false, "Unable to load g_pPlayerInfoManager!");
 		this->m_bNoUnload = true;
 		return false;
@@ -114,7 +114,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
 	if (!g_pGlobals)
 	{
-		assert(0 && "Unable to load g_pGlobals!");
+		assert(false && "Unable to load g_pGlobals!");
 		Log(WARNING, false, "Unable to load g_pGlobals!");
 		this->m_bNoUnload = true;
 		return false;
@@ -182,8 +182,8 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 
 		MH_EnableHook(MH_ALL_HOOKS);
 	} catch (const std::exception& ex) {
-		Log(INFO, false, "Failed to load plugin! :( Exception: \"%s\"", ex.what());
-		assert(0);
+		Log(INFO, false, "Failed to perform patch and hook operations! :( Exception: \"%s\"", ex.what());
+		assert(false && "Patch and hook failure!");
 		this->m_bNoUnload = true;
 		return false;
 	}
@@ -225,6 +225,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	if (m_bNoUnload)
 	{
 		m_bNoUnload = false;
+		Log(WARNING, true, "Failed to load plugin!");
 		MessageBox(hWnd, "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
 		return;
 	}
@@ -250,7 +251,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	}
 	catch (const std::exception& ex)
 	{
-		assert(0 && "Failed to fully unload!");
+		assert(false && "Failed to fully unload!");
 		Log(INFO, false, R"(Encountered error when unload plugin! :( Exception: "%s")", ex.what());
 		Log(ERRORR, false, "P2:MM failed to unload!\nGame has to be shutdown as possibly some other patches/hooks are still connected which can cause issues!");
 	}
