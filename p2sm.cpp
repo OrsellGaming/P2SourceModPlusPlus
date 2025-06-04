@@ -137,13 +137,20 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		Memory::ReplacePattern("vscript", "00 00 00 E0 51 B8 9E 3F", "9a 99 99 99 99 99 a9 3f");
 
 		// Increase the projected texture limit and disable the game auto-disabling others when there is more than one active. Thanks to \n and BetweenReality with help with these.
-		Log(INFO, true, "Patching max projected textures and auto disabling of projected textures...");
+		Log(INFO, true, "Patching max amount of projected textures at once and auto disabling of projected textures...");
 		// CEnvProjectedTexture::EnforceSingleProjectionRules
 		Memory::ReplacePattern("server", "8B F0 3B F3 0F 84 95 00 00 00", "E9 9D 00 00 00 84 95 00 00 00"); // Skip for loop jump and jump to function return.
 		
 		// CClientShadowMgr::CalculateRenderTargetsAndSizes
-		//Memory::ReplacePattern("client", "", ""); // Allow for higher resolution shadow maps without tools mode.
 		Memory::ReplacePattern("client", "F7 D8 1B C0 83 E0 07 40 5F", "B8 08 00 00 00 90 90 90 5F"); // Force the number of max projected texture to be 8.
+		Log(INFO, true, "Increasing shadow map resolution for projected textures...");
+		Memory::ReplacePattern("client", "0F 95 C3 89 8E", "0F 94 C3 89 8E"); // Allow for higher resolution shadow maps without tools mode.	
+
+		Log(INFO, true, "Patching all projected textures to have volumetrics...");
+		// CShadowMgr::DrawVolumetrics
+		// TODO: Make volumetric intensity customizable.
+		Memory::ReplacePattern("engine", "0F 85 47 0C 00 00 80 BF 10 02 00 00 00 0F 84 3A 0C 00 00", "0F 84 47 0C 00 00 80 BF 10 02 00 00 00 0F 85 3A 0C 00 00"); // Make volumetrics work for projected textures.
+
 		
 #else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
 #endif
