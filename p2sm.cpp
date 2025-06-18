@@ -309,7 +309,7 @@ void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity)
 {
 	// Make sure the r_drawscreenoverlay ConVar is enabled for connecting clients.
 	engineServer->ClientCommand(pEntity, "r_drawscreenoverlay 1");
-	Log(WARNING, true, "r_drawscreenoverlay set!");
+	Log(WARNING, true, "r_drawscreenoverlay enabled for client.");
 }
 
 //---------------------------------------------------------------------------------
