@@ -31,4 +31,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: p2sm
-        path: Release/p2sm.dll
+        path: Build/p2sm.dll
