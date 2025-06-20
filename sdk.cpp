@@ -7,7 +7,7 @@
 
 #include "sdk.hpp"
 
-#include "scanner.hpp"
+#include "memory.hpp"
 #include "p2sm.hpp"
 
 static ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");

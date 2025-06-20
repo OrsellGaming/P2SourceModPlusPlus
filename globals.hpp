@@ -15,11 +15,9 @@
 #include "public/steam/steamclientpublic.h"
 #include "irecipientfilter.h"
 
-#include "scanner.hpp"
+#include "memory.hpp"
 
 #include <comdef.h> 
-
-#include "memory.hpp"
 
 // Forward references for class types unable to be accessed directly.
 class CBasePlayer;

@@ -8,8 +8,8 @@
 #include "p2sm.hpp"
 #include "globals.hpp"
 #include "sdk.hpp"
-//#include "scanner.hpp" // Memory scanner
-#include "memory.hpp"
+#include "memory.hpp" // Memory scanner
+#include "scanner.hpp" // Memory scanner
 
 #include "cdll_int.h" // Client interfacing
 #include "eiface.h" // Server interfacing
