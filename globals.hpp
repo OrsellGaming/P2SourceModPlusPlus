@@ -15,7 +15,7 @@
 #include "public/steam/steamclientpublic.h"
 #include "irecipientfilter.h"
 
-#include "scanner.hpp"
+#include "memory.hpp"
 
 #include <comdef.h> 
 
@@ -174,7 +174,8 @@ inline int EDICTINDEX(const edict_t* pEdict)
 //---------------------------------------------------------------------------------
 inline int ENTINDEX(CBaseEntity* pEnt)
 {
-	static auto ENTINDEX_ = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scanner::Scan<void*>(SERVERDLL, "55 8B EC 8B 45 ?? 85 C0 74 ?? 8B 40 ?? 85 C0 74 ?? 8B 0D"));
+	static auto ENTINDEX_= reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(SERVERDLL, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
+	//static auto ENTINDEX_ = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(SERVERDLL, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
 	return ENTINDEX_(pEnt);
 }
 
@@ -224,7 +225,8 @@ inline const char* GetGameRootDir()
 //---------------------------------------------------------------------------------
 inline bool IsGameActive()
 {
-	const bool m_activeGame = **Memory::Scanner::Scan<bool**>(ENGINEDLL, "C6 05 ?? ?? ?? ?? ?? C6 05 ?? ?? ?? ?? ?? 0F B6 96", 2);
+	const bool m_activeGame = **Memory::Scan<bool**>(ENGINEDLL, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
+	//const bool m_activeGame = **Memory::Scan<bool**>(ENGINEDLL, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
 	return m_activeGame;
 }
 
@@ -233,6 +235,7 @@ inline bool IsGameActive()
 //---------------------------------------------------------------------------------
 inline bool IsGameShutdown()
 {
-	const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scanner::Scan<void*>(ENGINEDLL, "B8 05 00 00 00 39 05"))();
+	const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(ENGINEDLL, "B8 05 00 00 00 39 05"))();
+	//const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(ENGINEDLL, "B8 05 00 00 00 39 05"))();
 	return bIsGameShuttingDown;
 }
