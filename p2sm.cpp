@@ -138,6 +138,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		Memory::ReplacePattern("vscript", "00 00 00 E0 51 B8 9E 3F", "9a 99 99 99 99 99 a9 3f");
 
 		// Increase the projected texture limit and disable the game auto-disabling others when there is more than one active. Thanks to \n and BetweenReality with help with these.
+		//! Engine limit still exists though with a max of eight env_projectedtextures.
 		Log(INFO, true, "Patching max amount of projected textures at once and auto disabling of projected textures...");
 		// CEnvProjectedTexture::EnforceSingleProjectionRules
 		Memory::ReplacePattern("server", "8B F0 3B F3 0F 84 95 00 00 00", "E9 9D 00 00 00 84 95 00 00 00"); // Skip for loop jump and jump to function return.
@@ -155,7 +156,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		
 #else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
 #endif
-
+ 	
 #if _WIN32
 		// MinHook initialization and hooking.
 		Log(INFO, true, "Initializing MinHook and hooking functions...");
@@ -186,8 +187,9 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		// 	Memory::Scan<void*>(CLIENTDLL, "55 8B EC 8B 45 ? 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45"),
 		// 	&CWorkshopManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CWorkshopManager__CreateFileDownloadRequest_orig)
 		// );
-		MH_EnableHook(MH_ALL_HOOKS);
 		
+		MH_EnableHook(MH_ALL_HOOKS);
+
 #else // Linux Hooking. Due to the way this plugin is structured, it's currently not possible to compile this for Linux. Literally 1984 I know, but I don't have enough time or experience to figure it out by myself. One day.
 #endif // _WIN32
 

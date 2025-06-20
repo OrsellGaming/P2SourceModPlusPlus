@@ -42,7 +42,7 @@ bool __fastcall CPortal_Player__FlashlightTurnOn_hook(CPortal_Player* thisPtr,  
 	}
 	
 	CPortal_Player__SetFlashlightState(playerIndex, true);
-	// engineServer->EmitAmbientSound(playerIndex)
+	//engineServer-EmitAmbientSound>(playerIndex)
 	return true;
 }
 
@@ -190,6 +190,12 @@ HSCRIPT CBaseEntity__GetScriptInstance(CBaseEntity* entity)
 	return GetScriptInstance_(entity);
 }
 
+// TODO: Implement EmitSound
+// int CBaseEntity__EmitSound(CBaseEntity* entity, IRecipientFilter* filter, int iEntIndex, const char* soundName, const Vector* pOrigin, float soundTime)
+// {
+// 	static auto 
+// 		//55 8B EC 83 EC 4C 8B 0D
+// }
 
 ///			 CBasePlayer Class Functions				\\\
 
