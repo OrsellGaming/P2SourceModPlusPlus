@@ -15,6 +15,8 @@
 #include "eiface.h" // Server interfacing
 #include "minhook/include/MinHook.h" // MinHook
 
+#include "imgui.h"
+
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
 //---------------------------------------------------------------------------------
@@ -221,6 +223,13 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
+
+	Log(INFO, true, "Starting ImGUI...");
+	if (!ImGUI::Init())
+	{
+		assert(false && "Failed to initialize ImGui!");
+		Log(INFO, false, "Failed to initialize ImGui!");
+	}
 	
 	Log(INFO, false, "Loaded plugin! Yay! :D");
 	m_bPluginLoaded = true;
