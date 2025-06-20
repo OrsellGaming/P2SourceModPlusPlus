@@ -157,7 +157,6 @@
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="p2sm.cpp" />
-    <ClCompile Include="scanner.cpp" />
     <ClCompile Include="sdk.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,7 +164,6 @@
     <ClInclude Include="hook.hpp" />
     <ClInclude Include="memory.hpp" />
     <ClInclude Include="p2sm.hpp" />
-    <ClInclude Include="scanner.hpp" />
     <ClInclude Include="sdk.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

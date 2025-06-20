@@ -10,7 +10,9 @@
 #	define MAX_PATH 4096
 #endif
 
+#include <cassert>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 #define SERVERDLL "server.dll"
@@ -140,6 +142,11 @@ namespace Memory
 			result = Memory::FindAddress(start, end, pattern);
 			if (result)
 				result += offset;
+			if (!result)
+			{
+				assert(false && "Failed to find signature!");
+				throw std::runtime_error("Unable to find signature!");
+			}
 		}
 		return reinterpret_cast<T>(result);
 	}
