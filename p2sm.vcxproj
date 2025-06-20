@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="globals.cpp" />
+    <ClCompile Include="imgui.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="p2sm.cpp" />
     <ClCompile Include="scanner.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="globals.hpp" />
     <ClInclude Include="hook.hpp" />
+    <ClInclude Include="imgui.h" />
     <ClInclude Include="memory.hpp" />
     <ClInclude Include="p2sm.hpp" />
     <ClInclude Include="scanner.hpp" />
