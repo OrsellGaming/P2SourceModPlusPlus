@@ -8,14 +8,11 @@
 #include "p2sm.hpp"
 #include "globals.hpp"
 #include "sdk.hpp"
-#include "memory.hpp" // Memory scanner
-#include "scanner.hpp" // Memory scanner
+#include "utils/memory.hpp" // Memory scanner
+#include "utils/scanner.hpp" // Old memory scanner
 
 #include "cdll_int.h" // Client interfacing
 #include "eiface.h" // Server interfacing
-#include "minhook/include/MinHook.h" // MinHook
-
-#include "imgui.h"
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
@@ -223,7 +220,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
-
+	
 	Log(INFO, true, "Starting ImGUI...");
 	if (!ImGUI::Init())
 	{

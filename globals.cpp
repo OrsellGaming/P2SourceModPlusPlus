@@ -1,9 +1,10 @@
-//===========================================================================//
-//
-// Author: Orsell
-// Purpose: Global functions & variables used repeatedly throughout the plugin
-// 
-//===========================================================================//
+/*******************************************************************
+* @file   globals.cpp
+* @brief  Global functions & variables used repeatedly throughout the plugin.
+* @author Orsell
+* @date   03 2025
+*********************************************************************/
+
 #include "globals.hpp"
 
 #include "sdk.hpp"

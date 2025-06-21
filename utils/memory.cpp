@@ -1,10 +1,11 @@
+/*******************************************************************
+* @file   memory.cpp
+* @brief  Memory signature scanning and patching.
+* @author SAR Team
+*********************************************************************/
+
+#include "stdafx.hpp"
 #include "memory.hpp"
-
-#include <cstring>
-#include <memory>
-#include <vector>
-
-#include "../globals.hpp"
 
 #ifdef _WIN32
 // clang-format off
@@ -13,7 +14,6 @@
 #	include <psapi.h>
 // clang-format on
 #else
-#	include <cstdint>
 #	include <dlfcn.h>
 #	include <link.h>
 #	include <sys/uio.h>
@@ -346,12 +346,12 @@ bool Memory::Patch::Restore()
 	return true;
 }
 
-bool Memory::Patch::IsPatched()
+bool Memory::Patch::IsPatched() const
 {
 	return this->isPatched;
 }
 
-bool Memory::Patch::IsInit()
+bool Memory::Patch::IsInit() const
 {
 	return this->original != nullptr && this->patch != nullptr;
 }

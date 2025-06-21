@@ -1,10 +1,18 @@
+/*******************************************************************
+* @file   memory.cpp
+* @brief  Function hooking.
+* @author SAR Team
+*********************************************************************/
+
 #pragma once
+
+#ifndef HOOK_HPP
+#define HOOK_HPP
 
 #include "memory.hpp"
 
-#include <cstring>
-
-class Hook {
+class Hook
+{
 public:
 	template <typename T = void *>
 	Hook(T hook)
@@ -72,3 +80,5 @@ private:
 	bool locked;
 	uint8_t origCode[5];
 };
+
+#endif

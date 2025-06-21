@@ -1,7 +1,16 @@
+/*******************************************************************
+* @file   memory.h
+* @brief  Memory signature scanning and patching.
+* @author SAR Team
+*********************************************************************/
+
 #pragma once
+
+#ifndef MEMORY_HPP
+#define MEMORY_HPP
+
 #ifdef _WIN32
 // clang-format off
-#	include <windows.h>
 #	include <memoryapi.h>
 // clang-format on
 #else
@@ -10,15 +19,12 @@
 #	define MAX_PATH 4096
 #endif
 
-#include <cassert>
-#include <memory>
-#include <stdexcept>
-#include <vector>
 
 #define SERVERDLL "server.dll"
 #define ENGINEDLL "engine.dll"
 #define CLIENTDLL "client.dll"
-#define DIRECTX9DLL "shaderapidx9.dll"
+#define APIDX9 "shaderapidx9.dll"
+#define APIVULKAN "shaderapidx9.dll"
 
 namespace Memory
 {
@@ -42,25 +48,26 @@ namespace Memory
 
 	class Patch
 	{
+	public:
+		Patch() : location(0), original(nullptr), patch(nullptr), size(0), isPatched(false) {}
+		~Patch();
+		bool Execute();
+		bool Execute(uintptr_t location, unsigned char* bytes, size_t size);
+		template <size_t size>
+		bool Execute(const uintptr_t location_, unsigned char (&bytes)[size])
+		{
+			return Execute(location_, bytes, size);
+		}
+		bool Restore();
+		bool IsPatched() const;
+		bool IsInit() const;
+		
 	private:
 		uintptr_t location;
 		unsigned char* original;
 		unsigned char* patch;
 		size_t size;
 		bool isPatched;
-
-	public:
-		~Patch();
-		bool Execute();
-		bool Execute(uintptr_t location, unsigned char* bytes, size_t size);
-		template <size_t size>
-		bool Execute(uintptr_t location, unsigned char (&bytes)[size])
-		{
-			return Execute(location, bytes, size);
-		}
-		bool Restore();
-		bool IsPatched();
-		bool IsInit();
 	};
 
 	struct Pattern
@@ -142,11 +149,11 @@ namespace Memory
 			result = Memory::FindAddress(start, end, pattern);
 			if (result)
 				result += offset;
-			if (!result)
-			{
-				assert(false && "Failed to find signature!");
-				throw std::runtime_error("Unable to find signature!");
-			}
+			// if (!result)
+			// {
+			// 	assert(false && "Failed to find signature!");
+			// 	throw std::runtime_error("Unable to find signature!");
+			// }
 		}
 		return reinterpret_cast<T>(result);
 	}
@@ -164,3 +171,5 @@ namespace Memory
 #endif
 	}
 }  // namespace Memory
+
+#endif

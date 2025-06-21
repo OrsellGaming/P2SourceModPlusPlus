@@ -14,12 +14,6 @@
 // #define ENGINEDLL Memory::Modules::Get("engine")
 // #define CLIENTDLL Memory::Modules::Get("client")
 
-#include <span>
-#include <string>
-#include <vector>
-#include <memory>
-#include <unordered_map>
-
 namespace Memory {
 	class ScannerImplementation {
 	public:

@@ -5,20 +5,15 @@
 // 
 //===========================================================================//
 
+#include "stdafx.hpp"
 #include "scanner.hpp"
 
 #ifdef _WIN32
-#include <Windows.h>
 #include <Psapi.h>
 #else
 #endif
 
 #include <immintrin.h>
-#include <stdexcept>
-#include <sstream>
-#include <filesystem>
-
-#include "globals.hpp"
 
 namespace Memory {
 #ifndef _WIN32
