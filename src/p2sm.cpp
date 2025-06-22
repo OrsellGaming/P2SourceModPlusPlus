@@ -5,11 +5,18 @@
 // 
 //===========================================================================//
 
+#include "stdafx.hpp"
 #include "p2sm.hpp"
+
+#include "utils/memory.hpp" // SAR memory scanner
+#include "utils/scanner.hpp" // Old memory scanner
+#include "utils/hook.hpp"
+#include "utils/loggingsystem.hpp"
+
+#include "modules/gui.hpp"
+
 #include "globals.hpp"
 #include "sdk.hpp"
-#include "utils/memory.hpp" // Memory scanner
-#include "utils/scanner.hpp" // Old memory scanner
 
 #include "cdll_int.h" // Client interfacing
 #include "eiface.h" // Server interfacing
@@ -24,7 +31,6 @@ EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, I
 //---------------------------------------------------------------------------------
 CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 {
-	hWnd = nullptr;
 	this->m_bPluginLoaded = false;
 	this->m_bNoUnload = false;	  // If we fail to load, we don't want to run anything on Unload() to get what the error was.
 }
@@ -66,8 +72,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	Log(INFO, false, "Loading plugin...");
 
 	Log(INFO, true, "Grabbing game window handle...");
-	hWnd = FindWindow("Valve001", nullptr);
-	if (!hWnd)
+	if (!WindowsGUI::GetWindowHandle())
 		Log(WARNING, false, "Failed to find game window!");
 
 	Log(INFO, true, "Connecting tier libraries...");
@@ -164,26 +169,45 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		// Hook the death think function so players can be spawned immediate when the p2sm_instantrespawn ConVar is on.
 		Log(INFO, true, "Hooking CPortal_Player::PlayerDeathThink...");
 		MH_CreateHook(
-			Memory::Scan<void*>(SERVERDLL, "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B ? 89 6C 24 ? 8B EC A1 ? ? ? ? F3 0F 10 40 ? F3 0F 58 05 ? ? ? ? 83 EC 28 56 57 6A 00 51 8B F1 F3 0F 11 04 24 E8 ? ? ? ? 6A 03"),
+			Memory::Scan<void*>(SERVER, "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B ? 89 6C 24 ? 8B EC A1 ? ? ? ? F3 0F 10 40 ? F3 0F 58 05 ? ? ? ? 83 EC 28 56 57 6A 00 51 8B F1 F3 0F 11 04 24 E8 ? ? ? ? 6A 03"),
 			&CPortal_Player__PlayerDeathThink_hook, reinterpret_cast<void**>(&CPortal_Player__PlayerDeathThink_orig)
 		);
 
 		// Hook flashlight functions.
 		Log(INFO, true, "Hooking CPortal_Player::FlashlightTurnOn...");
 		MH_CreateHook(
-			Memory::Scan<void*>(SERVERDLL, "A1 ? ? ? ? 8B 50 ? 83 7A ? ? 75"),
+			Memory::Scan<void*>(SERVER, "A1 ? ? ? ? 8B 50 ? 83 7A ? ? 75"),
 			&CPortal_Player__FlashlightTurnOn_hook, reinterpret_cast<void**>(&CPortal_Player__FlashlightTurnOn_orig)
 		);
 		Log(INFO, true, "Hooking CPortal_Player::FlashlightTurnOff...");
 		MH_CreateHook(
-			Memory::Scan<void*>(SERVERDLL, "A1 ? ? ? ? 8B 50 ? 83 7A ? ? 74 ? 8B 81"),
+			Memory::Scan<void*>(SERVER, "A1 ? ? ? ? 8B 50 ? 83 7A ? ? 74 ? 8B 81"),
 			&CPortal_Player__FlashlightTurnOff_hook, reinterpret_cast<void**>(&CPortal_Player__FlashlightTurnOff_orig)
 		);
 		
 		// Stop workshop map downloads by not returning false on the download request.
-		// Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
+		//!! TEMP TO FIX ORIGINAL HOOK THAT SUDDENLY BROKE
+		MH_CreateHook(
+			Memory::Scan<void*>(CLIENT, "55 8B EC 81 EC 48 01 00 00 57"),
+			&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
+		);
+
 		// MH_CreateHook(
-		// 	Memory::Scan<void*>(CLIENTDLL, "55 8B EC 8B 45 ? 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45"),
+		// 	Memory::Scanner::Scan(CLIENT, "55 8B EC 51 56 6A 20 8B F1"),
+		// 	&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
+		// );
+		
+		//
+		// Stop workshop map downloads by not returning false on the download request.
+		// Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
+		// MH_CreateHook( //55 8B EC 8B 45 ?? 83 EC 14 53 57
+		// 	Memory::Scanner::Scan(CLIENT, "55 8B EC 8B 45 ?? 83 EC 14 53 57"),
+		// 	&CUGCFileRequestManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__CreateFileDownloadRequest_orig)
+		// );
+
+		// Log(INFO, true, "Hooking CEnvProjectedTexture::EnforceSingleProjectionRules...");
+		// MH_CreateHook(
+		// 	Memory::Scan<void*>(CLIENT, "55 8B EC 8B 45 ? 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45"),
 		// 	&CWorkshopManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CWorkshopManager__CreateFileDownloadRequest_orig)
 		// );
 		
@@ -222,7 +246,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 	
 	Log(INFO, true, "Starting ImGUI...");
-	if (!ImGUI::Init())
+	if (!ImGui::Init())
 	{
 		assert(false && "Failed to initialize ImGui!");
 		Log(INFO, false, "Failed to initialize ImGui!");
@@ -244,7 +268,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	{
 		m_bNoUnload = false;
 		Log(WARNING, true, "Failed to load plugin!");
-		MessageBox(hWnd, "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
+		MessageBox(WindowsGUI::GetWindowHandle(), "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
 		return;
 	}
 
@@ -271,7 +295,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	{
 		assert(false && "Failed to fully unload!");
 		Log(INFO, false, R"(Encountered error when unload plugin! :( Exception: "%s")", ex.what());
-		Log(ERRORR, false, "P2:MM failed to unload!\nGame has to be shutdown as possibly some other patches/hooks are still connected which can cause issues!");
+		Log(ERROR, false, "P2:MM failed to unload!\nGame has to be shutdown as possibly some other patches/hooks are still connected which can cause issues!");
 	}
 
 	// Turn every ConVar/ConCommand back to normal.
