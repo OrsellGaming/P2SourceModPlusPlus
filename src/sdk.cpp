@@ -5,12 +5,13 @@
 // 
 //===========================================================================//
 
+#include "stdafx.hpp"
 #include "sdk.hpp"
 
+#include "utils/loggingsystem.hpp"
 #include "memory.hpp"
+#include "commands.hpp"
 #include "p2sm.hpp"
-
-static ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");
 
 //---------------------------------------------------------------------------------
 // Purpose: For hooking onto the function that is called before a player respawns to skip the delay
@@ -61,37 +62,15 @@ void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,
 	return;
 }
 
-//---------------------------------------------------------------------------------
-// Purpose: Stop the UGC manager from automatically download workshop maps.
-//			Simply do nothing so that nothing gets updated and therefore nothing gets downloaded.
-//			!WARNING! This makes the game extremely unstable if the plugin is unloaded while the game is running.
-//---------------------------------------------------------------------------------
-bool (__fastcall* CWorkshopManager__CreateFileDownloadRequest_orig)(CWorkshopManager* thisPtr, void* edx,
-	uint64 hFileHandle, 
-	uint64 fileID,
-	const char *lpszDirectory, 
-	const char *lpszFilename, 
-	uint32 unPriority, 
-	uint32 unTimeLastUpdated, 
-	bool bForceUpdate);
-bool  __fastcall CWorkshopManager__CreateFileDownloadRequest_hook(CWorkshopManager* thisPtr, void* edx,
-	uint64 hFileHandle, 
-	uint64 fileID,
-	const char *lpszDirectory, 
-	const char *lpszFilename, 
-	uint32 unPriority, 
-	uint32 unTimeLastUpdated, 
-	bool bForceUpdate)
-{
-	return false;
-}
+// TODO: Replace unstable hook with byte patch.
+/**
+ * @brief Stop the UGC manager from automatically download workshop maps. Simply return doing nothing so that nothing gets updated and therefore nothing gets downloaded.
+ * @warning This makes the game extremely unstable if the plugin is unloaded while the game is running.
+ */
+void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisPtr);
+void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr) { }
 
-//---------------------------------------------------------------------------------
-// Purpose: Stop engine from disabling any other env_projectedtexture entities when one turns on.
-//			! Engine limit still exists though with a max of eight env_projectedtextures.
-//---------------------------------------------------------------------------------
-// void (__fastcall* CEnvProjectedTexture__EnforceSingleProjectionRules_orig)(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement);
-// void  __fastcall  CEnvProjectedTexture__EnforceSingleProjectionRules_hook(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement) { }
+}
 
 ///			 Interfaced UTIL Functions			\\\
 

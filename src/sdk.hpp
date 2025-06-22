@@ -38,26 +38,9 @@ extern void (__fastcall* CPortal_Player__FlashlightTurnOff_orig)(CPortal_Player*
 void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,  void* edx, bool playSound);
 
 // Workshop download stopping hooks.
-extern bool (__fastcall* CWorkshopManager__CreateFileDownloadRequest_orig)(CWorkshopManager* thisPtr, void* edx,
-	uint64 hFileHandle, 
-	uint64 fileID,
-	const char *lpszDirectory, 
-	const char *lpszFilename, 
-	uint32 unPriority, 
-	uint32 unTimeLastUpdated, 
-	bool bForceUpdate);
-bool  __fastcall CWorkshopManager__CreateFileDownloadRequest_hook(CWorkshopManager* thisPtr, void* edx,
-	uint64 hFileHandle, 
-	uint64 fileID,
-	const char *lpszDirectory, 
-	const char *lpszFilename, 
-	uint32 unPriority, 
-	uint32 unTimeLastUpdated, 
-	bool bForceUpdate);
-
-// env_projectedtexture enforcement function hook.
-// extern void (__fastcall* CEnvProjectedTexture__EnforceSingleProjectionRules_orig)(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement);
-// void  __fastcall CEnvProjectedTexture__EnforceSingleProjectionRules_hook(CEnvProjectedTexture* thisPtr, void* edx, bool bWarnOnEnforcement);
+class CUGCFileRequestManager;
+extern void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisptr);
+void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr);
 
 //---------------------------------------------------------------------------------
 // Interfaced game functions.
