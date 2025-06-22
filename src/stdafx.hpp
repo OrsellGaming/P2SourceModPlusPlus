@@ -15,6 +15,7 @@
 #include <windows.h>
 #include <winerror.h>
 #endif
+
 #include <memory>
 #include <cstdlib> /* NULL, malloc/free */
 #include <cstdio> /* printf, fgets */
