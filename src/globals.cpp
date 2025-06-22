@@ -5,10 +5,12 @@
 * @date   03 2025
 *********************************************************************/
 
+#include "stdafx.hpp"
 #include "globals.hpp"
 
 #include "sdk.hpp"
 #include "p2sm.hpp"
+#include "utils/loggingsystem.hpp"
 
 //---------------------------------------------------------------------------------
 // Interfaces from the engine.
@@ -22,46 +24,6 @@ IPlayerInfoManager*		g_pPlayerInfoManager = nullptr;
 // IGameEventManager2*		g_pGameEventManager_;
 //IServerPluginHelpers*	g_pPluginHelpers = nullptr;
 // IFileSystem*				g_pFileSystem;
-
-static ConVar p2sm_developer("p2sm_developer", "0", FCVAR_NONE, "Enable for developer messages.");
-
-//---------------------------------------------------------------------------------
-// Purpose: Logging for the plugin by adding a prefix and line break.
-// Max character limit of 1024 characters.	
-// level:	0 = Msg/DevMsg, 1 = Warning/DevWarning, 2 = Error WILL STOP ENGINE!
-//---------------------------------------------------------------------------------
-void Log(const LogLevel level, const bool dev, const char* pMsgFormat, ...)
-{
-	if (dev && !p2sm_developer.GetBool() && level != ERRORR) return; // Stop developer messages when p2mm_developer isn't enabled.
-
-	// Take our log message and format any arguments it has into the message.
-	va_list argPtr;
-	char szFormattedText[1024] = { 0 };
-	va_start(argPtr, pMsgFormat);
-	V_vsnprintf(szFormattedText, sizeof(szFormattedText), pMsgFormat, argPtr);
-	va_end(argPtr);
-
-	// Add a header to the log message.
-	char completeMsg[1024] = { 0 };
-	V_snprintf(completeMsg, sizeof(completeMsg), "(P2SourceMod++ PLUGIN): %s\n", szFormattedText);
-
-	switch (level)
-	{
-	case (INFO):
-		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
-		return;
-	case (WARNING):
-		Warning(completeMsg);
-		return;
-	case (ERRORR):
-		Warning("(P2SourceMod++ PLUGIN):\n!!!ERROR ERROR ERROR!!!:\nA FATAL ERROR OCCURED WITH THE ENGINE:\n%s", completeMsg);
-		Error(completeMsg);
-		return;
-	default:
-		Warning("(P2SourceMod++ PLUGIN): Log level set outside of INFO-ERRORR, \"%i\". Defaulting to level INFO.\n", level);
-		ConColorMsg(P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR, completeMsg);
-	}
-}
 
 //---------------------------------------------------------------------------------
 // Purpose: Get the player's entity index by their userid.

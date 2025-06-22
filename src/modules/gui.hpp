@@ -1,7 +1,6 @@
-
-/*******************************************************************
-* @file   gui.h
-* @brief  GUI handling operations: ImGui, VGUI, and Windows Window APIs.
+/*********************************************************************
+* @file   gui.hpp
+* @brief  GUI related functionality. Windows Window APIs, ImGUI, VGUI.  
 * @author Orsell
 * @date   06 2025
 *********************************************************************/
@@ -17,18 +16,39 @@
 #error "Linux needs to implemented!"
 #endif
 
-class GUI
+/**
+ * @brief Windows GUI functions and variables.
+ */
+class WindowsGUI
 {
-public: // MARK: GUI Public Members
+public: // MARK: WindowsGUI Public Members
 #pragma region Public Members
+    static HWND GetWindowHandle();
 #pragma endregion
 
-private: // MARK: GUI Private Members
+private: // MARK: WindowsGUI Private Members
 #pragma region Private Members
-    static HWND g_hWnd;
+    static HWND hWnd;
 #pragma endregion
 };
 
+/**
+ * @brief Valve GUI functions and variables.
+ */
+class VGUI
+{
+public: // MARK: VGUI Public Members
+#pragma region Public Members
+#pragma endregion
+
+private: // MARK: VGUI Private Members
+#pragma region Private Members
+#pragma endregion
+};
+
+/**
+ * @brief Dear ImGUI functions and variables.
+ */
 class ImGui
 {
 public: // MARK: ImGui Public Members
@@ -45,7 +65,7 @@ private: // MARK: ImGui Private Members
 #ifdef _WIN32
     static IDirect3DDevice9* g_pDXDevice;
 #else
-    // Implement SDL and Vulkan 
+    // TODO: Implement SDL and Vulkan devices
 #endif
 
     static void* present;

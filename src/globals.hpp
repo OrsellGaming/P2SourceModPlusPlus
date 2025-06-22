@@ -27,8 +27,7 @@ class CWorkshopManager;
 class CEnvProjectedTexture;
 
 // Color macros for console printing.
-#define P2SMPLUSPLUS_PLUGIN_VERSION "1.1.0" // Update this when a new version of the plugin is released.
-#define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
+#define P2SMPLUSPLUS_PLUGIN_VERSION "1.2.0 PREVIEW" // Update this when a new version of the plugin is released.
 
 #define CUR_MAPFILE_NAME STRING(g_pGlobals->mapname)
 #define MAX_PLAYERS g_pGlobals->maxClients
@@ -47,15 +46,6 @@ class CEnvProjectedTexture;
 // Macro to iterate through all players on the server.
 #define FOR_ALL_PLAYERS(i) \
 	for (int (i) = 1; (i) <= CURPLAYERCOUNT(); (i)++)
-
-// Log levels for all log functions.
-typedef enum LogLevels : std::uint8_t
-{
-	INFO = 0,
-	WARNING,
-	ERRORR // Have to use ERRORR because of macro by the Windows API. Yeah I know, I hate it too.
-} LogLevel;
-
 
 // Player team enum.
 enum : std::uint8_t
@@ -78,8 +68,7 @@ enum : std::uint8_t
 //---------------------------------------------------------------------------------
 // Public variables.
 //---------------------------------------------------------------------------------
-// Windows API Window Handle
-static HWND hWnd;
+
 
 //---------------------------------------------------------------------------------
 // Interfaces from the engine.
@@ -108,9 +97,6 @@ bool				IsBot(int playerIndex);
 int					GetBotCount();
 int					CURPLAYERCOUNT();
 HSCRIPT				INDEXHANDLE(int iEdictNum);
-
-// Logging function.
-void Log(LogLevel level, bool dev, const char* pMsgFormat, ...);
 
 //---------------------------------------------------------------------------------
 // Player recipient filter.
