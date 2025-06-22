@@ -8,6 +8,9 @@
 #include "stdafx.hpp"
 #include "commands.hpp"
 
+#include "utils/loggingsystem.hpp"
+#include "utils/memory.hpp"
+
 //---------------------------------------------------------------------------------
 // Debug P2:SM++ ConVars | Self-explanatory.
 //---------------------------------------------------------------------------------
@@ -16,4 +19,5 @@ ConVar p2sm_developer("p2sm_developer", "0", FCVAR_NONE, "Enable for developer m
 //---------------------------------------------------------------------------------
 // UTIL P2:SM++ ConVars | ConVars the host can change.
 //---------------------------------------------------------------------------------
-ConVar p2sm_instantrespawn("p2sm_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");
+ConVar p2sm_multiplayer_instantrespawn("p2sm_multiplayer_instantrespawn", "0", FCVAR_NONE, "Whether respawning should be instant or not in multiplayer.");
+
