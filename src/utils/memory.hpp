@@ -19,12 +19,12 @@
 #	define MAX_PATH 4096
 #endif
 
-
-#define SERVERDLL "server.dll"
-#define ENGINEDLL "engine.dll"
-#define CLIENTDLL "client.dll"
-#define APIDX9 "shaderapidx9.dll"
-#define APIVULKAN "shaderapidx9.dll"
+// Module file name macros.
+#define SERVER		"server.dll"
+#define ENGINE		"engine.dll"
+#define CLIENT		"client.dll"
+#define APIDX9		"shaderapidx9.dll"
+#define APIVULKAN	"shaderapidx9.dll"
 
 namespace Memory
 {
@@ -123,7 +123,7 @@ namespace Memory
 	}
 	template <typename T = void*>
 	void Deref(uintptr_t source, T* destination)
-{
+	{
 		*destination = Memory::Deref<T>(source);
 	}
 	template <typename T = void *>

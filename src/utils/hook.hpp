@@ -10,6 +10,7 @@
 #define HOOK_HPP
 
 #include "memory.hpp"
+#include "include/MinHook.h"
 
 class Hook
 {
@@ -26,9 +27,9 @@ public:
 	~Hook() = default;
 
 	template <typename T = void *>
-	void SetFunc(T func, const bool enable = true)
+	void SetFunc(T function, const bool enable = true)
 	{
-		this->func = static_cast<void*>(func);
+		this->func = static_cast<void*>(function);
 		Memory::UnProtect(this->func, 5);
 		if (enable)
 			this->Enable();
@@ -63,8 +64,8 @@ public:
 
 	static void DisableAll()
 	{
-		for (Hook* h : Hook::GetHooks())
-			h->Disable(true);
+		for (Hook* hook : Hook::GetHooks())
+			hook->Disable(true);
 	}
 
 	static std::vector<Hook*>& GetHooks()
@@ -78,7 +79,7 @@ private:
 	void* hook;
 	bool enabled;
 	bool locked;
-	uint8_t origCode[5];
+	std::uint8_t origCode[5];
 };
 
 #endif

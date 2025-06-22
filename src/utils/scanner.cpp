@@ -15,9 +15,12 @@
 
 #include <immintrin.h>
 
+#include "utils/loggingsystem.hpp"
+
 namespace Memory {
 #ifndef _WIN32
-	inline void __cpuidex(int cpuid[4], int function, int subleaf) {
+	inline void __cpuidex(int cpuid[4], int function, int subleaf)
+	{
 		asm volatile("cpuid"
 			: "=a" (cpuid[0]),
 			"=b" (cpuid[1]),
@@ -28,14 +31,16 @@ namespace Memory {
 	}
 #endif // _WIN32
 
-	enum MaskState : uint8_t {
+	enum MaskState : uint8_t
+	{
 		MASK_EMPTY = 0x00,
 		MASK_FULL = 0xFF,
 	};
 
 	class ScanData {
 	public:
-		ScanData(std::string patternString) : locatorFirst(0), locatorLast(0) {
+		ScanData(const std::string& patternString) : locatorFirst(0), locatorLast(0)
+		{
 			std::istringstream patternStream(patternString);
 			std::string patternByte;
 
