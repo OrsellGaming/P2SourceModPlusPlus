@@ -8,8 +8,9 @@
 #include "stdafx.hpp"   
 #include "utils/loggingsystem.hpp"
 
+#include "tier0/dbg.h"
+
 #include "commands.hpp"
-#include ""
 
 /**
  * @brief Logging for the plugin by adding a prefix and line break.
