@@ -282,11 +282,11 @@ bool Memory::Patch::Execute()
 	return ret;
 }
 
-bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, size_t size)
+bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, const size_t size_)
 {
 	if (this->isPatched) return true; // already executed
 	this->location = location;
-	this->size = size;
+	this->size = size_;
 	if (this->original)
 	{
 		delete[] this->original;
@@ -303,7 +303,7 @@ bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, size_t siz
 		this->patch = nullptr;
 	}
 	this->patch = new unsigned char[this->size];
-	memcpy(this->patch, bytes, size);
+	memcpy(this->patch, bytes, size_);
 
 #ifdef _WIN32
 	for (size_t i = 0; i < this->size; ++i)
