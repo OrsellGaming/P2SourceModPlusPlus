@@ -1,7 +1,7 @@
 /*******************************************************************
 * @file   cbaseentity.h
 * @brief  CBaseEntity class recreation.
-* @author Orsell/Valve
+* @author Orsell, Nanoman2525, Nullderef
 * @date   06 2025
 *********************************************************************/
 
