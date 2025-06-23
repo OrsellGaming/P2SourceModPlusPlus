@@ -23,6 +23,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\modules\cbaseplayer.cpp" />
     <ClCompile Include="src\modules\gui.cpp">
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -309,6 +310,7 @@
     <ClInclude Include="src\commands.hpp" />
     <ClInclude Include="src\globals.hpp" />
     <ClInclude Include="src\modules\cbaseentity.h" />
+    <ClInclude Include="src\modules\cbaseplayer.h" />
     <ClInclude Include="src\modules\gui.hpp" />
     <ClInclude Include="src\p2sm.hpp" />
     <ClInclude Include="src\sdk.hpp" />
@@ -384,7 +386,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>include;include\common;include\engine;include\public;include\public\tier0;include\public\tier1;lib;lib\common;lib\minhook;lib\minhook\include;lib\public;lib\toml;src;src\utils;src\modules</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\common;include\engine;include\public;include\public\tier0;include\public\tier1;lib;lib\common;lib\minhook;lib\minhook\include;lib\public;lib\toml;src;src\modules;src\utils</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>VPC;RAD_TELEMETRY_DISABLED;_HAS_ITERATOR_DEBUGGING=0;WIN32;_WIN32;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_MSC_VER_MISMATCH;%(PreprocessorDefinitions);COMPILER_MSVC32;COMPILER_MSVC;_DLL_EXT=.dll;DLLNAME=p2sm;BINK_VIDEO;AVI_VIDEO;WMV_VIDEO;DEV_BUILD;FRAME_POINTER_OMISSION_DISABLED;_MBCS;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=HL2MP;SOURCE1=1;VPCGAME=hl2mp</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
@@ -409,6 +411,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
@@ -451,7 +454,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
