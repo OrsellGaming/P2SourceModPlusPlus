@@ -10,6 +10,7 @@
 
 #include "utils/loggingsystem.hpp"
 #include "utils/memory.hpp"
+#include "utils/scanner.hpp"
 
 //---------------------------------------------------------------------------------
 // Debug P2:SM++ ConVars | Self-explanatory.

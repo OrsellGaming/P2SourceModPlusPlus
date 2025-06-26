@@ -18,6 +18,6 @@ extern ConVar p2sm_developer;
 //---------------------------------------------------------------------------------
 // UTIL P2:SM++ ConVars | ConVars the host can change.
 //---------------------------------------------------------------------------------
-extern ConVar p2sm_instantrespawn;
+extern ConVar p2sm_multiplayer_instantrespawn;
 
 #endif
