@@ -6,11 +6,9 @@
 *********************************************************************/
 
 #include "stdafx.hpp"
-#include "modules/utils.h"
+#include "utils.hpp"
 
-#include "utils/loggingsystem.hpp"
-
-#include "modules/cbaseentity.h"
+#include "modules/cbaseentity.hpp"
 
 #include "globals.hpp"
 
@@ -324,7 +322,7 @@ edict_t* Utils::IndexToEdict(const int entityIndex)
  * @brief Returns the current game directory. Ex. "portal2"
  * @return The current game directory.
  */
-inline const char* Utils::GetGameMainDir()
+const char* Utils::GetGameMainDir()
 {
 	return CommandLine()->ParmValue("-game", CommandLine()->ParmValue("-defaultgamedir", "portal2"));
 }
@@ -351,7 +349,7 @@ const char* Utils::GetGameRootDir()
  * @brief Check if a game session is running.
  * @return Returns true if a game session is running.
  */
-inline bool Utils::IsGameActive()
+bool Utils::IsGameActive()
 {
 	const bool m_activeGame = **Memory::Scan<bool**>(MODULE_ENGINE, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
 	return m_activeGame;
@@ -361,7 +359,7 @@ inline bool Utils::IsGameActive()
  * @brief Check if the game session is shutdown or is in the process of shutting down.
  * @return Returns true if a game session is shutting down or has been shutdown.
  */
-inline bool Utils::IsGameShutdown()
+bool Utils::IsGameShutdown()
 {
 	const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(MODULE_ENGINE, "B8 05 00 00 00 39 05"))();
 	return bIsGameShuttingDown;
@@ -372,7 +370,7 @@ inline bool Utils::IsGameShutdown()
  * @param pEntity Pointer to entity.
  * @return Entity index of entity.
  */
-inline int Utils::EntityIndex(CBaseEntity* pEntity)
+int Utils::EntityIndex(CBaseEntity* pEntity)
 {
 	static auto entIndex = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
 	return entIndex(pEntity);

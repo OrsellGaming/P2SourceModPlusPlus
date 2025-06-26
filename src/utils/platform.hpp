@@ -5,6 +5,10 @@
 *********************************************************************/
 
 #pragma once
+
+#ifndef PLATFORM_HPP
+#define PLATFORM_HPP
+
 #ifdef _WIN32
 #	include "minhook/include/MinHook.h"
 #endif
@@ -111,4 +115,6 @@ namespace {
 		type __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #	define DETOUR_B(name, ...) \
 		int __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
+#endif
+
 #endif

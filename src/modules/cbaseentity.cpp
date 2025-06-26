@@ -6,13 +6,11 @@
 *********************************************************************/
 
 #include "stdafx.hpp"
-#include "modules/cbaseentity.h"
+#include "modules/cbaseentity.hpp"
 
-#include "modules/cbaseplayer.h"
+#include "modules/cbaseplayer.hpp"
 
-#include "utils/memory.hpp"
-#include "utils/loggingsystem.hpp"
-
+#include "utils.hpp"
 #include "globals.hpp"
 
 #include "vscript/ivscript.h"

@@ -6,7 +6,7 @@
 //===========================================================================//
 
 #include "stdafx.hpp"
-#include "scanner.hpp"
+#include "utils/scanner.hpp"
 
 #ifdef _WIN32
 #include <Psapi.h>
@@ -400,7 +400,7 @@ namespace Memory {
 
 	void ReplacePattern(const std::string& targetModule, const std::string& patternBytes, const std::string& replaceWith)
 	{
-		void* addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(targetModule), patternBytes);
+		const auto addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(targetModule), patternBytes);
 		if (!addr)
 		{
 			Log(WARNING, false, "Failed to replace pattern! Turn on p2sm_developer for more info...");

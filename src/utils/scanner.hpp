@@ -10,10 +10,6 @@
 #ifndef SCANNER_HPP
 #define SCANNER_HPP
 
-// #define SERVER Memory::Modules::Get("server")
-// #define ENGINE Memory::Modules::Get("engine")
-// #define CLIENT Memory::Modules::Get("client")
-
 namespace Memory {
 	class ScannerImplementation
 	{
@@ -27,12 +23,12 @@ namespace Memory {
 	public:
 		template<typename T = void*> static T Scan(std::span<uint8_t> region, std::string pattern, int offset = 0)
 		{
-			return reinterpret_cast<T>(Scanner::Implementation().get()->Scan(region, pattern, offset));
+			return reinterpret_cast<T>(Scanner::Implementation()->Scan(region, std::move(pattern), offset));
 		}
 
-		static std::vector<uintptr_t> ScanMultiple(std::span<uint8_t> region, std::string pattern, int offset = 0)
+		static std::vector<uintptr_t> ScanMultiple(std::span<uint8_t> region, const std::string& pattern, int offset = 0)
 		{
-			return Scanner::Implementation().get()->ScanMultiple(region, pattern, offset);
+			return Scanner::Implementation()->ScanMultiple(region, pattern, offset);
 		}
 
 	private:

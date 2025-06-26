@@ -5,7 +5,7 @@
 *********************************************************************/
 
 #include "stdafx.hpp"
-#include "memory.hpp"
+#include "utils/memory.hpp"
 
 #ifdef _WIN32
 // clang-format off

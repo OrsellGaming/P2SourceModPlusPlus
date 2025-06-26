@@ -10,7 +10,10 @@
 #define HOOK_HPP
 
 #include "memory.hpp"
-#include "include/MinHook.h"
+
+#ifdef _WIN32
+#include "minhook/include/MinHook.h"
+#endif
 
 class Hook
 {

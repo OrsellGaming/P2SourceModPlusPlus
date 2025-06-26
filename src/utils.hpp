@@ -1,9 +1,17 @@
 /*******************************************************************
-* @file   utils.h
+* @file   utils.hpp
 * @brief  Util functions.
-* @author Orsell, Nanoman2525, Nullderef
+* @author Orsell, Nanoman2525, Nullderef, SAR Team
 * @date   06 2025
 *********************************************************************/
+
+#pragma once
+
+#include "utils/hook.hpp"
+#include "utils/loggingsystem.hpp"
+#include "utils/memory.hpp" // SAR memory scanner
+#include "utils/platform.hpp"
+#include "utils/scanner.hpp" // Old memory scanner
 
 #ifndef UTILS_HPP
 #define UTILS_HPP
@@ -13,6 +21,24 @@ class CBaseEntity;
 class CBasePlayer;
 struct edict_t;
 typedef struct HSCRIPT__* HSCRIPT;
+
+// Macros from the Utils.hpp from SAR --------------
+#define REDECL(name) \
+	decltype(name) name
+
+#define SAFE_DELETE(ptr) \
+if (ptr)				 \
+{						 \
+	delete (ptr);        \
+	(ptr) = nullptr;     \
+}
+
+#if _WIN32
+#	define SNORE_MEMEMEME(ms) Sleep(ms)
+#else
+#	define SNORE_MEMEMEME(ms) usleep((ms) * 1000)
+#endif
+// ----------------------------------------------==
 
 // Utils::HudMessage message parameters struct. Based on the one from Valve's util.h.
 // See Valve Developer Community for game_text to see which field does what:
@@ -58,11 +84,11 @@ namespace Utils
     void         SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, bool fireTriggers);
 	int			 EdictIndex(const edict_t* pEdict);
 	edict_t*	 IndexToEdict(const int entityIndex);
-	inline const char* GetGameMainDir();
+	const char*  GetGameMainDir();
 	const char*	 GetGameRootDir();
-	inline bool  IsGameActive();
-	inline bool  IsGameShutdown();
-	inline int	 EntityIndex(CBaseEntity* pEntity);
+	bool		 IsGameActive();
+	bool		 IsGameShutdown();
+	int			 EntityIndex(CBaseEntity* pEntity);
 }
 
 /**

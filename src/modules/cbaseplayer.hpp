@@ -1,11 +1,14 @@
 /*******************************************************************
-* @file   cbaseplayer.h
+* @file   cbaseplayer.hpp
 * @brief  CBasePlayer class recreation.
 * @author Orsell
 * @date   06 2025
 *********************************************************************/
 
 #pragma once
+
+#ifndef CBASEPLAYER_HPP
+#define CBASEPLAYER_HPP
 
 class KeyValues;
 
@@ -22,3 +25,5 @@ private: // MARK: CBasePlayer Private Members
 #pragma region Private Members
 #pragma endregion
 };
+
+#endif
