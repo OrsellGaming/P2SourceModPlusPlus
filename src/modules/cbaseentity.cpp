@@ -27,7 +27,7 @@ void CBaseEntity::RemoveEntity(CBaseEntity* pEntity)
     if (!pEntity)
         return;
     
-    static auto removeEntity = reinterpret_cast<void (__cdecl*)(void*)>(Memory::Scan<void*>(SERVER, "55 8B EC 57 8B 7D 08 85 FF 74 72"));
+    static auto removeEntity = reinterpret_cast<void (__cdecl*)(void*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 57 8B 7D 08 85 FF 74 72"));
     removeEntity((reinterpret_cast<IServerEntity*>(pEntity)->GetNetworkable()));
 }
 
@@ -41,7 +41,7 @@ HSCRIPT CBaseEntity::GetScriptScope(CBaseEntity* pEntity)
     if (!pEntity)
         return nullptr;
 
-    return *reinterpret_cast<HSCRIPT*>(reinterpret_cast<uintptr_t>(pEntity) + 0x33c);
+    return *reinterpret_cast<HSCRIPT*>(reinterpret_cast<uintptr_t>(pEntity) + 0x33C);
 }
 
 /**
@@ -51,7 +51,7 @@ HSCRIPT CBaseEntity::GetScriptScope(CBaseEntity* pEntity)
  */
 HSCRIPT CBaseEntity::GetScriptInstance(CBaseEntity* entity)
 {
-    static auto getScriptInstance = reinterpret_cast<HSCRIPT (__thiscall*)(CBaseEntity*)>(Memory::Scan<void*>(SERVER, "55 8B EC 51 56 8B F1 83 BE 50"));
+    static auto getScriptInstance = reinterpret_cast<HSCRIPT (__thiscall*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 51 56 8B F1 83 BE 50"));
     if (!getScriptInstance)
     {
         Log(WARNING, false, "Could not get script instance for entity!");
@@ -73,6 +73,6 @@ HSCRIPT CBaseEntity::GetScriptInstance(CBaseEntity* entity)
  */
 int CBaseEntity::EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter* filter, const char* soundName, const Vector* pOrigin, const float soundTime)
 {
-    static auto emitSound = reinterpret_cast<int (__thiscall*)(CBaseEntity*, IRecipientFilter*, int, const char*, const Vector*, float)>(Memory::Scan<void*>(SERVER, "55 8B EC 83 EC 4C 8B 0D"));
+    static auto emitSound = reinterpret_cast<int (__thiscall*)(CBaseEntity*, IRecipientFilter*, int, const char*, const Vector*, float)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 4C 8B 0D"));
     return emitSound(pEntity, filter, entityIndex, soundName, pOrigin, soundTime);
 }

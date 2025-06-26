@@ -222,7 +222,7 @@ HSCRIPT Utils::EntIndexScriptHandle(const int entityIndex)
  */
 CBasePlayer* Utils::PlayerByIndex(const int playerEntityIndex)
 {
-	static auto playerByIndex = reinterpret_cast<CBasePlayer* (__cdecl*)(int)>(Memory::Scan<void*>(SERVER, "55 8B EC 8B 4D 08 33 C0 85 C9 7E 30"));
+	static auto playerByIndex = reinterpret_cast<CBasePlayer* (__cdecl*)(int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 4D 08 33 C0 85 C9 7E 30"));
 	return playerByIndex(playerEntityIndex);
 }
 
@@ -239,7 +239,7 @@ CBasePlayer* Utils::PlayerByIndex(const int playerEntityIndex)
  */
 void Utils::ClientPrint(CBasePlayer* player, const int msgDest, const char* msg, const char* param1, const char* param2, const char* param3, const char* param4)
 {
-	static auto clientPrint = reinterpret_cast<void (__cdecl*)(CBasePlayer*, int, const char*, const char*, const char*, const char*, const char*)>(Memory::Scan<void*>(SERVER, "55 8B EC 83 EC 20 56 8B 75 08 85 F6 74 4C"));
+	static auto clientPrint = reinterpret_cast<void (__cdecl*)(CBasePlayer*, int, const char*, const char*, const char*, const char*, const char*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 20 56 8B 75 08 85 F6 74 4C"));
 	clientPrint(player, msgDest, msg, param1, param2, param3, param4);
 }
 
@@ -252,7 +252,7 @@ void Utils::ClientPrint(CBasePlayer* player, const int msgDest, const char* msg,
  */
 void Utils::HudMessage(CBasePlayer* pPlayer, const char* pMessage, const HudMessageParams& textParms)
 {
-	static auto hudMessage = reinterpret_cast<void (__cdecl*)(CBasePlayer*, const HudMessageParams&, const char*)>(Memory::Scan(SERVER, "55 8B EC 83 EC 20 8D 4D ? E8 ? ? ? ? 8B 45 ? 8D 4D ? 85 C0 74 ? 50 E8 ? ? ? ? EB ? E8 ? ? ? ? 56"));
+	static auto hudMessage = reinterpret_cast<void (__cdecl*)(CBasePlayer*, const HudMessageParams&, const char*)>(Memory::Scan(MODULE_SERVER, "55 8B EC 83 EC 20 8D 4D ? E8 ? ? ? ? 8B 45 ? 8D 4D ? 85 C0 74 ? 50 E8 ? ? ? ? EB ? E8 ? ? ? ? 56"));
 	hudMessage(pPlayer, textParms, pMessage);
 }
 
@@ -263,7 +263,7 @@ void Utils::HudMessage(CBasePlayer* pPlayer, const char* pMessage, const HudMess
  */
 CBasePlayer* Utils::GetCommandClient()
 {
-	static auto getCommandClient = reinterpret_cast<CBasePlayer* (__cdecl*)()>(Memory::Scan(SERVER, "A1 ? ? ? ? 40 85 C0"));
+	static auto getCommandClient = reinterpret_cast<CBasePlayer* (__cdecl*)()>(Memory::Scan(MODULE_SERVER, "A1 ? ? ? ? 40 85 C0"));
 	return getCommandClient();
 }
 
@@ -274,7 +274,7 @@ CBasePlayer* Utils::GetCommandClient()
  */
 int Utils::GetCommandClientIndex()
 {
-	static auto getCommandClientIndex = reinterpret_cast<int (__cdecl*)()>(Memory::Scan(SERVER, "A1 ? ? ? ? 40 C3"));
+	static auto getCommandClientIndex = reinterpret_cast<int (__cdecl*)()>(Memory::Scan(MODULE_SERVER, "A1 ? ? ? ? 40 C3"));
 	return getCommandClientIndex();
 }
 
@@ -286,6 +286,6 @@ int Utils::GetCommandClientIndex()
  */
 void Utils::SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, const bool fireTriggers)
 {
-	static auto setOrigin = reinterpret_cast<void (__cdecl*)(CBaseEntity*, const Vector&, bool)>(Memory::Scan(SERVER, "55 8B EC 8B 45 0C 56 8B 75 08 50 8B"));
+	static auto setOrigin = reinterpret_cast<void (__cdecl*)(CBaseEntity*, const Vector&, bool)>(Memory::Scan(MODULE_SERVER, "55 8B EC 8B 45 0C 56 8B 75 08 50 8B"));
 	setOrigin(entity, vecOrigin, fireTriggers);
 }

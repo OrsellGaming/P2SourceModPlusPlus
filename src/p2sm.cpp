@@ -134,23 +134,23 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 #if _WIN32
 		// When a player, both client or host, goes through a linked_portal_door entity in multiplayer, the host will crash. This fixes that.
 		Log(INFO, true, "Fixing linked portal doors for multiplayer...");
-		Memory::ReplacePattern("server", "0F B6 87 04 05 00 00 8B 16", "EB 14 87 04 05 00 00 8B 16");
+		Memory::ReplacePattern(MODULE_SERVER, "0F B6 87 04 05 00 00 8B 16", "EB 14 87 04 05 00 00 8B 16");
 		
 		// Increase runtime max from 0.03 to 0.05.
 		// Helps add some more leeway to some things we do in VScript without the engine complaining and shutting down the rest of the script.
 		Log(INFO, true, "Patching max runtime for VScript...");
-		Memory::ReplacePattern("vscript", "00 00 00 E0 51 B8 9E 3F", "9a 99 99 99 99 99 a9 3f");
+		Memory::ReplacePattern(MODULE_VSCRIPT, "00 00 00 E0 51 B8 9E 3F", "9a 99 99 99 99 99 a9 3f");
 
 		// Increase the projected texture limit and disable the game auto-disabling others when there is more than one active. Thanks to \n and BetweenReality with help with these.
 		//! Engine limit still exists though with a max of eight env_projectedtextures.
 		Log(INFO, true, "Patching max amount of projected textures at once and auto disabling of projected textures...");
 		// CEnvProjectedTexture::EnforceSingleProjectionRules
-		Memory::ReplacePattern("server", "8B F0 3B F3 0F 84 95 00 00 00", "E9 9D 00 00 00 84 95 00 00 00"); // Skip for loop jump and jump to function return.
+		Memory::ReplacePattern(MODULE_SERVER, "8B F0 3B F3 0F 84 95 00 00 00", "E9 9D 00 00 00 84 95 00 00 00"); // Skip for loop jump and jump to function return.
 		
 		// CClientShadowMgr::CalculateRenderTargetsAndSizes
-		Memory::ReplacePattern("client", "F7 D8 1B C0 83 E0 07 40 5F", "B8 08 00 00 00 90 90 90 5F"); // Force the number of max projected texture to be 8.
+		Memory::ReplacePattern(MODULE_CLIENT, "F7 D8 1B C0 83 E0 07 40 5F", "B8 08 00 00 00 90 90 90 5F"); // Force the number of max projected texture to be 8.
 		Log(INFO, true, "Increasing shadow map resolution for projected textures...");
-		Memory::ReplacePattern("client", "0F 95 C3 89 8E", "0F 94 C3 89 8E"); // Allow for higher resolution shadow maps without tools mode.	
+		Memory::ReplacePattern(MODULE_CLIENT, "0F 95 C3 89 8E", "0F 94 C3 89 8E"); // Allow for higher resolution shadow maps without tools mode.	
 
 		Log(INFO, true, "Patching all projected textures to have volumetrics...");
 		// CShadowMgr::DrawVolumetrics
@@ -188,7 +188,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		// Stop workshop map downloads by not returning false on the download request.
 		//!! TEMP TO FIX ORIGINAL HOOK THAT SUDDENLY BROKE
 		MH_CreateHook(
-			Memory::Scan<void*>(CLIENT, "55 8B EC 81 EC 48 01 00 00 57"),
+			Memory::Scan<void*>(MODULE_CLIENT, "55 8B EC 81 EC 48 01 00 00 57"),
 			&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
 		);
 

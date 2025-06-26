@@ -29,7 +29,7 @@ void CPortal_Player::RespawnPlayer(const int playerEntityIndex)
         return;
     }
 
-    static auto respawnPlayer = reinterpret_cast<void(__thiscall*)(CPortal_Player*)>(Memory::Scan<void*>(SERVER, "0F 57 C0 56 8B F1 57 8D 8E"));
+    static auto respawnPlayer = reinterpret_cast<void(__thiscall*)(CPortal_Player*)>(Memory::Scan<void*>(MODULE_SERVER, "0F 57 C0 56 8B F1 57 8D 8E"));
     respawnPlayer(pPlayer);
 }
 
@@ -51,7 +51,7 @@ void CPortal_Player::SetFlashlightState(const int playerEntityIndex, const bool 
     }
 
     if (enabled)
-        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(SERVER, "55 8B EC 53 8B D9 8B 83 A8"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 8B D9 8B 83 A8"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
     else
-        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
 }

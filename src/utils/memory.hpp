@@ -19,12 +19,15 @@
 #	define MAX_PATH 4096
 #endif
 
+#include "utils/platform.hpp"
+
 // Module file name macros.
-#define SERVER		"server.dll"
-#define ENGINE		"engine.dll"
-#define CLIENT		"client.dll"
-#define APIDX9		"shaderapidx9.dll"
-#define APIVULKAN	"shaderapidx9.dll"
+#define MODULE_SERVER		"server" MODULE_EXTENSION
+#define MODULE_ENGINE		"engine" MODULE_EXTENSION
+#define MODULE_CLIENT		"client" MODULE_EXTENSION
+#define MODULE_VSCRIPT		"vscript" MODULE_EXTENSION
+#define MODULE_SHADERAPIDX9	"shaderapidx9" MODULE_EXTENSION
+#define MODULE_APIVULKAN	"shaderapidx9" MODULE_EXTENSION
 
 namespace Memory
 {
