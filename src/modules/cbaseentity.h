@@ -24,6 +24,8 @@ public: // MARK: CBaseEntity Public Members
     static HSCRIPT GetScriptScope(CBaseEntity* pEntity);
     static HSCRIPT GetScriptInstance(CBaseEntity* entity);
     static int EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter* filter, const char* soundName, const Vector* pOrigin, float soundTime);
+    static inline void AddEffects(CBaseEntity* pEntity, int nEffects);
+    static inline void RemoveEffects(CBaseEntity* pEntity, int nEffects); 
     
 #pragma endregion
 

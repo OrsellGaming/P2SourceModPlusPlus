@@ -51,7 +51,7 @@ void CPortal_Player::SetFlashlightState(const int playerEntityIndex, const bool 
     }
 
     if (enabled)
-        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 8B D9 8B 83 A8"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+        CBaseEntity::AddEffects(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
     else
-        reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"))(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+        CBaseEntity::RemoveEffects(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
 }

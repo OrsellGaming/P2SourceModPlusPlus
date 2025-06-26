@@ -76,3 +76,15 @@ int CBaseEntity::EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilt
     static auto emitSound = reinterpret_cast<int (__thiscall*)(CBaseEntity*, IRecipientFilter*, int, const char*, const Vector*, float)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 4C 8B 0D"));
     return emitSound(pEntity, filter, entityIndex, soundName, pOrigin, soundTime);
 }
+
+void CBaseEntity::AddEffects(CBaseEntity* pEntity, int nEffects)
+{
+    static auto addEffects = reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 8B D9 8B 83 A8"));
+    addEffects(pEntity, nEffects);
+}
+
+void CBaseEntity::RemoveEffects(CBaseEntity* pEntity, int nEffects)
+{
+    static auto removeEffects = reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"));
+    removeEffects(pEntity, nEffects);
+}
