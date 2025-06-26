@@ -24,6 +24,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\modules\cbaseplayer.cpp" />
+    <ClCompile Include="src\modules\cportal_player.cpp" />
     <ClCompile Include="src\modules\gui.cpp">
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -112,6 +113,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="src\modules\utils.cpp" />
     <ClCompile Include="src\p2sm.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.hpp</PrecompiledHeaderFile>
@@ -311,13 +313,16 @@
     <ClInclude Include="src\globals.hpp" />
     <ClInclude Include="src\modules\cbaseentity.h" />
     <ClInclude Include="src\modules\cbaseplayer.h" />
+    <ClInclude Include="src\modules\cportal_player.h" />
     <ClInclude Include="src\modules\gui.hpp" />
+    <ClInclude Include="src\modules\utils.h" />
     <ClInclude Include="src\p2sm.hpp" />
     <ClInclude Include="src\sdk.hpp" />
     <ClInclude Include="src\stdafx.hpp" />
     <ClInclude Include="src\utils\hook.hpp" />
     <ClInclude Include="src\utils\loggingsystem.hpp" />
     <ClInclude Include="src\utils\memory.hpp" />
+    <ClInclude Include="src\utils\platform.hpp" />
     <ClInclude Include="src\utils\scanner.hpp" />
   </ItemGroup>
   <ItemGroup>
