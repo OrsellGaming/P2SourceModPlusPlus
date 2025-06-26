@@ -41,14 +41,14 @@ namespace Memory {
 	class Modules
 	{
 	public:
-		static std::span<uint8_t> Get(std::string name);
+		static std::span<uint8_t> Get(const std::string& name);
 
 	private:
 		static void PopulateModules();
 		static std::unordered_map<std::string, std::span<uint8_t>> loadedModules;
 	};
 
-	void ReplacePattern(std::string target_module, std::string patternBytes, std::string replace_with);
+	void ReplacePattern(const std::string& targetModule, const std::string& patternBytes, const std::string& replaceWith);
 	
 	template<typename T = void*> T Rel32(void* relPtr)
 	{

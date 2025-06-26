@@ -361,7 +361,7 @@ namespace Memory {
 	void Modules::PopulateModules() {
 #ifdef _WIN32
 		HMODULE modules[1024];
-		auto processHandle = GetCurrentProcess();
+		const auto processHandle = GetCurrentProcess();
 		DWORD modulesNeeded;
 		if (EnumProcessModules(processHandle, modules, sizeof(modules), &modulesNeeded)) {
 			for (DWORD i = 0; i < (modulesNeeded / sizeof(HMODULE)); i++) {
@@ -374,7 +374,7 @@ namespace Memory {
 					std::make_pair(
 						modulePath.stem().string(),
 						std::span<uint8_t>(
-							reinterpret_cast<uint8_t*>(moduleInfo.lpBaseOfDll),
+							static_cast<uint8_t*>(moduleInfo.lpBaseOfDll),
 							static_cast<size_t>(moduleInfo.SizeOfImage)
 						)
 					)
@@ -385,7 +385,7 @@ namespace Memory {
 #endif
 	}
 
-	std::span<uint8_t> Modules::Get(std::string name) {
+	std::span<uint8_t> Modules::Get(const std::string& name) {
 		if (loadedModules.empty()) {
 			PopulateModules();
 		}
@@ -398,31 +398,31 @@ namespace Memory {
 		}
 	}
 
-	void ReplacePattern(std::string target_module, std::string patternBytes, std::string replace_with)
+	void ReplacePattern(const std::string& targetModule, const std::string& patternBytes, const std::string& replaceWith)
 	{
-		void* addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(target_module), patternBytes);
+		void* addr = Memory::Scanner::Scan<void*>(Memory::Modules::Get(targetModule), patternBytes);
 		if (!addr)
 		{
 			Log(WARNING, false, "Failed to replace pattern! Turn on p2sm_developer for more info...");
-			Log(WARNING, true, "Target Module: %s", target_module.c_str());
+			Log(WARNING, true, "Target Module: %s", targetModule.c_str());
 			Log(WARNING, true, "Pattern Bytes To Find: %s", patternBytes.c_str());
-			Log(WARNING, true, "Bytes To Replace Pattern Bytes With: %s", replace_with.c_str());
+			Log(WARNING, true, "Bytes To Replace Pattern Bytes With: %s", replaceWith.c_str());
 			return;
 		}
 
 		std::vector<uint8_t> replace;
 
-		std::istringstream patternStream(replace_with);
+		std::istringstream patternStream(replaceWith);
 		std::string patternByte;
 		while (patternStream >> patternByte)
 		{
-			replace.push_back((uint8_t)std::stoul(patternByte, nullptr, 16));
+			replace.push_back(static_cast<uint8_t>(std::stoul(patternByte, nullptr, 16)));
 		}
 
-		DWORD oldprotect = 0;
-		DWORD newprotect = PAGE_EXECUTE_READWRITE;
-		VirtualProtect(addr, replace.size(), newprotect, &oldprotect);
+		DWORD oldProtect = 0;
+		DWORD newProtect = PAGE_EXECUTE_READWRITE;
+		VirtualProtect(addr, replace.size(), newProtect, &oldProtect);
 		memcpy_s(addr, replace.size(), replace.data(), replace.size());
-		VirtualProtect(addr, replace.size(), oldprotect, &newprotect);
+		VirtualProtect(addr, replace.size(), oldProtect, &newProtect);
 	}
 };
