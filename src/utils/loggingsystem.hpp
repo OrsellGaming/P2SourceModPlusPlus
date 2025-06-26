@@ -10,6 +10,9 @@
 #ifndef LOGGING_HPP
 #define LOGGING_HPP
 
+#include <color.h>
+
+// Move this color to a LoggingSystem channel.
 #define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
 
 #undef ERROR // ERROR is a Windows header defined macro that is interfering with the enum below

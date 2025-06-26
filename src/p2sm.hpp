@@ -7,7 +7,12 @@
 
 #pragma once
 
+#ifndef P2SM_HPP
+#define P2SM_HPP
+
 #include "engine/iserverplugin.h"
+
+#define P2SMPLUSPLUS_PLUGIN_VERSION "1.2.0 PREVIEW" // Update this when a new version of the plugin is released.
 
 //---------------------------------------------------------------------------------
 // Purpose: P2SourceModPlusPlus server plugin class
@@ -51,3 +56,5 @@ private:
 };
 
 static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;
+
+#endif

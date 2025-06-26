@@ -26,9 +26,6 @@ class CBaseEntity;
 class CWorkshopManager;
 class CEnvProjectedTexture;
 
-// Color macros for console printing.
-#define P2SMPLUSPLUS_PLUGIN_VERSION "1.2.0 PREVIEW" // Update this when a new version of the plugin is released.
-
 #define CUR_MAPFILE_NAME STRING(g_pGlobals->mapname)
 #define MAX_PLAYERS g_pGlobals->maxClients
 
