@@ -32,20 +32,6 @@ void CBaseEntity::RemoveEntity(CBaseEntity* pEntity)
 }
 
 /**
- * @brief Get team number of a player.
- * @param pPlayer Pointer to player.
- * @return Team number or -1 if invalid player pointer or team.
- */
-int CBaseEntity::GetTeamNumber(CBasePlayer* pPlayer)
-{
-    if (!pPlayer)
-        return -1;
-    
-    static auto getTeamNumber = reinterpret_cast<int (__thiscall*)(CBaseEntity*)>(Memory::Scan<void*>(SERVER, "8B 81 F4 02 00 00 C3"));
-    return getTeamNumber(reinterpret_cast<CBaseEntity*>(pPlayer));
-}
-
-/**
  * @brief Get the script scope of a entity.
  * @param pEntity Pointer to entity.
  * @return VScript handle to entity's script scope.

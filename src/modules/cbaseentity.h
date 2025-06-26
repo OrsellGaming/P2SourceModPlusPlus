@@ -21,7 +21,6 @@ public: // MARK: CBaseEntity Public Members
 #pragma region Public Members
 
     static void RemoveEntity(CBaseEntity* pEntity);
-    static int GetTeamNumber(CBasePlayer* pPlayer);
     static HSCRIPT GetScriptScope(CBaseEntity* pEntity);
     static HSCRIPT GetScriptInstance(CBaseEntity* entity);
     static int EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter* filter, const char* soundName, const Vector* pOrigin, float soundTime);
