@@ -24,25 +24,25 @@
 #	define STDCALL_NAME(base, param_bytes) "_" base "@" #param_bytes
 
 #	define DECL_DETOUR(name, ...)                                   \
-		using _##name = int(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = int(__rescall*)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                            \
-		static int __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		static int __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 #	define DECL_DETOUR_T(type, name, ...)                            \
-		using _##name = type(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = type(__rescall*)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                             \
-		static type __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		static type __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 #	define DECL_DETOUR_B(name, ...)                                 \
-		using _##name = int(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = int(__rescall *)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                            \
 		static _##name name##Base;                                      \
-		static int __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		static int __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 
 #	define DETOUR(name, ...) \
-		int __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		int __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 #	define DETOUR_T(type, name, ...) \
-		type __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		type __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 #	define DETOUR_B(name, ...) \
-		int __fastcall name##_Hook(void *thisptr, int edx, ##__VA_ARGS__)
+		int __fastcall name##_Hook(void* thisPtr, int edx, ##__VA_ARGS__)
 
 namespace {
 	bool mhInitialized = false;
@@ -52,16 +52,16 @@ namespace {
 			MH_Initialize();                                                                                             \
 			mhInitialized = true;                                                                                        \
 		}                                                                                                             \
-		name = reinterpret_cast<decltype(name)>(target);                                                              \
-		MH_CreateHook(reinterpret_cast<LPVOID>(target), name##_Hook, reinterpret_cast<LPVOID *>(&name##_Trampoline)); \
+		(name) = reinterpret_cast<decltype(name)>(target);                                                              \
+		MH_CreateHook(reinterpret_cast<LPVOID>(target), name##_Hook, reinterpret_cast<LPVOID*>(&name##_Trampoline)); \
 		MH_EnableHook(reinterpret_cast<LPVOID>(target));
 #	define MH_HOOK_MID(name, target)                                                                            \
 		if (!mhInitialized) {                                                                                       \
 			MH_Initialize();                                                                                           \
 			mhInitialized = true;                                                                                      \
 		}                                                                                                           \
-		name = target;                                                                                              \
-		MH_CreateHook(reinterpret_cast<LPVOID>(name), name##_Hook, reinterpret_cast<LPVOID *>(&name##_Trampoline)); \
+		(name) = target;                                                                                              \
+		MH_CreateHook(reinterpret_cast<LPVOID>(name), name##_Hook, reinterpret_cast<LPVOID*>(&name##_Trampoline)); \
 		MH_EnableHook(reinterpret_cast<LPVOID>(name));
 #	define MH_UNHOOK(name)                           \
 		if (name) {                                      \
@@ -73,15 +73,15 @@ namespace {
 		static uintptr_t name##_Trampoline; \
 		static void name##_Hook()
 #	define DECL_DETOUR_MH(name, ...)                               \
-		using _##name = int(__thiscall *)(void *thisptr, __VA_ARGS__); \
+		using _##name = int(__thiscall*)(void* thisPtr, __VA_ARGS__); \
 		static _##name name;                                           \
 		static _##name name##_Trampoline;                              \
-		static int __fastcall name##_Hook(void *thisptr, int edx, __VA_ARGS__)
+		static int __fastcall name##_Hook(void* thisPtr, int edx, __VA_ARGS__)
 
 #	define DETOUR_MID_MH(name) \
 		__declspec(naked) void name##_Hook()
 #	define DETOUR_MH(name, ...) \
-		int __fastcall name##_Hook(void *thisptr, int edx, __VA_ARGS__)
+		int __fastcall name##_Hook(void* thisPtr, int edx, __VA_ARGS__)
 #else
 #	define MODULE_EXTENSION ".so"
 #	define __rescall __attribute__((__cdecl__))
@@ -92,23 +92,23 @@ namespace {
 #	define STDCALL_NAME(base, param_bytes) base
 
 #	define DECL_DETOUR(name, ...)                                   \
-		using _##name = int(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = int(__rescall *)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                            \
-		static int __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		static int __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #	define DECL_DETOUR_T(type, name, ...)                            \
-		using _##name = type(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = type(__rescall *)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                             \
-		static type __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		static type __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #	define DECL_DETOUR_B(name, ...)                                 \
-		using _##name = int(__rescall *)(void *thisptr, ##__VA_ARGS__); \
+		using _##name = int(__rescall *)(void* thisPtr, ##__VA_ARGS__); \
 		static _##name name;                                            \
 		static _##name name##Base;                                      \
-		static int __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		static int __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 
 #	define DETOUR(name, ...) \
-		int __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		int __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #	define DETOUR_T(type, name, ...) \
-		type __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		type __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #	define DETOUR_B(name, ...) \
-		int __rescall name##_Hook(void *thisptr, ##__VA_ARGS__)
+		int __rescall name##_Hook(void* thisPtr, ##__VA_ARGS__)
 #endif

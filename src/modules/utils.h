@@ -5,8 +5,8 @@
 * @date   06 2025
 *********************************************************************/
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 class Vector;
 class CBaseEntity;

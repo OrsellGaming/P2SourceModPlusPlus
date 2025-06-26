@@ -23,5 +23,5 @@ void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,
 
 // Workshop download stopping hooks.
 class CUGCFileRequestManager;
-extern void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisptr);
+extern void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisPtr);
 void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisPtr);
