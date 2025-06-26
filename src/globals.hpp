@@ -45,24 +45,15 @@ class CEnvProjectedTexture;
 
 // Macro to iterate through all players on the server.
 #define FOR_ALL_PLAYERS(i) \
-	for (int (i) = 1; (i) <= CURPLAYERCOUNT(); (i)++)
+	for (int (i) = 1; (i) <= Utils::CurPlayerCount(); (i)++)
 
 // Player team enum.
-enum : std::uint8_t
+enum PlayerTeam : std::uint8_t
 {
 	TEAM_SINGLEPLAYER = 0,
 	TEAM_SPECTATOR,
 	TEAM_RED,  
 	TEAM_BLUE
-};
-
-// ClientPrint msg_dest macros.
-enum : std::uint8_t
-{
-	HUD_PRINTNOTIFY	= 1, // Works same as HUD_PRINTCONSOLE
-	HUD_PRINTCONSOLE,
-	HUD_PRINTTALK,
-	HUD_PRINTCENTER
 };
 
 //---------------------------------------------------------------------------------
@@ -82,21 +73,6 @@ extern IPlayerInfoManager*		g_pPlayerInfoManager;
 // extern IGameEventManager2*	g_pGameEventManager_;
 // extern IServerPluginHelpers*	g_pPluginHelpers;
 // extern IFileSystem*			g_pFileSystem;
-
-//---------------------------------------------------------------------------------
-// UTIL functions.
-//---------------------------------------------------------------------------------
-int					UserIDToPlayerIndex(int userid);
-const char*			GetPlayerName(int playerIndex);
-int					GetSteamID(int playerIndex);
-int					GetConVarInt(const char* cvName);
-const char*			GetConVarString(const char* cvName);
-void				SetConVarInt(const char* cvName, int newValue);
-void				SetConVarString(const char* cvName, const char* newValue);
-bool				IsBot(int playerIndex);
-int					GetBotCount();
-int					CURPLAYERCOUNT();
-HSCRIPT				INDEXHANDLE(int iEdictNum);
 
 //---------------------------------------------------------------------------------
 // Player recipient filter.
@@ -130,98 +106,3 @@ private:
 	int recipients[256];
 	int recipientCount;
 };
-
-// If String Equals String helper function. Taken from utils.h.
-inline bool FStrEq(const char* sz1, const char* sz2)
-{
-	return (V_stricmp(sz1, sz2) == 0);
-}
-
-// If String Has Substring helper function. Taken from utils.h.
-inline bool FSubStr(const char* sz1, const char* search)
-{
-	return (V_strstr(sz1, search));
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Entity edict to entity index. Taken from utils.h.
-//---------------------------------------------------------------------------------
-inline int EDICTINDEX(const edict_t* pEdict)
-{
-	if (!pEdict)
-		return 0;
-	const int edictIndex = pEdict - g_pGlobals->pEdicts;
-	Assert(edictIndex < MAX_EDICTS && edictIndex >= 0);
-	return edictIndex;
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Entity to entity index.
-//---------------------------------------------------------------------------------
-inline int ENTINDEX(CBaseEntity* pEnt)
-{
-	static auto ENTINDEX_= reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
-	//static auto ENTINDEX_ = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
-	return ENTINDEX_(pEnt);
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Entity index to entity edict. Taken from utils.h.
-//---------------------------------------------------------------------------------
-inline edict_t* INDEXENT(const int iEdictNum)
-{
-	Assert(iEdictNum >= 0 && iEdictNum < MAX_EDICTS);
-	if (g_pGlobals->pEdicts)
-	{
-		edict_t* pEdict = g_pGlobals->pEdicts + iEdictNum;
-		if (pEdict->IsFree())
-			return nullptr;
-		return pEdict;
-	}
-	return nullptr;
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Returns the current game directory. Ex. portal2
-//---------------------------------------------------------------------------------
-inline const char* GetGameMainDir()
-{
-	return CommandLine()->ParmValue("-game", CommandLine()->ParmValue("-defaultgamedir", "portal2"));
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Returns the current root game directory. Ex. Portal 2
-//---------------------------------------------------------------------------------
-inline const char* GetGameRootDir()
-{
-	static char baseDir[MAX_PATH] = { 0 };
-	const std::string fullGameDirectoryPath = engineClient->GetGameDirectory();
-
-	// Find last two backslashes
-	const size_t firstSlash = fullGameDirectoryPath.find_last_of('\\');
-	const size_t secondSlash = fullGameDirectoryPath.find_last_of('\\', firstSlash - 1);
-	const std::string tempBaseDir = fullGameDirectoryPath.substr(secondSlash + 1, firstSlash - secondSlash - 1);
-	V_strcpy(baseDir, tempBaseDir.c_str()); // Copy to static buffer
-
-	return baseDir;
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Returns true if a game session is running. 
-//---------------------------------------------------------------------------------
-inline bool IsGameActive()
-{
-	const bool m_activeGame = **Memory::Scan<bool**>(ENGINE, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
-	//const bool m_activeGame = **Memory::Scan<bool**>(ENGINE, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
-	return m_activeGame;
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Returns true if a game session is shutting down or has been shutdown.
-//---------------------------------------------------------------------------------
-inline bool IsGameShutdown()
-{
-	const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(ENGINE, "B8 05 00 00 00 39 05"))();
-	//const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(ENGINE, "B8 05 00 00 00 39 05"))();
-	return bIsGameShuttingDown;
-}

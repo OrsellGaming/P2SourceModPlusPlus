@@ -11,6 +11,7 @@
 class Vector;
 class CBaseEntity;
 class CBasePlayer;
+struct edict_t;
 typedef struct HSCRIPT__* HSCRIPT;
 
 // Utils::HudMessage message parameters struct. Based on the one from Valve's util.h.
@@ -27,6 +28,14 @@ typedef struct HudMessageParams
     int			channel = 1;
 } HudMessageParams;
 
+// ClientPrint msgDest enum.
+enum MessageDestination : std::uint8_t
+{
+    HUD_PRINTNOTIFY	= 1, // Works same as HUD_PRINTCONSOLE
+    HUD_PRINTCONSOLE,    // Print to console.
+    HUD_PRINTTALK,		 // Print to chat.
+    HUD_PRINTCENTER		 // Print to top center of screen.
+};
 
 namespace Utils
 {
@@ -42,12 +51,40 @@ namespace Utils
     int			 CurPlayerCount();
     HSCRIPT		 EntIndexScriptHandle(int entityIndex);
     CBasePlayer* PlayerByIndex(int playerEntityIndex);
-    void         ClientPrint(CBasePlayer* player, int msgDest, const char* msg, const char* param1 = nullptr, const char* param2 = nullptr, const char* param3 = nullptr, const char* param4 = nullptr);
+    void         ClientPrint(CBasePlayer* player, MessageDestination msgDest, const char* msg, const char* param1 = nullptr, const char* param2 = nullptr, const char* param3 = nullptr, const char* param4 = nullptr);
     void         HudMessage(CBasePlayer* pPlayer, const char* pMessage, const HudMessageParams& textParms = HudMessageParams());
     CBasePlayer* GetCommandClient();
     int          GetCommandClientIndex();
     void         SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, bool fireTriggers);
+	int			 EdictIndex(const edict_t* pEdict);
+	edict_t*	 IndexToEdict(const int entityIndex);
+	inline const char* GetGameMainDir();
+	const char*	 GetGameRootDir();
+	inline bool  IsGameActive();
+	inline bool  IsGameShutdown();
+	inline int	 EntityIndex(CBaseEntity* pEntity);
 }
 
+/**
+ * @brief Check if strings match,
+ * @param str1 String 1.
+ * @param str2 String 2.
+ * @return Returns true if strings match.
+ */
+inline bool FStrEq(const char* str1, const char* str2)
+{
+	return (stricmp(str1, str2) == 0);
+}
+
+/**
+ * @brief Check if a string contains a substring.
+ * @param str String to check.
+ * @param search Substring to find in string,
+ * @return If substring is in string,
+ */
+inline bool FSubStr(const char* str, const char* search)
+{
+	return (std::strstr(str, search));
+}
 
 #endif

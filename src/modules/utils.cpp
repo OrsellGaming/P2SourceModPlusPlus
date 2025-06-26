@@ -14,8 +14,6 @@
 
 #include "globals.hpp"
 
-struct edict_t;
-
 /**
  * @brief Get the player's entity index by their user ID.
  * @param userid User ID of player.
@@ -237,7 +235,7 @@ CBasePlayer* Utils::PlayerByIndex(const int playerEntityIndex)
  * @param param3 Formatting. Defaults to nullptr.
  * @param param4 Formatting. Defaults to nullptr.
  */
-void Utils::ClientPrint(CBasePlayer* player, const int msgDest, const char* msg, const char* param1, const char* param2, const char* param3, const char* param4)
+void Utils::ClientPrint(CBasePlayer* player, const MessageDestination msgDest, const char* msg, const char* param1, const char* param2, const char* param3, const char* param4)
 {
 	static auto clientPrint = reinterpret_cast<void (__cdecl*)(CBasePlayer*, int, const char*, const char*, const char*, const char*, const char*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 20 56 8B 75 08 85 F6 74 4C"));
 	clientPrint(player, msgDest, msg, param1, param2, param3, param4);
@@ -288,4 +286,94 @@ void Utils::SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, const bool f
 {
 	static auto setOrigin = reinterpret_cast<void (__cdecl*)(CBaseEntity*, const Vector&, bool)>(Memory::Scan(MODULE_SERVER, "55 8B EC 8B 45 0C 56 8B 75 08 50 8B"));
 	setOrigin(entity, vecOrigin, fireTriggers);
+}
+
+/**
+ * @brief Entity edict to entity index.
+ * @param pEdict Pointer to edict.
+ * @return Entity index for edict.
+ */
+int Utils::EdictIndex(const edict_t* pEdict)
+{
+	if (!pEdict)
+		return 0;
+	const int edictIndex = pEdict - g_pGlobals->pEdicts;
+	assert(edictIndex < MAX_EDICTS && edictIndex >= 0);
+	return edictIndex;
+}
+
+/**
+ * @brief Entity index to entity edict.
+ * @param entityIndex Entity index.
+ * @return Edict of entity index.
+ */
+edict_t* Utils::IndexToEdict(const int entityIndex)
+{
+	assert(entityIndex >= 0 && entityIndex < MAX_EDICTS);
+	if (g_pGlobals->pEdicts)
+	{
+		edict_t* pEdict = g_pGlobals->pEdicts + entityIndex;
+		if (pEdict->IsFree())
+			return nullptr;
+		return pEdict;
+	}
+	return nullptr;
+}
+
+/**
+ * @brief Returns the current game directory. Ex. "portal2"
+ * @return The current game directory.
+ */
+inline const char* Utils::GetGameMainDir()
+{
+	return CommandLine()->ParmValue("-game", CommandLine()->ParmValue("-defaultgamedir", "portal2"));
+}
+
+/**
+ * @brief Return the current root game directory. Ex. "Portal 2"
+ * @return The current root game directory.
+ */
+const char* Utils::GetGameRootDir()
+{
+	static char baseDir[MAX_PATH] = { 0 };
+	const std::string fullGameDirectoryPath = engineClient->GetGameDirectory();
+
+	// Find last two backslashes
+	const size_t firstSlash = fullGameDirectoryPath.find_last_of('\\');
+	const size_t secondSlash = fullGameDirectoryPath.find_last_of('\\', firstSlash - 1);
+	const std::string tempBaseDir = fullGameDirectoryPath.substr(secondSlash + 1, firstSlash - secondSlash - 1);
+	std::strcpy(baseDir, tempBaseDir.c_str());
+
+	return baseDir;
+}
+
+/**
+ * @brief Check if a game session is running.
+ * @return Returns true if a game session is running.
+ */
+inline bool Utils::IsGameActive()
+{
+	const bool m_activeGame = **Memory::Scan<bool**>(MODULE_ENGINE, "C6 05 ? ? ? ? ? C6 05 ? ? ? ? ? 0F B6 96", 2);
+	return m_activeGame;
+}
+
+/**
+ * @brief Check if the game session is shutdown or is in the process of shutting down.
+ * @return Returns true if a game session is shutting down or has been shutdown.
+ */
+inline bool Utils::IsGameShutdown()
+{
+	const bool bIsGameShuttingDown = reinterpret_cast<bool(__cdecl*)()>(Memory::Scan<void*>(MODULE_ENGINE, "B8 05 00 00 00 39 05"))();
+	return bIsGameShuttingDown;
+}
+
+/**
+ * @brief CBaseEntity to entity index.
+ * @param pEntity Pointer to entity.
+ * @return Entity index of entity.
+ */
+inline int Utils::EntityIndex(CBaseEntity* pEntity)
+{
+	static auto entIndex = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
+	return entIndex(pEntity);
 }
