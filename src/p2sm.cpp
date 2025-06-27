@@ -8,18 +8,14 @@
 #include "stdafx.hpp"
 #include "p2sm.hpp"
 
-#include "utils/memory.hpp" // SAR memory scanner
-#include "utils/scanner.hpp" // Old memory scanner
-#include "utils/hook.hpp"
-#include "utils/loggingsystem.hpp"
+#include <cdll_int.h> // Client interfacing
+#include <eiface.h> // Server interfacing
 
 #include "modules/gui.hpp"
 
+#include "utils.hpp"
 #include "globals.hpp"
 #include "sdk.hpp"
-
-#include "cdll_int.h" // Client interfacing
-#include "eiface.h" // Server interfacing
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
@@ -47,7 +43,7 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 // Purpose: Called when the plugin is loaded, initialization process.
 //			Loads the interfaces we need from the engine and applies our patches.
 //---------------------------------------------------------------------------------
-bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
+bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateInterfaceFn gameServerFactory)
 {
 	if (m_bPluginLoaded)
 	{

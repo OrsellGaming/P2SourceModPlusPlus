@@ -18,8 +18,8 @@
 class Hook
 {
 public:
-	template <typename T = void *>
-	Hook(T hook)
+	template <typename T = void*>
+	explicit Hook(T hook)
 		: func(nullptr)
 		, hook(static_cast<void*>(hook))
 		, enabled(false)

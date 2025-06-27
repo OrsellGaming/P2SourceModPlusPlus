@@ -17,6 +17,7 @@
 #include "commands.hpp"
 #include "globals.hpp"
 
+// Redeclaration's for hooks that need it.
 REDECL(CPortal_Player::PlayerDeathThink);
 // REDECL(CPortal_Player::FlashlightTurnOn);
 // REDECL(CPortal_Player::FlashlightTurnOff);
