@@ -21,8 +21,9 @@
  */
 void Log(const LogLevel level, const bool dev, const char* message, ...)
 {
-    if (dev && !p2sm_developer.GetBool() && level != ERROR)
-        return; // Stop developer messages when p2mm_developer isn't enabled.
+    // Stop developer messages when p2mm_developer isn't enabled. Command line value is also checked as ConVars could not be registered yet.
+    if (dev && !(p2sm_developer.GetBool() || CommandLine()->ParmValue("+p2sm_developer", "0")) && level != ERROR)
+        return;
 
     // Take our log message and format any arguments it has into the message.
     va_list argPtr;
