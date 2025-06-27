@@ -22,10 +22,10 @@
 #include "utils/platform.hpp"
 
 // Module file name macros.
-#define MODULE_SERVER		"server" MODULE_EXTENSION
-#define MODULE_ENGINE		"engine" MODULE_EXTENSION
-#define MODULE_CLIENT		"client" MODULE_EXTENSION
-#define MODULE_VSCRIPT		"vscript" MODULE_EXTENSION
+#define MODULE_SERVER		"server" 	   MODULE_EXTENSION
+#define MODULE_ENGINE		"engine" 	   MODULE_EXTENSION
+#define MODULE_CLIENT		"client" 	   MODULE_EXTENSION
+#define MODULE_VSCRIPT		"vscript"	   MODULE_EXTENSION
 #define MODULE_SHADERAPIDX9	"shaderapidx9" MODULE_EXTENSION
 #define MODULE_APIVULKAN	"shaderapidx9" MODULE_EXTENSION
 
@@ -80,26 +80,26 @@ namespace Memory
 	};
 
 	typedef std::vector<int> Offset;
-	typedef std::vector<const Pattern *> Patterns;
+	typedef std::vector<const Pattern*> Patterns;
 
 #define PATTERN(name, sig, ...) \
 	Memory::Pattern name { sig, Memory::Offset({__VA_ARGS__}) }
 #define PATTERNS(name, ...) Memory::Patterns name({__VA_ARGS__})
 
-	std::vector<uintptr_t> Scan(const char *moduleName, const Pattern *pattern);
-	std::vector<std::vector<uintptr_t>> MultiScan(const char *moduleName, const Patterns* patterns);
+	std::vector<uintptr_t> Scan(const char *moduleName, const Pattern* pattern);
+	std::vector<std::vector<uintptr_t>> MultiScan(const char* moduleName, const Patterns* patterns);
 
 	template <typename T = uintptr_t>
-	T Absolute(const char *moduleName, int relative)
+	T Absolute(const char* moduleName, int relative)
 	{
 		auto info = Memory::ModuleInfo();
 		return (Memory::TryGetModule(moduleName, &info)) ? static_cast<T>(info.base + relative) : static_cast<T>(0);
 	}
 	template <typename T = void*>
-	T GetSymbolAddress(void *moduleHandle, const char *symbolName)
+	T GetSymbolAddress(void* moduleHandle, const char* symbolName)
 	{
 #ifdef _WIN32
-		return static_cast<T>(GetProcAddress((HMODULE)moduleHandle, symbolName));
+		return static_cast<T>(GetProcAddress(static_cast<HMODULE>(moduleHandle), symbolName));
 #else
 		return (T)dlsym(moduleHandle, symbolName);
 #endif
@@ -161,7 +161,7 @@ namespace Memory
 		return reinterpret_cast<T>(result);
 	}
 
-	inline void UnProtect(void *addr, size_t len)
+	inline void UnProtect(void* addr, const size_t len)
 	{
 		uintptr_t startPage = reinterpret_cast<uintptr_t>(addr) & 0xFFFFF000;
 		uintptr_t endPage = (reinterpret_cast<uintptr_t>(addr) + len) & 0xFFFFF000;

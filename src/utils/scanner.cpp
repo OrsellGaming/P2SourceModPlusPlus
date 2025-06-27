@@ -358,15 +358,19 @@ namespace Memory {
 
 	std::unordered_map<std::string, std::span<uint8_t>> Modules::loadedModules;
 
-	void Modules::PopulateModules() {
+	void Modules::PopulateModules()
+	{
 #ifdef _WIN32
 		HMODULE modules[1024];
 		const auto processHandle = GetCurrentProcess();
 		DWORD modulesNeeded;
-		if (EnumProcessModules(processHandle, modules, sizeof(modules), &modulesNeeded)) {
-			for (DWORD i = 0; i < (modulesNeeded / sizeof(HMODULE)); i++) {
+		if (EnumProcessModules(processHandle, modules, sizeof(modules), &modulesNeeded))
+		{
+			for (DWORD i = 0; i < (modulesNeeded / sizeof(HMODULE)); i++)
+			{
 				char pathBuffer[MAX_PATH];
-				if (!GetModuleFileNameA(modules[i], pathBuffer, sizeof(pathBuffer))) continue;
+				if (!GetModuleFileNameA(modules[i], pathBuffer, sizeof(pathBuffer)))
+					continue;
 				MODULEINFO moduleInfo = {};
 				if (!GetModuleInformation(processHandle, modules[i], &moduleInfo, sizeof(MODULEINFO))) continue;
 				std::filesystem::path modulePath(pathBuffer);
@@ -386,16 +390,13 @@ namespace Memory {
 	}
 
 	std::span<uint8_t> Modules::Get(const std::string& name) {
-		if (loadedModules.empty()) {
+		if (loadedModules.empty())
 			PopulateModules();
-		}
 
-		if (loadedModules.contains(name)) {
+		if (loadedModules.contains(name))
 			return loadedModules[name];
-		}
-		else {
-			throw std::runtime_error("Failed to Get a required module");
-		}
+		
+		throw std::runtime_error("Failed to get a required module: \"" + name + "\"");
 	}
 
 	void ReplacePattern(const std::string& targetModule, const std::string& patternBytes, const std::string& replaceWith)
