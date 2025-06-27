@@ -17,13 +17,18 @@
 #endif
 
 /**
- * @brief Windows GUI functions and variables.
+ * @brief General GUI functions and variables.
  */
-class WindowsGUI
+class GeneralGUI
 {
 public: // MARK: WindowsGUI Public Members
 #pragma region Public Members
+
+
+    static bool InitializeGUISystems();
+    
     static HWND GetWindowHandle();
+    
 #pragma endregion
 
 private: // MARK: WindowsGUI Private Members
@@ -67,8 +72,9 @@ private: // MARK: ImGui Private Members
 #else
     // TODO: Implement SDL and Vulkan devices
 #endif
-
-    static void* present;
+    
+    static void* Present;
+    
 
 #pragma endregion
 };

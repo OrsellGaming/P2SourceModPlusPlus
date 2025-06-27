@@ -66,23 +66,24 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	);
 	
 	Log(INFO, false, "Loading plugin...");
-
-	Log(INFO, true, "Grabbing game window handle...");
-	if (!WindowsGUI::GetWindowHandle())
-		Log(WARNING, false, "Failed to find game window!");
-
-	Log(INFO, true, "Connecting tier libraries...");
+	
+	Log(INFO, true, "Connecting tier libraries and registering plugin ConVars and ConCommands...");
+	ConVar_Register(0);
 	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
 
-	Log(INFO, true, "Registering plugin ConVars and ConCommands...");
-	ConVar_Register(0);
-
+	Log(INFO, true, "Initializing plugin GUI systems...");
+	if (!GeneralGUI::InitializeGUISystems())
+	{
+		assert(0 && "Failed to initialize plugin GUI systems!");
+		Log(WARNING, false, "Failed to initialize plugin GUI systems!");
+	}
+	
 	// Make sure that all the interfaces needed are loaded and usable.
 	Log(INFO, true, "Loading interfaces...");
 	Log(INFO, true, "Loading engineServer...");
-	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, 0));
+	engineServer = static_cast<IVEngineServer*>(interfaceFactory(INTERFACEVERSION_VENGINESERVER, nullptr));
 	if (!engineServer)
 	{
 		assert(false && "Unable to load engineServer!");
@@ -92,7 +93,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	}
 
 	Log(INFO, true, "Loading engineClient...");
-	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, 0));
+	engineClient = static_cast<IVEngineClient*>(interfaceFactory(VENGINE_CLIENT_INTERFACE_VERSION, nullptr));
 	if (!engineClient)
 	{
 		assert(false && "Unable to load engineClient!");
@@ -102,7 +103,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	}
 
 	Log(INFO, true, "Loading g_pPlayerInfoManager...");
-	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, 0));
+	g_pPlayerInfoManager = static_cast<IPlayerInfoManager*>(gameServerFactory(INTERFACEVERSION_PLAYERINFOMANAGER, nullptr));
 	if (!g_pPlayerInfoManager)
 	{
 		assert(false && "Unable to load g_pPlayerInfoManager!");
@@ -188,19 +189,6 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 			&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
 		);
 
-		// MH_CreateHook(
-		// 	Memory::Scanner::Scan(CLIENT, "55 8B EC 51 56 6A 20 8B F1"),
-		// 	&CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
-		// );
-		
-		//
-		// Stop workshop map downloads by not returning false on the download request.
-		// Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
-		// MH_CreateHook( //55 8B EC 8B 45 ?? 83 EC 14 53 57
-		// 	Memory::Scanner::Scan(CLIENT, "55 8B EC 8B 45 ?? 83 EC 14 53 57"),
-		// 	&CUGCFileRequestManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__CreateFileDownloadRequest_orig)
-		// );
-
 		// Log(INFO, true, "Hooking CEnvProjectedTexture::EnforceSingleProjectionRules...");
 		// MH_CreateHook(
 		// 	Memory::Scan<void*>(CLIENT, "55 8B EC 8B 45 ? 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45 ? 52 8B 55 ? 50 8B 45"),
@@ -241,13 +229,6 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 	
-	Log(INFO, true, "Starting ImGUI...");
-	if (!ImGui::Init())
-	{
-		assert(false && "Failed to initialize ImGui!");
-		Log(INFO, false, "Failed to initialize ImGui!");
-	}
-	
 	Log(INFO, false, "Loaded plugin! Yay! :D");
 	m_bPluginLoaded = true;
 
@@ -264,7 +245,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	{
 		m_bNoUnload = false;
 		Log(WARNING, true, "Failed to load plugin!");
-		MessageBox(WindowsGUI::GetWindowHandle(), "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
+		MessageBox(GeneralGUI::GetWindowHandle(), "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
 		return;
 	}
 
