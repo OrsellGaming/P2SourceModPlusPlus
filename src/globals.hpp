@@ -9,22 +9,12 @@
 
 #include "eiface.h"
 #include "cdll_int.h"
-#include "vscript/ivscript.h"
 #include "engine/iserverplugin.h"
 #include "game/server/iplayerinfo.h"
 #include "public/steam/steamclientpublic.h"
 #include "irecipientfilter.h"
 
-#include "memory.hpp"
-
 #include <comdef.h> 
-
-// Forward references for class types unable to be accessed directly.
-class CBasePlayer;
-class CPortal_Player;
-class CBaseEntity;
-class CWorkshopManager;
-class CEnvProjectedTexture;
 
 #define CUR_MAPFILE_NAME STRING(g_pGlobals->mapname)
 #define MAX_PLAYERS g_pGlobals->maxClients

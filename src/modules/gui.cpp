@@ -6,10 +6,9 @@
 *********************************************************************/
 
 #include "stdafx.hpp"
-#include "gui.hpp"
+#include "modules/gui.hpp"
 
-#include "utils/memory.hpp"
-#include "utils/loggingsystem.hpp"
+#include "utils.hpp"
 
 HWND WindowsGUI::GetWindowHandle()
 {

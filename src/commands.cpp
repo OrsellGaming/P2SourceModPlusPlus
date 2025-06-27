@@ -8,9 +8,7 @@
 #include "stdafx.hpp"
 #include "commands.hpp"
 
-#include "utils/loggingsystem.hpp"
-#include "utils/memory.hpp"
-#include "utils/scanner.hpp"
+#include "utils.hpp"
 
 //---------------------------------------------------------------------------------
 // Debug P2:SM++ ConVars | Self-explanatory.
