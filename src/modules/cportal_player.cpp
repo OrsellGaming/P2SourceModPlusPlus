@@ -17,21 +17,17 @@
 #include "commands.hpp"
 #include "globals.hpp"
 
-// Redeclaration's for hooks that need it.
+// Redeclaration's for hooks.
 REDECL(CPortal_Player::PlayerDeathThink);
-// REDECL(CPortal_Player::FlashlightTurnOn);
-// REDECL(CPortal_Player::FlashlightTurnOff);
+REDECL(CPortal_Player::FlashlightTurnOn);
+REDECL(CPortal_Player::FlashlightTurnOff);
 
-//---------------------------------------------------------------------------------
-// Purpose: For hooking onto the function that is called before a player respawns to skip the delay
-//			that is usual there and instead force a instant respawn of the player.
-//---------------------------------------------------------------------------------
-// void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisPtr);
-// void __fastcall CPortal_Player__PlayerDeathThink_hook(CPortal_Player* thisPtr)
-// {
-//
-// }
+#pragma region CPortal_Player Hooks // MARK: Hooks
 
+/**
+ * @brief For hooking onto the function that is called before a player respawns to skip the delay that is usual there and instead force a instant respawn of the player.
+ */
+DECL_HOOK(CPortal_Player::PlayerDeathThink_Hook, CPortal_Player_PlayerDeathThink);
 DETOUR_T(void, CPortal_Player::PlayerDeathThink)
 {
 	if (p2sm_multiplayer_instantrespawn.GetBool())
@@ -39,23 +35,22 @@ DETOUR_T(void, CPortal_Player::PlayerDeathThink)
     	CPortal_Player::RespawnPlayer(Utils::EntityIndex(static_cast<CBaseEntity*>(thisPtr)));
     	return;
     }
-    // CPortal_Player__PlayerDeathThink_orig(thisPtr);
+
+	h_CPortal_Player_PlayerDeathThink.Disable();
 	CPortal_Player::PlayerDeathThink(thisPtr);
+	h_CPortal_Player_PlayerDeathThink.Enable();
 }
 
-//---------------------------------------------------------------------------------
-// Purpose: Change out the original Flashlight turn and off with our versions.
-//			TODO: Have flashlight on and off sound work again.
-//---------------------------------------------------------------------------------
-// bool (__fastcall* CPortal_Player__FlashlightTurnOn_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
-// bool __fastcall CPortal_Player__FlashlightTurnOn_hook(CPortal_Player* thisPtr,  void* edx, bool playSound)
-// {
-//
-// }
-
+/**
+ * @brief Player flashlight turn on hook.
+ * @param playSound If flashlight sound should play. Coded to always pass as false.
+ * @return If flashlight was enabled successfully.
+ */
+DECL_HOOK(CPortal_Player::FlashlightTurnOn_Hook, CPortal_Player_FlashlightTurnOn);
 DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 {
-	const int playerIndex = Utils::EntityIndex(static_cast<CBaseEntity*>(thisPtr));
+	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
+	const int playerIndex = Utils::EntityIndex(pEntity);
 	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
 	{
 		Log(WARNING, false, "CPortal_Player::FlashlightTurnOn was called with a invalid player!");
@@ -63,18 +58,21 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 	}
 	
 	CPortal_Player::SetFlashlightState(playerIndex, true);
-	//engineServer-EmitAmbientSound>(playerIndex)
+	
+	CPlayerFilter filter;
+	filter.AddPlayer(playerIndex);
+	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOn", nullptr, 0.0f);
 	return true;
 }
 
-// void (__fastcall* CPortal_Player__FlashlightTurnOff_orig)(CPortal_Player* thisPtr,  void* edx, bool playSound);
-// void  __fastcall CPortal_Player__FlashlightTurnOff_hook(CPortal_Player* thisPtr,  void* edx, bool playSound)
-// {
-//
-// }
-
+/**
+ * @brief Player flashlight turn off hook.
+ * @param playSound If flashlight sound should play. Coded to always pass as false.
+ */
+DECL_HOOK(CPortal_Player::FlashlightTurnOff_Hook, CPortal_Player_FlashlightTurnOff);
 DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 {
+	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
 	const int playerIndex = Utils::EntityIndex(static_cast<CBaseEntity*>(thisPtr));
 	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
 	{
@@ -83,8 +81,15 @@ DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 	}
 	
 	CPortal_Player::SetFlashlightState(playerIndex, false);
-	// engineServer->EmitAmbientSound(playerIndex)
+	
+	CPlayerFilter filter;
+	filter.AddPlayer(playerIndex);
+	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOff", nullptr, 0.0f);
 }
+
+#pragma endregion
+
+#pragma region Functions // MARK: Functions
 
 /**
  * @brief Respawn a player where ever their spawn point is set.
@@ -125,3 +130,5 @@ void CPortal_Player::SetFlashlightState(int playerEntityIndex, bool enabled)
 	else
 		CBaseEntity::RemoveEffects(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
 }
+
+#pragma	endregion

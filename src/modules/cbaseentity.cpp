@@ -69,20 +69,22 @@ HSCRIPT CBaseEntity::GetScriptInstance(CBaseEntity* entity)
  * @param soundTime Time in seconds till sound is played. NOT HOW LONG SOUND WILL PLAY! 
  * @return Return code for sound.
  */
-int CBaseEntity::EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter* filter, const char* soundName, const Vector* pOrigin, const float soundTime)
+int CBaseEntity::EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter& filter, const char* soundName, const Vector* pOrigin, const float soundTime)
 {
-    static auto emitSound = reinterpret_cast<int (__thiscall*)(CBaseEntity*, IRecipientFilter*, int, const char*, const Vector*, float)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 4C 8B 0D"));
+    static auto emitSound = reinterpret_cast<int (__thiscall*)(CBaseEntity*, IRecipientFilter&, int, const char*, const Vector*, float)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 83 EC 4C 8B 0D"));
     return emitSound(pEntity, filter, entityIndex, soundName, pOrigin, soundTime);
 }
 
 void CBaseEntity::AddEffects(CBaseEntity* pEntity, int nEffects)
 {
-    static auto addEffects = reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 8B D9 8B 83 A8"));
+    static auto addEffects = reinterpret_cast<void (__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 8B D9 8B 83 A8"));
     addEffects(pEntity, nEffects);
 }
 
 void CBaseEntity::RemoveEffects(CBaseEntity* pEntity, int nEffects)
 {
-    static auto removeEffects = reinterpret_cast<void(__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"));
+    static auto removeEffects = reinterpret_cast<void (__thiscall*)(CBaseEntity*, int)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 53 56 8B 75 08 8B D9 8B 83"));
     removeEffects(pEntity, nEffects);
 }
+
+

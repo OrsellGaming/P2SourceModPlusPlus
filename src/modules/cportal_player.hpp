@@ -27,16 +27,19 @@ class CPortal_Player
 public: // MARK: CPortal_Player Public Members
 #pragma region Public Members
 
+    // Player respawn hook.
     DECL_DETOUR_T(void, PlayerDeathThink);
     // using _PlayerDeathThink = void(__thiscall*)(void* thisPtr);
     // static _PlayerDeathThink PlayerDeathThink;
     // static void __fastcall PlayerDeathThink_Hook(void* thisPtr, int edx);
-    
+
+    // Flashlight turn on hook.
     DECL_DETOUR_T(bool, FlashlightTurnOn, bool playSound);
     // using _FlashlightTurnOn = bool(__thiscall*)(void* thisPtr, bool playSound);
     // static _FlashlightTurnOn FlashlightTurnOn;
     // static bool __fastcall FlashlightTurnOn_Hook(void* thisPtr, int edx, bool playSound);
 
+    // Flashlight turn off hook.
     DECL_DETOUR_T(void, FlashlightTurnOff, bool playSound);
     // using _FlashlightTurnOff = void(__thiscall*)(void* thisPtr, bool playSound);
     // static _FlashlightTurnOff FlashlightTurnOff;

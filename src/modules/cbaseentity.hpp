@@ -13,6 +13,7 @@
 class Vector;
 class IRecipientFilter;
 class CBasePlayer;
+struct edict_t;
 typedef struct HSCRIPT__* HSCRIPT;
 
 class CBaseEntity
@@ -23,9 +24,9 @@ public: // MARK: CBaseEntity Public Members
     static void RemoveEntity(CBaseEntity* pEntity);
     static HSCRIPT GetScriptScope(CBaseEntity* pEntity);
     static HSCRIPT GetScriptInstance(CBaseEntity* entity);
-    static int EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter* filter, const char* soundName, const Vector* pOrigin, float soundTime);
+    static int EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter& filter, const char* soundName, const Vector* pOrigin, float soundTime);
     static void AddEffects(CBaseEntity* pEntity, int nEffects);
-    static void RemoveEffects(CBaseEntity* pEntity, int nEffects); 
+    static void RemoveEffects(CBaseEntity* pEntity, int nEffects);
     
 #pragma endregion
 
