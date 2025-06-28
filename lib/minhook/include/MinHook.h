@@ -85,7 +85,7 @@ MH_STATUS;
 
 // Can be passed as a parameter to MH_EnableHook, MH_DisableHook,
 // MH_QueueEnableHook or MH_QueueDisableHook.
-#define MH_ALL_HOOKS NULL
+#define MH_ALL_HOOKS nullptr
 
 #ifdef __cplusplus
 extern "C" {
