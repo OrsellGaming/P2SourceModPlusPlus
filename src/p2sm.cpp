@@ -15,7 +15,6 @@
 
 #include "utils.hpp"
 #include "globals.hpp"
-#include "sdk.hpp"
 
 //---------------------------------------------------------------------------------
 // The plugin is a static singleton that is exported as an interface
@@ -68,10 +67,10 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	Log(INFO, false, "Loading plugin...");
 	
 	Log(INFO, true, "Connecting tier libraries and registering plugin ConVars and ConCommands...");
-	ConVar_Register(0);
 	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
+	ConVar_Register(0);
 
 	Log(INFO, true, "Initializing plugin GUI systems...");
 	if (!GeneralGUI::InitializeGUISystems())
