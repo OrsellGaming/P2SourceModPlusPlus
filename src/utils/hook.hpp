@@ -15,14 +15,18 @@
 #include "minhook/include/MinHook.h"
 #endif
 
+#define DECL_HOOK(func, name) \
+	Hook h_##name(&func, #name)
+
 class Hook
 {
 public:
 	template <typename T = void*>
-	explicit Hook(T hook)
+	explicit Hook(T hook, std::string name = "")
 		: func(nullptr)
 		, hook(static_cast<void*>(hook))
 		, enabled(false)
+		, hookName(std::move(name))
 	{
 		Hook::GetHooks().push_back(this);
 	}
@@ -77,12 +81,27 @@ public:
 		return hooks;
 	}
 
+	static Hook* GetHook(const std::string& name)
+	{
+		for (Hook* hook : Hook::GetHooks())
+			if (hook->hookName == name)
+				return hook;
+		
+		return nullptr;
+	}
+
+	std::string GetName() const
+	{
+		return this->hookName;
+	}
+
 private:
 	void* func;
 	void* hook;
 	bool enabled;
 	bool locked;
 	std::uint8_t origCode[5];
+	std::string hookName;
 };
 
 #endif

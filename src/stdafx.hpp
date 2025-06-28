@@ -10,12 +10,14 @@
 #ifndef PH_HPP
 #define PH_HPP
 
+// MARK: Windows includes
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <winerror.h>
 #endif
 
+// MARK: Common types/used includes
 #include <memory>
 #include <cstdlib> /* NULL, malloc/free */
 #include <cstdio> /* printf, fgets */
@@ -35,5 +37,8 @@
 #include <filesystem>
 #include <cstdint>
 #include <strtools.h>
+
+// MARK: Common Valve types/used includes
+#include <mathlib/vector.h>
 
 #endif
