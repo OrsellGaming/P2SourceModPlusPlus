@@ -287,6 +287,17 @@ void Utils::SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, const bool f
 }
 
 /**
+ * @brief CBaseEntity to entity index.
+ * @param pEntity Pointer to entity.
+ * @return Entity index of entity.
+ */
+int Utils::EntityIndex(CBaseEntity* pEntity)
+{
+	static auto entIndex = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
+	return entIndex(pEntity);
+}
+
+/**
  * @brief Entity edict to entity index.
  * @param pEdict Pointer to edict.
  * @return Entity index for edict.
@@ -316,6 +327,16 @@ edict_t* Utils::IndexToEdict(const int entityIndex)
 		return pEdict;
 	}
 	return nullptr;
+}
+
+/**
+ * @brief Convert CBaseEntity to entity edict.
+ * @param pEntity Pointer to entity.
+ * @return Edict of CBaseEntity.
+ */
+edict_t* Utils::EntityToEdict(CBaseEntity* pEntity)
+{
+	return IndexToEdict(EntityIndex(pEntity));
 }
 
 /**
@@ -365,13 +386,3 @@ bool Utils::IsGameShutdown()
 	return bIsGameShuttingDown;
 }
 
-/**
- * @brief CBaseEntity to entity index.
- * @param pEntity Pointer to entity.
- * @return Entity index of entity.
- */
-int Utils::EntityIndex(CBaseEntity* pEntity)
-{
-	static auto entIndex = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
-	return entIndex(pEntity);
-}
