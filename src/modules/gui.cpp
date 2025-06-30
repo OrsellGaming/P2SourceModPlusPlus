@@ -19,7 +19,7 @@ bool GeneralGUI::InitializeGUISystems()
         Log(WARNING, false, "Failed to get window handle!");
         return false;
     }
-    
+
     // Log(INFO, true, "Starting ImGUI...");
     // if (!ImGui::Init())
     // {
@@ -64,7 +64,7 @@ bool ImGui::Init()
         deviceAddressPtr = Memory::Scan(MODULE_SHADERAPIDX9, "A1 ? ? ? ? 6A 00", 1);
     else
         deviceAddressPtr = Memory::Scan(MODULE_APIVULKAN, "A1 ? ? ? ? 56 84 DB", 1);
-        
+
     if (!deviceAddressPtr)
     {
         assert(0 && "Failed to get address pointer to the DirectX9 device!");
@@ -86,7 +86,7 @@ bool ImGui::Init()
     Log(INFO, false, "Present %p", Present);
 
     // TODO: Add ImGui initialization calls here.
-    
+
     return true;
 }
 

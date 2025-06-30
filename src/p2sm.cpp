@@ -64,9 +64,9 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		R"(|__/      |________/ \______/ |__/     |__/                    )""\n"\
 		"(========================== VERSION: %s ==========================)", P2SMPLUSPLUS_PLUGIN_VERSION
 	);
-	
+
 	Log(INFO, false, "Loading plugin...");
-	
+
 	Log(INFO, true, "Connecting tier libraries and registering plugin ConVars and ConCommands...");
 	MathLib_Init(2.2f, 2.2f, 0.0f, 2.0f);
 	ConnectTier1Libraries(&interfaceFactory, 1);
@@ -79,7 +79,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		assert(0 && "Failed to initialize plugin GUI systems!");
 		Log(WARNING, false, "Failed to initialize plugin GUI systems!");
 	}
-	
+
 	// Make sure that all the interfaces needed are loaded and usable.
 	Log(INFO, true, "Loading interfaces...");
 	Log(INFO, true, "Loading engineServer...");
@@ -111,7 +111,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		this->m_bNoUnload = true;
 		return false;
 	}
-	
+
 	Log(INFO, true, "Loading g_pGlobals...");
 	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
 	if (!g_pGlobals)
@@ -121,19 +121,19 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		this->m_bNoUnload = true;
 		return false;
 	}
-	
+
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
 	try {
 
 		Log(INFO, true, "Executing game patches...");
-		
+
 		if (!Patches::EnablePatches())
 		{
 			this->m_bNoUnload = true;
 			throw std::runtime_error("Failed to enable patches!");
 		}
- 	
+
 #if _WIN32
 		// MinHook initialization and hooking.
 		Log(INFO, true, "Initializing MinHook and hooking functions...");
@@ -156,7 +156,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(0);
-	
+
 	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
 	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
@@ -164,13 +164,13 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		screenCVar->RemoveFlags(FCVAR_CHEAT);
 		screenCVar->SetValue(1);
 	}
-	
+
 	// Make switching between players in splitscreen when testing easier by removing
 	// the need for cheats to change the current player under control.
 	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
-	
+
 	Log(INFO, false, "Loaded plugin! Yay! :D");
 	m_bPluginLoaded = true;
 
@@ -192,17 +192,17 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	}
 
 	Log(INFO, false, "Unloading Plugin...");
-	
+
 	try
 	{
 #if _WIN32
 		Log(INFO, true, "Un-patching game patches...");
-		
+
 		if (!Patches::DisablePatches())
 		{
 			throw std::runtime_error("Failed to disable patches!");
 		}
-		
+
 		Log(INFO, true, "Disconnecting hooked functions and un-initializing MinHook...");
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();
@@ -223,7 +223,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(1);
-	
+
 	// Cheats flag readded, disabled.
 	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))

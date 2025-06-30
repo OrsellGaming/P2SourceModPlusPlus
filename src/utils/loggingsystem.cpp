@@ -5,7 +5,7 @@
 * @date   06 2025
 *********************************************************************/
 
-#include "stdafx.hpp"   
+#include "stdafx.hpp"
 #include "utils/loggingsystem.hpp"
 
 #include "tier0/dbg.h"

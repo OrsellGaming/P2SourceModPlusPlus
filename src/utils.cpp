@@ -203,11 +203,11 @@ HSCRIPT Utils::EntIndexScriptHandle(const int entityIndex)
 	edict_t* pEdict = IndexToEdict(entityIndex);
 	if (!pEdict->GetUnknown())
 		return nullptr;
-		
+
 	CBaseEntity* pBaseEntity = pEdict->GetUnknown()->GetBaseEntity();
 	if (!pBaseEntity)
 		return nullptr;
-	
+
 	return CBaseEntity::GetScriptInstance(pBaseEntity);
 }
 

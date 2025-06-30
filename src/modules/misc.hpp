@@ -23,7 +23,7 @@ public: // MARK: CUGCFileRequestManager Public Members
     // Workshop download stopping hooks.
     DECL_HOOK(Update);
     DECL_DETOUR_T(void, Update);
-    
+
 #pragma endregion
 
 private: // MARK: CUGCFileRequestManager Private Members
@@ -39,7 +39,7 @@ public: // MARK: CPrecipitation Public Members
     // func_precipitation origin fix hook.
     DECL_HOOK(Spawn);
     DECL_DETOUR_T(void, Spawn);
-    
+
 #pragma endregion
 
 private: // MARK: CPrecipitation Private Members

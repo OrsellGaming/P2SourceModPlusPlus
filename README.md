@@ -14,8 +14,8 @@
 > 2. Compatibility will not be 100%, so expect bugs or other issues.
 > 3. If you are using this plugin with your mod, I am not responsible if anything bad happens to your mod's page on Steam.
 >
-> Ideally, if you wish to have some of these features but want to be able to have your mod on Steam, wait for P2:CE to release rather than using this. 
-> 
+> Ideally, if you wish to have some of these features but want to be able to have your mod on Steam, wait for P2:CE to release rather than using this.
+>
 > I will, in the future, try to add custom elements involving interactions with Steam's API, like achievements, but for now, I don't expect this to work correctly with Steam mods. Plus, in the end, P2:CE will do this properly in the future.
 
 ### Features Implemented/Potentially Plan to Implement:

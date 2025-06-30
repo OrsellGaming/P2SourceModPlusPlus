@@ -395,7 +395,7 @@ namespace Memory {
 
 		if (loadedModules.contains(name))
 			return loadedModules[name];
-		
+
 		throw std::runtime_error("Failed to get a required module: \"" + name + "\"");
 	}
 

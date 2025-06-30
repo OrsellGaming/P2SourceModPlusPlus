@@ -56,9 +56,9 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 		Log(WARNING, false, "CPortal_Player::FlashlightTurnOn was called with a invalid player!");
 		return false;
 	}
-	
+
 	CPortal_Player::SetFlashlightState(playerIndex, true);
-	
+
 	CPlayerFilter filter;
 	filter.AddPlayer(playerIndex);
 	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOn", nullptr, 0.0f);
@@ -80,9 +80,9 @@ DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 		Log(WARNING, false, "CPortal_Player::FlashlightTurnOff was called with a invalid player!");
 		return;
 	}
-	
+
 	CPortal_Player::SetFlashlightState(playerIndex, false);
-	
+
 	CPlayerFilter filter;
 	filter.AddPlayer(playerIndex);
 	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOff", nullptr, 0.0f);

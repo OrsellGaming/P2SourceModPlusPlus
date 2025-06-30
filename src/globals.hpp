@@ -2,7 +2,7 @@
 //
 // Author: Orsell
 // Purpose: Global functions & variables used repeatedly throughout the plugin
-// 
+//
 //===========================================================================//
 
 #pragma once
@@ -14,7 +14,7 @@
 #include "public/steam/steamclientpublic.h"
 #include "irecipientfilter.h"
 
-#include <comdef.h> 
+#include <comdef.h>
 
 #define CUR_MAPFILE_NAME STRING(g_pGlobals->mapname)
 #define MAX_PLAYERS g_pGlobals->maxClients
@@ -39,7 +39,7 @@ enum PlayerTeam : std::uint8_t
 {
 	TEAM_SINGLEPLAYER = 0,
 	TEAM_SPECTATOR,
-	TEAM_RED,  
+	TEAM_RED,
 	TEAM_BLUE
 };
 

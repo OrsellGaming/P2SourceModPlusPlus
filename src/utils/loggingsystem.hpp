@@ -44,14 +44,14 @@ public: // MARK: LoggingSystem Public Members
     std::vector<LogChannel> GetLogChannels();
     bool AddLogChannel(const LogChannel channel);
     bool RemoveLogChannel(const LogChannel channel);
-    
+
 #pragma endregion
 
 private: // MARK: LoggingSystem Private Members
 #pragma region Private Members
 
     std::vector<LogChannel> logChannels;
-    
+
 #pragma endregion
 };
 
