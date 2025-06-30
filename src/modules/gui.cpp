@@ -59,13 +59,13 @@ bool ImGui::Init()
     // Get the DirectX9 Device.
     // Valve used DXVK for Vulkan, so the API it uses layers over DirectX's stuff so the device handle can be used for both cases.
 
-    uintptr_t deviceAddressPtr = NULL;
+    IDirect3DDevice9** deviceHandlePtr;
     if (Memory::GetModuleHandleByName(MODULE_SHADERAPIDX9))
-        deviceAddressPtr = Memory::Scan(MODULE_SHADERAPIDX9, "A1 ? ? ? ? 6A 00", 1);
+        deviceHandlePtr = Memory::Scan<IDirect3DDevice9**>(MODULE_SHADERAPIDX9, "A1 ? ? ? ? 6A 00", 1);
     else
-        deviceAddressPtr = Memory::Scan(MODULE_APIVULKAN, "A1 ? ? ? ? 56 84 DB", 1);
+        deviceHandlePtr = Memory::Scan<IDirect3DDevice9**>(MODULE_APIVULKAN, "A1 ? ? ? ? 56 84 DB", 1);
 
-    if (!deviceAddressPtr)
+    if (!deviceHandlePtr)
     {
         assert(0 && "Failed to get address pointer to the DirectX9 device!");
         Log(WARNING, false, "Failed to get address pointer to the DirectX9 device!");
@@ -73,17 +73,22 @@ bool ImGui::Init()
     }
 
     // Get the device itself from the pointer pointer of the device address.
-    ImGui::g_pDXDevice = Memory::Deref<IDirect3DDevice9*>(deviceAddressPtr);
-    if (!ImGui::g_pDXDevice)
+    ImGui::dXDevice = *deviceHandlePtr;
+    if (!ImGui::dXDevice)
     {
         assert(0 && "Failed to get DirectX9 device!");
         Log(WARNING, false, "Failed to get DirectX9 device!");
         return false;
     }
 
+    // Get the "Reset" class function
+    ImGui::Reset = Memory::VMT<void*>(dXDevice, 16);
+    Log(INFO, false, "Reset %p", Reset);
+
     // Get the "Present" class function used for rendering to it can be hooked.
-    ImGui::Present = Memory::VMT<void*>(g_pDXDevice, 17);
+    ImGui::Present = Memory::VMT<void*>(dXDevice, 17);
     Log(INFO, false, "Present %p", Present);
+
 
     // TODO: Add ImGui initialization calls here.
 
@@ -96,5 +101,6 @@ void ImGui::Shutdown()
 }
 
 HWND GeneralGUI::hWnd = nullptr;
-IDirect3DDevice9* ImGui::g_pDXDevice = nullptr;
+IDirect3DDevice9* ImGui::dXDevice = nullptr;
+void* ImGui::Reset = nullptr;
 void* ImGui::Present = nullptr;

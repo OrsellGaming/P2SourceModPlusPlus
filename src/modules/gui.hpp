@@ -1,6 +1,6 @@
 /*********************************************************************
 * @file   gui.hpp
-* @brief  GUI related functionality. Windows Window APIs, ImGUI, VGUI.  
+* @brief  GUI related functionality. Windows Window APIs, ImGUI, VGUI.
 * @author Orsell
 * @date   06 2025
 *********************************************************************/
@@ -57,7 +57,7 @@ private: // MARK: VGUI Private Members
 class ImGui
 {
 public: // MARK: ImGui Public Members
-#pragma region Public Members 
+#pragma region Public Members
 
     static bool Init();
     static void Shutdown();
@@ -68,11 +68,12 @@ private: // MARK: ImGui Private Members
 #pragma region Private Members
 
 #ifdef _WIN32
-    static IDirect3DDevice9* g_pDXDevice;
+    static IDirect3DDevice9* dXDevice;
 #else
     // TODO: Implement SDL and Vulkan devices
 #endif
 
+    static void* Reset;
     static void* Present;
 
 
