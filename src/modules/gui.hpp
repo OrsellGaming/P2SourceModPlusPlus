@@ -26,9 +26,9 @@ public: // MARK: WindowsGUI Public Members
 
 
     static bool InitializeGUISystems();
-    
+
     static HWND GetWindowHandle();
-    
+
 #pragma endregion
 
 private: // MARK: WindowsGUI Private Members
@@ -58,23 +58,23 @@ class ImGui
 {
 public: // MARK: ImGui Public Members
 #pragma region Public Members 
-    
+
     static bool Init();
     static void Shutdown();
 
 #pragma endregion
-    
+
 private: // MARK: ImGui Private Members
 #pragma region Private Members
-    
+
 #ifdef _WIN32
     static IDirect3DDevice9* g_pDXDevice;
 #else
     // TODO: Implement SDL and Vulkan devices
 #endif
-    
+
     static void* Present;
-    
+
 
 #pragma endregion
 };

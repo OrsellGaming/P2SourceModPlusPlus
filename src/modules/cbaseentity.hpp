@@ -27,7 +27,7 @@ public: // MARK: CBaseEntity Public Members
     static int EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter& filter, const char* soundName, const Vector* pOrigin, float soundTime);
     static void AddEffects(CBaseEntity* pEntity, int nEffects);
     static void RemoveEffects(CBaseEntity* pEntity, int nEffects);
-    
+
 #pragma endregion
 
 private: // MARK: CBaseEntity Private Members

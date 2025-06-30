@@ -64,7 +64,7 @@ namespace Memory
 		bool Restore();
 		bool IsPatched() const;
 		bool IsInit() const;
-		
+
 	private:
 		uintptr_t location;
 		unsigned char* original;

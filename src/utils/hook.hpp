@@ -56,7 +56,7 @@ public:
 		for (Hook* hook : Hook::GetHooks())
 			if (hook->hookName == name)
 				return hook;
-		
+
 		return nullptr;
 	}
 

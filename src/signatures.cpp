@@ -8,10 +8,17 @@
 * @date   06 2025
 *********************************************************************/
 
-#include "stdafx.hpp"
-#include "signatures.hpp"
+#ifdef _WIN32
+#define OFFSET(name, win, linux) int name = win;
+#define SIGSCAN(name, win, linux) const char* name = win;
+#else // !_WIN32
+#warning "Linux signatures are not yet implemented"
+#define OFFSET(name, win, linux) int name = linux;
+#define SIGSCAN(name, win, linux) const char* name = linux;
+#endif
 
-#undef SIGSCAN
-#undef OFFSET
+namespace Signatures
+{
+#include "signatures_portal2.hpp"
+}
 
-#define 

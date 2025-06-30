@@ -44,7 +44,7 @@ public: // MARK: CPortal_Player Public Members
 
     static void RespawnPlayer(int playerEntityIndex);
     static void SetFlashlightState(int playerEntityIndex, bool enabled);
-    
+
 #pragma endregion
 
 private: // MARK: CPortal_Player Private Members

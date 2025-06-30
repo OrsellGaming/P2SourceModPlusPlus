@@ -45,7 +45,7 @@ namespace Memory {
 	};
 
 	void ReplacePattern(const std::string& targetModule, const std::string& patternBytes, const std::string& replaceWith);
-	
+
 	template<typename T = void*> T Rel32(void* relPtr)
 	{
 		auto rel = reinterpret_cast<uintptr_t>(relPtr);

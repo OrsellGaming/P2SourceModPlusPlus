@@ -97,7 +97,7 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 		{
 			if (info)
 				*info = item;
-			
+
 			return true;
 		}
 	}
@@ -243,7 +243,7 @@ std::vector<std::vector<uintptr_t>> Memory::MultiScan(const char* moduleName, co
 					auto result = std::vector<uintptr_t>();
 					for (const auto &offset : pattern->offsets)
 						result.push_back(addr + offset);
-					
+
 					results.push_back(result);
 					start = addr + length;
 				}
@@ -296,7 +296,7 @@ bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, const size
 
 	if (!bytes)
 		return false;
-	
+
 	if (this->patch)
 	{
 		delete[] this->patch;
@@ -331,7 +331,7 @@ bool Memory::Patch::Restore()
 {
 	if (!this || !this->location || !this->original)
 		return false;
-	
+
 	if (!this->isPatched)
 		return true; // already restored
 #ifdef _WIN32

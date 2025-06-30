@@ -24,7 +24,7 @@ void CBaseEntity::RemoveEntity(CBaseEntity* pEntity)
 {
     if (!pEntity)
         return;
-    
+
     static auto removeEntity = reinterpret_cast<void (__cdecl*)(void*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 57 8B 7D 08 85 FF 74 72"));
     removeEntity((reinterpret_cast<IServerEntity*>(pEntity)->GetNetworkable()));
 }
@@ -66,7 +66,7 @@ HSCRIPT CBaseEntity::GetScriptInstance(CBaseEntity* entity)
  * @param filter Filter of recipient entities that can hear this noise.
  * @param soundName Sound file path, or script name to play.
  * @param pOrigin Position in the world the sound will play.
- * @param soundTime Time in seconds till sound is played. NOT HOW LONG SOUND WILL PLAY! 
+ * @param soundTime Time in seconds till sound is played. NOT HOW LONG SOUND WILL PLAY!
  * @return Return code for sound.
  */
 int CBaseEntity::EmitSound(CBaseEntity* pEntity, int entityIndex, IRecipientFilter& filter, const char* soundName, const Vector* pOrigin, const float soundTime)
