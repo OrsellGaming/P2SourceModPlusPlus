@@ -8,6 +8,7 @@
 #include "stdafx.hpp"
 #include "commands.hpp"
 
+#include "signatures.hpp"
 #include "utils.hpp"
 
 //---------------------------------------------------------------------------------
@@ -22,15 +23,15 @@ ConVar p2sm_multiplayer_instantrespawn("p2sm_multiplayer_instantrespawn", "0", F
 
 static void ChangePtexVolumetricState(IConVar* var, const char* pOldValue, float flOldValue)
 {
-    if (!dynamic_cast<ConVar*>(var)->GetBool())
+    if (dynamic_cast<ConVar*>(var)->GetBool())
     {
-        Log(INFO, false, "Disabled volumetrics for projected textures...");
-        Memory::ReplacePattern("engine", "0F 84 47 0C 00 00 80 BF 10 02 00 00 00 0F 85 3A 0C 00 00", "0F 85 47 0C 00 00 80 BF 10 02 00 00 00 0F 84 3A 0C 00 00");
+        Log(INFO, false, "Enabled volumetrics for projected textures...");
+        Memory::ReplacePattern("engine", Signature::CShadowMgr_DrawVolumetrics_VolState, Signature::CShadowMgr_DrawVolumetrics_VolState_Patch);
     }
     else
     {
-        Log(INFO, false, "Enabled volumetrics for projected textures...");
-        Memory::ReplacePattern("engine", "0F 85 47 0C 00 00 80 BF 10 02 00 00 00 0F 84 3A 0C 00 00", "0F 84 47 0C 00 00 80 BF 10 02 00 00 00 0F 85 3A 0C 00 00");
+        Log(INFO, false, "Disabled volumetrics for projected textures...");
+        Memory::ReplacePattern("engine", Signature::CShadowMgr_DrawVolumetrics_VolState_Patch, Signature::CShadowMgr_DrawVolumetrics_VolState);
     }
 }
 ConVar p2sm_ptex_volumetrics("p2sm_ptex_volumetrics", "0", FCVAR_NONE, "Enable or disable volumetrics for projected textures.", ChangePtexVolumetricState);

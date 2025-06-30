@@ -13,12 +13,15 @@
 #include "hook.hpp"
 #include "platform.hpp"
 
+class Hook;
+
 class CUGCFileRequestManager
 {
 public: // MARK: CUGCFileRequestManager Public Members
 #pragma region Public Members
 
     // Workshop download stopping hooks.
+    DECL_HOOK(Update);
     DECL_DETOUR_T(void, Update);
     
 #pragma endregion
@@ -34,6 +37,7 @@ public: // MARK: CPrecipitation Public Members
 #pragma region Public Members
 
     // func_precipitation origin fix hook.
+    DECL_HOOK(Spawn);
     DECL_DETOUR_T(void, Spawn);
     
 #pragma endregion

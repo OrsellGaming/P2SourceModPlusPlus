@@ -10,7 +10,10 @@
 #ifndef CPORTAL_PLAYER_HPP
 #define CPORTAL_PLAYER_HPP
 
+#include "hook.hpp"
 #include "utils/platform.hpp"
+
+class Hook;
 
 // Respawn Hooks.
 // extern void (__fastcall* CPortal_Player__PlayerDeathThink_orig)(CPortal_Player* thisPtr);
@@ -28,23 +31,17 @@ public: // MARK: CPortal_Player Public Members
 #pragma region Public Members
 
     // Player respawn hook.
+    DECL_HOOK(PlayerDeathThink);
     DECL_DETOUR_T(void, PlayerDeathThink);
-    // using _PlayerDeathThink = void(__thiscall*)(void* thisPtr);
-    // static _PlayerDeathThink PlayerDeathThink;
-    // static void __fastcall PlayerDeathThink_Hook(void* thisPtr, int edx);
 
     // Flashlight turn on hook.
+    DECL_HOOK(FlashlightTurnOn);
     DECL_DETOUR_T(bool, FlashlightTurnOn, bool playSound);
-    // using _FlashlightTurnOn = bool(__thiscall*)(void* thisPtr, bool playSound);
-    // static _FlashlightTurnOn FlashlightTurnOn;
-    // static bool __fastcall FlashlightTurnOn_Hook(void* thisPtr, int edx, bool playSound);
 
     // Flashlight turn off hook.
+    DECL_HOOK(FlashlightTurnOff);
     DECL_DETOUR_T(void, FlashlightTurnOff, bool playSound);
-    // using _FlashlightTurnOff = void(__thiscall*)(void* thisPtr, bool playSound);
-    // static _FlashlightTurnOff FlashlightTurnOff;
-    // static void __fastcall FlashlightTurnOff_Hook(void* thisPtr, int edx, bool playSound);
-    
+
     static void RespawnPlayer(int playerEntityIndex);
     static void SetFlashlightState(int playerEntityIndex, bool enabled);
     

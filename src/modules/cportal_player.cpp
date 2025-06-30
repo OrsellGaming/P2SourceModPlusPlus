@@ -27,7 +27,7 @@ REDECL(CPortal_Player::FlashlightTurnOff);
 /**
  * @brief For hooking onto the function that is called before a player respawns to skip the delay that is usual there and instead force a instant respawn of the player.
  */
-DECL_HOOK(CPortal_Player::PlayerDeathThink_Hook, CPortal_Player_PlayerDeathThink);
+DEFINE_HOOK(CPortal_Player, PlayerDeathThink);
 DETOUR_T(void, CPortal_Player::PlayerDeathThink)
 {
 	if (p2sm_multiplayer_instantrespawn.GetBool())
@@ -36,9 +36,9 @@ DETOUR_T(void, CPortal_Player::PlayerDeathThink)
     	return;
     }
 
-	h_CPortal_Player_PlayerDeathThink.Disable();
+	h_PlayerDeathThink->Disable();
 	CPortal_Player::PlayerDeathThink(thisPtr);
-	h_CPortal_Player_PlayerDeathThink.Enable();
+	h_PlayerDeathThink->Enable();
 }
 
 /**
@@ -46,7 +46,7 @@ DETOUR_T(void, CPortal_Player::PlayerDeathThink)
  * @param playSound If flashlight sound should play. Coded to always pass as false.
  * @return If flashlight was enabled successfully.
  */
-DECL_HOOK(CPortal_Player::FlashlightTurnOn_Hook, CPortal_Player_FlashlightTurnOn);
+DEFINE_HOOK(CPortal_Player, FlashlightTurnOn);
 DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 {
 	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
@@ -69,7 +69,8 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
  * @brief Player flashlight turn off hook.
  * @param playSound If flashlight sound should play. Coded to always pass as false.
  */
-DECL_HOOK(CPortal_Player::FlashlightTurnOff_Hook, CPortal_Player_FlashlightTurnOff);
+DEFINE_HOOK(CPortal_Player, FlashlightTurnOff);
+//Hook* CPortal_Player::h_CPortal_Player_FlashlightTurnOff = nullptr;
 DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 {
 	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
