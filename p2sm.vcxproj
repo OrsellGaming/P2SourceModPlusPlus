@@ -118,6 +118,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.hpp</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\patch-hook.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -397,7 +398,8 @@
     <ClInclude Include="src\modules\misc.hpp" />
     <ClInclude Include="src\modules\gui.hpp" />
     <ClInclude Include="src\p2sm.hpp" />
-    <ClInclude Include="src\sigs-hooks\hooks.hpp" />
+    <ClInclude Include="src\patch-hook.hpp" />
+    <ClInclude Include="src\signatures.hpp" />
     <ClInclude Include="src\stdafx.hpp" />
     <ClInclude Include="src\utils.hpp" />
     <ClInclude Include="src\utils\hook.hpp" />
