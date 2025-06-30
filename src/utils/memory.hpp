@@ -164,11 +164,11 @@ namespace Memory
 	inline void UnProtect(void* addr, const size_t len)
 	{
 		uintptr_t startPage = reinterpret_cast<uintptr_t>(addr) & 0xFFFFF000;
-		uintptr_t endPage = (reinterpret_cast<uintptr_t>(addr) + len) & 0xFFFFF000;
+		const uintptr_t endPage = (reinterpret_cast<uintptr_t>(addr) + len) & 0xFFFFF000;
 		uintptr_t pageLen = endPage - startPage + 0x1000;
 #ifdef _WIN32
-		DWORD wtf_microsoft_why_cant_this_be_null;
-		VirtualProtect(reinterpret_cast<void*>(startPage), pageLen, PAGE_EXECUTE_READWRITE, &wtf_microsoft_why_cant_this_be_null);
+		DWORD wtfMicrosoftWhyCantThisBeNull;
+		VirtualProtect(reinterpret_cast<void*>(startPage), pageLen, PAGE_EXECUTE_READWRITE, &wtfMicrosoftWhyCantThisBeNull);
 #else
 		mprotect((void *)startPage, pageLen, PROT_READ | PROT_WRITE | PROT_EXEC);
 #endif

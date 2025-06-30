@@ -13,8 +13,13 @@
 #ifndef SIGS_HPP
 #define SIGS_HPP
 
-#define OFFSET(name, win, linux) int (name);
+#ifndef OFFSET
+#define OFFSET(name, win, linux) extern int (name);
+#endif
+
+#ifndef SIGSCAN
 #define SIGSCAN(name, win, linux) const char* (name);
+#endif
 
 namespace Signature
 {
