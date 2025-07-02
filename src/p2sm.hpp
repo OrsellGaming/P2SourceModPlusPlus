@@ -23,7 +23,7 @@ class CP2SMPlusPlusPlugin : public IServerPluginCallbacks, public IGameEventList
 {
 public:
 	CP2SMPlusPlusPlugin();
-	virtual ~CP2SMPlusPlusPlugin() = default;
+	~CP2SMPlusPlusPlugin() override;
 
 	bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory) override;
 	void			Unload() override;
@@ -49,17 +49,17 @@ public:
 
 	// IGameEventListener2 methods
 	virtual void			FireGameEvent(IGameEvent* event);
-	virtual int				GetEventDebugID(void) { return m_nDebugID; }
+	virtual int				GetEventDebugID(void) { return debugID; }
 
-	virtual int				GetCommandIndex() { return m_iClientCommandIndex; }
+	virtual int				GetCommandIndex() { return clientCommandIndex; }
 
 private:
 	// Plugin state member variables.
-	bool		m_bPluginLoaded;
-	bool		m_bNoUnload;
+	bool		pluginLoaded;
+	bool		noUnload;
 
-	int			m_nDebugID;
-	int			m_iClientCommandIndex;
+	int			debugID;
+	int			clientCommandIndex;
 };
 
 static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;

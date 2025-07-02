@@ -14,24 +14,35 @@
 #include "globals.hpp"
 #include "patch-hook.hpp"
 
-//---------------------------------------------------------------------------------
-// The plugin is a static singleton that is exported as an interface
-//---------------------------------------------------------------------------------
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, INTERFACEVERSION_ISERVERPLUGINCALLBACKS, g_P2SMPlusPlusPlugin);
+/**
+ * @brief The plugin is a static singleton that is exported as an interface. Max plugin interface version Portal 2 uses is 3.
+ */
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, "ISERVERPLUGINCALLBACKS003", g_P2SMPlusPlusPlugin);
 
-//---------------------------------------------------------------------------------
-// Purpose: constructor
-//---------------------------------------------------------------------------------
+/**
+ * @brief Constructor
+ */
 CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 {
-	this->m_bPluginLoaded = false;
-	this->m_bNoUnload = false;	  // If we fail to load, we don't want to run anything on Unload() to get what the error was.
+	this->pluginLoaded = false;
+	this->noUnload = false; // If we fail to load, we don't want to run anything on Unload() to get what the error was.
+
+	this->clientCommandIndex = 0;
+	this->debugID = EVENT_DEBUG_ID_INIT;
+}
+
+/**
+ * @brief Destructor
+ */
+CP2SMPlusPlusPlugin::~CP2SMPlusPlusPlugin()
+{
+	this->debugID = EVENT_DEBUG_ID_SHUTDOWN;
 }
 
 //---------------------------------------------------------------------------------
 // Purpose: Description of plugin outputted when the "plugin_print" console command is executed.
 //---------------------------------------------------------------------------------
-const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
+const char* CP2SMPlusPlusPlugin::GetPluginDescription()
 {
 	return "P2SourceModPlusPlus Plugin | Plugin Version: " P2SMPLUSPLUS_PLUGIN_VERSION;
 }
@@ -40,12 +51,12 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 // Purpose: Called when the plugin is loaded, initialization process.
 //			Loads the interfaces we need from the engine and applies our patches.
 //---------------------------------------------------------------------------------
-bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateInterfaceFn gameServerFactory)
+bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
-	if (m_bPluginLoaded)
+	if (pluginLoaded)
 	{
 		Log(WARNING, false, "Already loaded!");
-		m_bNoUnload = true;
+		noUnload = true;
 		return false;
 	}
 
@@ -85,7 +96,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	{
 		assert(false && "Unable to load engineServer!");
 		Log(WARNING, false, "Unable to load engineServer!");
-		this->m_bNoUnload = true;
+		this->noUnload = true;
 		return false;
 	}
 
@@ -95,7 +106,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	{
 		assert(false && "Unable to load engineClient!");
 		Log(WARNING, false, "Unable to load engineClient!");
-		this->m_bNoUnload = true;
+		this->noUnload = true;
 		return false;
 	}
 
@@ -105,7 +116,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	{
 		assert(false && "Unable to load g_pPlayerInfoManager!");
 		Log(WARNING, false, "Unable to load g_pPlayerInfoManager!");
-		this->m_bNoUnload = true;
+		this->noUnload = true;
 		return false;
 	}
 
@@ -115,7 +126,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	{
 		assert(false && "Unable to load g_pGlobals!");
 		Log(WARNING, false, "Unable to load g_pGlobals!");
-		this->m_bNoUnload = true;
+		this->noUnload = true;
 		return false;
 	}
 
@@ -127,7 +138,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 
 		if (!Patches::EnablePatches())
 		{
-			this->m_bNoUnload = true;
+			this->noUnload = true;
 			throw std::runtime_error("Failed to enable patches!");
 		}
 
@@ -142,7 +153,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 	} catch (const std::exception& ex) {
 		Log(INFO, false, "Failed to perform patch and hook operations! :( Exception: \"%s\"", ex.what());
 		assert(false && "Patch and hook failure!");
-		this->m_bNoUnload = true;
+		this->noUnload = true;
 		return false;
 	}
 
@@ -169,7 +180,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
 
 	Log(INFO, false, "Loaded plugin! Yay! :D");
-	m_bPluginLoaded = true;
+	pluginLoaded = true;
 
 	return true;
 }
@@ -177,12 +188,12 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, const CreateI
 //---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is turning off/unloading.
 //---------------------------------------------------------------------------------
-void CP2SMPlusPlusPlugin::Unload(void)
+void CP2SMPlusPlusPlugin::Unload()
 {
 	// If the plugin errors for some reason, prevent it from unloading.
-	if (m_bNoUnload)
+	if (noUnload)
 	{
-		m_bNoUnload = false;
+		noUnload = false;
 		Log(WARNING, true, "Failed to load plugin!");
 		MessageBox(GeneralGUI::GetWindowHandle(), "P2SM++ ran into a error when starting!\nPlease check the console for more info!", "P2SM++ Startup Error", MB_OK | MB_ICONERROR);
 		return;
@@ -241,14 +252,14 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	DisconnectTier2Libraries();
 	DisconnectTier1Libraries();
 
-	m_bPluginLoaded = false;
+	pluginLoaded = false;
 	Log(INFO, false, "Plugin unloaded! Goodbye!");
 }
 
-void CP2SMPlusPlusPlugin::ClientFullyConnect(Edict* pEntity)
+void CP2SMPlusPlusPlugin::ClientFullyConnect(Edict* edict)
 {
 	// Make sure the r_drawscreenoverlay ConVar is enabled for connecting clients.
-	engineServer->ClientCommand(pEntity, "r_drawscreenoverlay 1");
+	engineServer->ClientCommand(edict, "r_drawscreenoverlay 1");
 	Log(WARNING, true, "r_drawscreenoverlay enabled for client.");
 }
 
