@@ -26,7 +26,7 @@ DETOUR_T(void, CUGCFileRequestManager::Update)
 }
 
 /**
- * @brief func_precipitation entity brushes are bugged where they need to set to the world origin to function properly. 
+ * @brief func_precipitation entity brushes are bugged where they need to set to the world origin to function properly.
  */
 DEFINE_HOOK(CPrecipitation, Spawn);
 DETOUR_T(void, CPrecipitation::Spawn)

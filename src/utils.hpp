@@ -19,7 +19,7 @@
 class Vector;
 class CBaseEntity;
 class CBasePlayer;
-struct edict_t;
+struct Edict;
 typedef struct HSCRIPT__* HSCRIPT;
 
 // Macros from the Utils.hpp from SAR --------------
@@ -47,15 +47,24 @@ typedef struct HudMessageParams
 {
     float		x = -1.f, y = 0.6f;
     int			effect = 0;
-    byte		r1 = 100, g1 = 100, b1 = 100, a1 = 255;
-    byte		r2 = 240, g2 = 110, b2 =   0, a2 = 255;
+    uint8_t		r1 = 100, g1 = 100, b1 = 100, a1 = 255;
+    uint8_t		r2 = 240, g2 = 110, b2 =   0, a2 = 255;
     float		fadeinTime = 1.5f, fadeoutTime = 0.5f, holdTime = 1.2f;
     float		fxTime = 0.25f;
     int			channel = 1;
 } HudMessageParams;
 
+// Player team enum.
+enum PlayerTeam : uint8_t
+{
+	TEAM_SINGLEPLAYER = 0,
+	TEAM_SPECTATOR,
+	TEAM_RED,
+	TEAM_BLUE
+};
+
 // ClientPrint msgDest enum.
-enum MessageDestination : std::uint8_t
+enum MessageDestination : uint8_t
 {
     HUD_PRINTNOTIFY	= 1, // Works same as HUD_PRINTCONSOLE
     HUD_PRINTCONSOLE,    // Print to console.
@@ -83,9 +92,9 @@ namespace Utils
     int          GetCommandClientIndex();
     void         SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, bool fireTriggers);
 	int			 EntityIndex(CBaseEntity* pEntity);
-	int			 EdictIndex(const edict_t* pEdict);
-	edict_t*	 IndexToEdict(const int entityIndex);
-	edict_t*	 EntityToEdict(CBaseEntity* pEntity);
+	int			 EdictIndex(const Edict* pEdict);
+	Edict*	 IndexToEdict(const int entityIndex);
+	Edict*	 EntityToEdict(CBaseEntity* pEntity);
 	const char*  GetGameMainDir();
 	const char*	 GetGameRootDir();
 	bool		 IsGameActive();

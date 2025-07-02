@@ -2,7 +2,7 @@
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
 // Purpose: P2SourceModPlusPlus plugin
-// 
+//
 //===========================================================================//
 
 #pragma once
@@ -10,7 +10,8 @@
 #ifndef P2SM_HPP
 #define P2SM_HPP
 
-#include "engine/iserverplugin.h"
+#include "interfaces/serverplugin.hpp"
+#include "interfaces/gameevents.hpp"
 
 #define P2SMPLUSPLUS_PLUGIN_VERSION "1.2.0 PREVIEW" // Update this when a new version of the plugin is released.
 
@@ -18,41 +19,47 @@
 // Purpose: P2SourceModPlusPlus server plugin class
 //---------------------------------------------------------------------------------
 
-class CP2SMPlusPlusPlugin : public IServerPluginCallbacks
+class CP2SMPlusPlusPlugin : public IServerPluginCallbacks, public IGameEventListener2
 {
 public:
 	CP2SMPlusPlusPlugin();
 	virtual ~CP2SMPlusPlusPlugin() = default;
 
-	// IServerPluginCallbacks methods.
-	virtual bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
-	virtual void			Unload(void);
-	virtual void			Pause(void);
-	virtual void			UnPause(void);
-	virtual const char*     GetPluginDescription(void);
-	virtual void			LevelInit(char const* pMapName);
-	virtual void			ServerActivate(edict_t* pEdictList, int edictCount, int clientMax);
-	virtual void			GameFrame(bool simulating);
-	virtual void			LevelShutdown(void);
-	virtual void			ClientActive(edict_t* pEntity);
-	virtual void			ClientDisconnect(edict_t* pEntity);
-	virtual void			ClientPutInServer(edict_t* pEntity, char const* playerName);
-	virtual void			SetCommandClient(int index);
-	virtual void			ClientSettingsChanged(edict_t* pEdict);
-	virtual PLUGIN_RESULT	ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxRejectLen);
-	virtual void			ClientFullyConnect(edict_t* pEntity);
-	virtual PLUGIN_RESULT	ClientCommand(edict_t* pEntity, const CCommand& args);
-	virtual PLUGIN_RESULT	NetworkIDValidated(const char* pszUserName, const char* pszNetworkID);
-	virtual void			OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue);
-	virtual void			OnEdictAllocated(edict_t* edict);
-	virtual void			OnEdictFreed(const edict_t* edict);
-	virtual bool			BNetworkCryptKeyCheckRequired(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, bool bClientWantsToUseCryptKey);
-	virtual bool			BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan);
+	bool			Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory) override;
+	void			Unload() override;
+	void			Pause() override;
+	void			UnPause() override;
+	const char*     GetPluginDescription() override;
+	void			LevelInit(const char* mapName) override;
+	void			ServerActivate(Edict* edictList, int edictCount, int clientMax) override;
+	void			GameFrame(bool simulating) override;
+	void			LevelShutdown() override;
+	void			ClientActive(Edict* edict) override;
+	void			ClientFullyConnect(Edict* edict) override;
+	void			ClientDisconnect(Edict* edict) override;
+	void			ClientPutInServer(Edict* edict, char const* playerName) override;
+	void			SetCommandClient(int index) override;
+	void			ClientSettingsChanged(Edict* edict) override;
+	PluginResult	ClientConnect(bool* allowConnect, Edict* edict, const char* name, const char* ipAddress, char* reject, int maxRejectLen) override;
+	PluginResult	ClientCommand(Edict* edict, const CCommand& args) override;
+	PluginResult	NetworkIDValidated(const char* username, const char* networkID) override;
+	void			OnQueryCvarValueFinished(QueryCvarCookie cookie, Edict* edict, QueryCvarValueStatus status, const char* cvarName, const char* cvarValue) override;
+	void			OnEdictAllocated(Edict* edict) override;
+	void			OnEdictFreed(const Edict* edict) override;
+
+	// IGameEventListener2 methods
+	virtual void			FireGameEvent(IGameEvent* event);
+	virtual int				GetEventDebugID(void) { return m_nDebugID; }
+
+	virtual int				GetCommandIndex() { return m_iClientCommandIndex; }
 
 private:
 	// Plugin state member variables.
 	bool		m_bPluginLoaded;
 	bool		m_bNoUnload;
+
+	int			m_nDebugID;
+	int			m_iClientCommandIndex;
 };
 
 static CP2SMPlusPlusPlugin g_P2SMPlusPlusPlugin;

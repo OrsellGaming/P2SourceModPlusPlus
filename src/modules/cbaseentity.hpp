@@ -13,7 +13,7 @@
 class Vector;
 class IRecipientFilter;
 class CBasePlayer;
-struct edict_t;
+struct Edict;
 typedef struct HSCRIPT__* HSCRIPT;
 
 class CBaseEntity

@@ -36,9 +36,5 @@
 #include <sstream>
 #include <filesystem>
 #include <cstdint>
-#include <strtools.h>
-
-// MARK: Common Valve types/used includes
-#include <mathlib/vector.h>
 
 #endif

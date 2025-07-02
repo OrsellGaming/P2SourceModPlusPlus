@@ -53,13 +53,8 @@ CON_COMMAND(p2sm_spmaplist, "")
     // BF F0 2D 94 10 84 DB
     // GetNumChapters: 55 8B EC 80 7D ?? ?? 57 74
 
-    //uintptr_t GetNumChapters = *static_cast<uintptr_t*>(Memory::Scanner::Scan<void*>(CLIENT, "55 8B EC 80 7D 08 00 57 74 0C", 0));//16));
     ChapterContext_t** chapterArrayPtr = Memory::Scan<ChapterContext_t**>(MODULE_CLIENT, "55 8B EC 80 7D 08 00 57 74 0C", 16);
     const ChapterContext_t* chapterArray = *chapterArrayPtr;
-    // chapterArray = *reinterpret_cast<ChapterContext_t*>(tempChapterArray + 16);
-    //chapterArray = reinterpret_cast<ChapterContext_t*>(GetNumChapters + 16);
-    //chapterArray = static_cast<ChapterContext_t*>(Memory::Scanner::Scan<void*>(CLIENT, "B8 F0 A8 93 10 8D 64 24", 0));
-
 
     if (!chapterArrayPtr)
     {

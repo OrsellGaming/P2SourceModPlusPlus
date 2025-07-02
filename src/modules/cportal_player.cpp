@@ -8,8 +8,6 @@
 #include "stdafx.hpp"
 #include "modules/cportal_player.hpp"
 
-#include <const.h>
-
 #include "modules/cbaseentity.hpp"
 #include "modules/cbaseplayer.hpp"
 

@@ -8,15 +8,13 @@
 #include "stdafx.hpp"
 #include "utils/loggingsystem.hpp"
 
-#include "tier0/dbg.h"
-
 #include "commands.hpp"
 
 /**
  * @brief Logging for the plugin by adding a prefix and line break.
  * @param level Log level for log message. 0 = Msg/DevMsg, 1 = Warning/DevWarning, 2 = Error WILL STOP ENGINE!
  * @param dev Whether this log message should only appear when "p2sm_developer" is enabled.
- * @param message Message to log. Max character limit of 1024 characters.	
+ * @param message Message to log. Max character limit of 1024 characters.
  * @param ... Message formatting.
  */
 void Log(const LogLevel level, const bool dev, const char* message, ...)

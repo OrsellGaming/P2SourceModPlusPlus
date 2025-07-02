@@ -10,7 +10,7 @@
 #ifndef LOGGING_HPP
 #define LOGGING_HPP
 
-#include <color.h>
+#include "interfaces/color.hpp"
 
 // Move this color to a LoggingSystem channel.
 #define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
@@ -27,7 +27,7 @@ typedef enum LogLevels : std::uint8_t
 } LogLevel;
 
 /**
- * @brief The log channel struct which contains information abotu  
+ * @brief The log channel struct which contains information about how it will send.
  */
 typedef struct LogChannel
 {
@@ -56,8 +56,5 @@ private: // MARK: LoggingSystem Private Members
 };
 
 void Log(LogLevel level, bool dev, const char* message, ...);
-
-// Logging function.
-//void Log(LogLevel level, bool dev, const char* pMsgFormat, ...);
 
 #endif

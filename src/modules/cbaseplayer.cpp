@@ -8,8 +8,6 @@
 #include "stdafx.hpp"
 #include "modules/cbaseplayer.hpp"
 
-#include <KeyValues.h>
-
 #include "utils.hpp"
 
 void CBasePlayer::ShowViewPortPanel(const int playerIndex, const char* name, const bool bShow, KeyValues* data)

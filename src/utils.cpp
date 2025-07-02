@@ -21,7 +21,7 @@ int Utils::UserIDToPlayerIndex(const int userid)
 {
     for (int i = 1; i <= MAX_PLAYERS; i++)
     {
-        const edict_t* pEdict = nullptr;
+        const Edict* pEdict = nullptr;
         if (i >= 0 && i < g_pGlobals->maxEntities)
             pEdict = (g_pGlobals->pEdicts + i);
 
@@ -61,7 +61,7 @@ const char* Utils::GetPlayerName(const int playerIndex)
  */
 int Utils::GetSteamID(const int playerIndex)
 {
-	edict_t* pEdict = nullptr;
+	Edict* pEdict = nullptr;
 	if (playerIndex >= 0 && playerIndex < MAX_PLAYERS)
 		pEdict = (g_pGlobals->pEdicts + playerIndex);
 
@@ -200,7 +200,7 @@ int Utils::CurPlayerCount()
  */
 HSCRIPT Utils::EntIndexScriptHandle(const int entityIndex)
 {
-	edict_t* pEdict = IndexToEdict(entityIndex);
+	Edict* pEdict = IndexToEdict(entityIndex);
 	if (!pEdict->GetUnknown())
 		return nullptr;
 
@@ -302,7 +302,7 @@ int Utils::EntityIndex(CBaseEntity* pEntity)
  * @param pEdict Pointer to edict.
  * @return Entity index for edict.
  */
-int Utils::EdictIndex(const edict_t* pEdict)
+int Utils::EdictIndex(const Edict* pEdict)
 {
 	if (!pEdict)
 		return 0;
@@ -316,12 +316,12 @@ int Utils::EdictIndex(const edict_t* pEdict)
  * @param entityIndex Entity index.
  * @return Edict of entity index.
  */
-edict_t* Utils::IndexToEdict(const int entityIndex)
+Edict* Utils::IndexToEdict(const int entityIndex)
 {
 	assert(entityIndex >= 0 && entityIndex < MAX_EDICTS);
 	if (g_pGlobals->pEdicts)
 	{
-		edict_t* pEdict = g_pGlobals->pEdicts + entityIndex;
+		Edict* pEdict = g_pGlobals->pEdicts + entityIndex;
 		if (pEdict->IsFree())
 			return nullptr;
 		return pEdict;
@@ -334,7 +334,7 @@ edict_t* Utils::IndexToEdict(const int entityIndex)
  * @param pEntity Pointer to entity.
  * @return Edict of CBaseEntity.
  */
-edict_t* Utils::EntityToEdict(CBaseEntity* pEntity)
+Edict* Utils::EntityToEdict(CBaseEntity* pEntity)
 {
 	return IndexToEdict(EntityIndex(pEntity));
 }

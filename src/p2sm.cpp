@@ -2,14 +2,11 @@
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
 // Purpose: P2SourceMod++ Plugin
-// 
+//
 //===========================================================================//
 
 #include "stdafx.hpp"
 #include "p2sm.hpp"
-
-#include <cdll_int.h> // Client interfacing
-#include <eiface.h> // Server interfacing
 
 #include "modules/gui.hpp"
 
@@ -248,7 +245,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	Log(INFO, false, "Plugin unloaded! Goodbye!");
 }
 
-void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity)
+void CP2SMPlusPlusPlugin::ClientFullyConnect(Edict* pEntity)
 {
 	// Make sure the r_drawscreenoverlay ConVar is enabled for connecting clients.
 	engineServer->ClientCommand(pEntity, "r_drawscreenoverlay 1");
@@ -259,23 +256,19 @@ void CP2SMPlusPlusPlugin::ClientFullyConnect(edict_t* pEntity)
 // Purpose: Unused callbacks
 //---------------------------------------------------------------------------------
 #pragma region UNUSED_CALLBACKS
-void CP2SMPlusPlusPlugin::SetCommandClient(int index) {}
-void CP2SMPlusPlusPlugin::ServerActivate(edict_t* pEdictList, int edictCount, int clientMax) {}
-void CP2SMPlusPlusPlugin::LevelInit(char const* pMapName) {}
-PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientCommand(edict_t* pEntity, const CCommand& args) { return PLUGIN_CONTINUE; }
-void CP2SMPlusPlusPlugin::ClientActive(edict_t* pEntity) {}
-void CP2SMPlusPlusPlugin::GameFrame(bool simulating) {}
-void CP2SMPlusPlusPlugin::LevelShutdown(void) {}
-void CP2SMPlusPlusPlugin::Pause(void) {}
-void CP2SMPlusPlusPlugin::UnPause(void) {}
-void CP2SMPlusPlusPlugin::ClientDisconnect(edict_t* pEntity) {}
-void CP2SMPlusPlusPlugin::ClientPutInServer(edict_t* pEntity, char const* playerName) {}
-void CP2SMPlusPlusPlugin::ClientSettingsChanged(edict_t* pEdict) {}
-PLUGIN_RESULT CP2SMPlusPlusPlugin::ClientConnect(bool* bAllowConnect, edict_t* pEntity, const char* pszName, const char* pszAddress, char* reject, int maxRejectLen) { return PLUGIN_CONTINUE; }
-PLUGIN_RESULT CP2SMPlusPlusPlugin::NetworkIDValidated(const char* pszUserName, const char* pszNetworkID) { return PLUGIN_CONTINUE; }
-void CP2SMPlusPlusPlugin::OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue) {}
-void CP2SMPlusPlusPlugin::OnEdictAllocated(edict_t* edict) {}
-void CP2SMPlusPlusPlugin::OnEdictFreed(const edict_t* edict) {}
-bool CP2SMPlusPlusPlugin::BNetworkCryptKeyCheckRequired(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, bool bClientWantsToUseCryptKey) { return false; }
-bool CP2SMPlusPlusPlugin::BNetworkCryptKeyValidate(uint32 unFromIP, uint16 usFromPort, uint32 unAccountIdProvidedByClient, int nEncryptionKeyIndexFromClient, int numEncryptedBytesFromClient, byte* pbEncryptedBufferFromClient, byte* pbPlainTextKeyForNetchan) { return true; }
+void			Pause() {}
+void			UnPause() {}
+void			ServerActivate(Edict* edictList, int edictCount, int clientMax) {}
+void			GameFrame(bool simulating) {}
+void			ClientActive(Edict* edict) {}
+void			ClientDisconnect(Edict* edict) {}
+void			ClientPutInServer(Edict* edict, char const* playerName) {}
+void			SetCommandClient(int index) {}
+void			ClientSettingsChanged(Edict* edict) {}
+PluginResult	ClientConnect(bool* allowConnect, Edict* edict, const char* name, const char* ipAddress, char* reject, int maxRejectLen) { return PluginResult::Continue; }
+PluginResult	ClientCommand(Edict* edict, const CCommand& args) { return PluginResult::Continue; }
+PluginResult	NetworkIDValidated(const char* username, const char* networkID) { return PluginResult::Continue; }
+void			OnQueryCvarValueFinished(QueryCvarCookie cookie, Edict* edict, QueryCvarValueStatus status, const char* cvarName, const char* cvarValue) {}
+void			OnEdictAllocated(Edict* edict) {}
+void			OnEdictFreed(const Edict* edict) {}
 #pragma endregion
