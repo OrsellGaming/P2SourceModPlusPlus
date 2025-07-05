@@ -297,6 +297,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="src\utils\math.cpp" />
     <ClCompile Include="src\utils\memory.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.hpp</PrecompiledHeaderFile>
@@ -408,6 +409,7 @@
     <ClInclude Include="src\utils.hpp" />
     <ClInclude Include="src\utils\hook.hpp" />
     <ClInclude Include="src\utils\loggingsystem.hpp" />
+    <ClInclude Include="src\utils\math.hpp" />
     <ClInclude Include="src\utils\memory.hpp" />
     <ClInclude Include="src\utils\platform.hpp" />
     <ClInclude Include="src\utils\scanner.hpp" />
