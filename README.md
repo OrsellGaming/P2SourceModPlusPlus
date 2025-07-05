@@ -20,7 +20,7 @@
 
 ### Features Implemented/Potentially Plan to Implement:
 
-* ***CURRENTLY BROKEN!!! Sorry!*** Stopped workshop maps from being downloaded by the game because the base game's workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
+* Stopped workshop maps from being downloaded by the game because the base game's workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
 * Fixed human NPC movement so they don't jitter when they move. `cl_localnetworkbackdoor` is automatically set to 0 without manual adjustment.
 * Made `r_screenoverlay` ConVar be enabled by default and not need cheats so `env_screenoverlay` entities can work correctly without `sv_cheats` being needed.
 * Added a ConVar to enable instant respawns for multiplayer. Skips those moments in the third-person death cam before respawn.
