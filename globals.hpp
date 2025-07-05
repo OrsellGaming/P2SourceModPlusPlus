@@ -2,7 +2,7 @@
 //
 // Author: Orsell
 // Purpose: Global functions & variables used repeatedly throughout the plugin
-// 
+//
 //===========================================================================//
 
 #pragma once
@@ -17,7 +17,7 @@
 
 #include "scanner.hpp"
 
-#include <comdef.h> 
+#include <comdef.h>
 
 // Forward references for class types unable to be accessed directly.
 class CBasePlayer;
@@ -27,7 +27,7 @@ class CWorkshopManager;
 class CEnvProjectedTexture;
 
 // Color macros for console printing.
-#define P2SMPLUSPLUS_PLUGIN_VERSION "1.1.0" // Update this when a new version of the plugin is released.
+#define P2SMPLUSPLUS_PLUGIN_VERSION "1.1.1" // Update this when a new version of the plugin is released.
 #define P2SMPLUSPLUS_PLUGIN_CONSOLE_COLOR  Color(100, 192, 252, 255) // Light Blue
 
 #define CUR_MAPFILE_NAME STRING(g_pGlobals->mapname)
@@ -62,7 +62,7 @@ enum : std::uint8_t
 {
 	TEAM_SINGLEPLAYER = 0,
 	TEAM_SPECTATOR,
-	TEAM_RED,  
+	TEAM_RED,
 	TEAM_BLUE
 };
 
@@ -220,7 +220,7 @@ inline const char* GetGameRootDir()
 }
 
 //---------------------------------------------------------------------------------
-// Purpose: Returns true if a game session is running. 
+// Purpose: Returns true if a game session is running.
 //---------------------------------------------------------------------------------
 inline bool IsGameActive()
 {
