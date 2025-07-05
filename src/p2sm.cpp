@@ -15,12 +15,12 @@
 #include "patch-hook.hpp"
 
 /**
- * @brief The plugin is a static singleton that is exported as an interface. Max plugin interface version Portal 2 uses is 3.
+ * @brief The plugin is a static singleton that is exported as an interface. Highest plugin interface version Portal 2 uses is version 3.
  */
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CP2SMPlusPlusPlugin, IServerPluginCallbacks, "ISERVERPLUGINCALLBACKS003", g_P2SMPlusPlusPlugin);
 
 /**
- * @brief Constructor
+ * @brief Plugin class constructor.
  */
 CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 {
@@ -32,25 +32,19 @@ CP2SMPlusPlusPlugin::CP2SMPlusPlusPlugin()
 }
 
 /**
- * @brief Destructor
+ * @brief Plugin class destructor.
  */
 CP2SMPlusPlusPlugin::~CP2SMPlusPlusPlugin()
 {
 	this->debugID = EVENT_DEBUG_ID_SHUTDOWN;
 }
 
-//---------------------------------------------------------------------------------
-// Purpose: Description of plugin outputted when the "plugin_print" console command is executed.
-//---------------------------------------------------------------------------------
-const char* CP2SMPlusPlusPlugin::GetPluginDescription()
-{
-	return "P2SourceModPlusPlus Plugin | Plugin Version: " P2SMPLUSPLUS_PLUGIN_VERSION;
-}
-
-//---------------------------------------------------------------------------------
-// Purpose: Called when the plugin is loaded, initialization process.
-//			Loads the interfaces we need from the engine and applies our patches.
-//---------------------------------------------------------------------------------
+/**
+ * @brief Called when the plugin is loaded, the primary initialization process for the plugin.
+ * @param interfaceFactory Interface factory to get game interfaces.
+ * @param gameServerFactory Game server interface factory to get other game interfaces.
+ * @return True if plugin started correctly.
+ */
 bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
 	if (pluginLoaded)
@@ -185,9 +179,9 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	return true;
 }
 
-//---------------------------------------------------------------------------------
-// Purpose: Called when the plugin is turning off/unloading.
-//---------------------------------------------------------------------------------
+/**
+ * @brief Called when the plugin is shutting down. Also called when the plugin fails to load.
+ */
 void CP2SMPlusPlusPlugin::Unload()
 {
 	// If the plugin errors for some reason, prevent it from unloading.
@@ -256,6 +250,33 @@ void CP2SMPlusPlusPlugin::Unload()
 	Log(INFO, false, "Plugin unloaded! Goodbye!");
 }
 
+void	CP2SMPlusPlusPlugin::Pause() {}
+
+void	CP2SMPlusPlusPlugin::UnPause() {}
+
+/**
+ * @brief Description of plugin outputted when the "plugin_print" console command is executed.
+ * @return Plugin description.
+ */
+const char* CP2SMPlusPlusPlugin::GetPluginDescription()
+{
+	return "P2SourceModPlusPlus Plugin | Plugin Version: " P2SMPLUSPLUS_PLUGIN_VERSION;
+}
+
+void CP2SMPlusPlusPlugin::LevelInit(const char* mapName) {}
+
+void CP2SMPlusPlusPlugin::ServerActivate(Edict* edictList, int edictCount, int clientMax) {}
+
+void CP2SMPlusPlusPlugin::GameFrame(bool simulating) {}
+
+void CP2SMPlusPlusPlugin::LevelShutdown() {}
+
+void CP2SMPlusPlusPlugin::ClientActive(Edict* edict) {}
+
+/**
+ * @brief Player has fully connected to the server, but the player entity isn't fully initialized yet.
+ * @param edict Edict of player that has fully connected.
+ */
 void CP2SMPlusPlusPlugin::ClientFullyConnect(Edict* edict)
 {
 	// Make sure the r_drawscreenoverlay ConVar is enabled for connecting clients.
@@ -263,23 +284,22 @@ void CP2SMPlusPlusPlugin::ClientFullyConnect(Edict* edict)
 	Log(WARNING, true, "r_drawscreenoverlay enabled for client.");
 }
 
-//---------------------------------------------------------------------------------
-// Purpose: Unused callbacks
-//---------------------------------------------------------------------------------
-#pragma region UNUSED_CALLBACKS
-void			Pause() {}
-void			UnPause() {}
-void			ServerActivate(Edict* edictList, int edictCount, int clientMax) {}
-void			GameFrame(bool simulating) {}
-void			ClientActive(Edict* edict) {}
-void			ClientDisconnect(Edict* edict) {}
-void			ClientPutInServer(Edict* edict, char const* playerName) {}
-void			SetCommandClient(int index) {}
-void			ClientSettingsChanged(Edict* edict) {}
-PluginResult	ClientConnect(bool* allowConnect, Edict* edict, const char* name, const char* ipAddress, char* reject, int maxRejectLen) { return PluginResult::Continue; }
-PluginResult	ClientCommand(Edict* edict, const CCommand& args) { return PluginResult::Continue; }
-PluginResult	NetworkIDValidated(const char* username, const char* networkID) { return PluginResult::Continue; }
-void			OnQueryCvarValueFinished(QueryCvarCookie cookie, Edict* edict, QueryCvarValueStatus status, const char* cvarName, const char* cvarValue) {}
-void			OnEdictAllocated(Edict* edict) {}
-void			OnEdictFreed(const Edict* edict) {}
-#pragma endregion
+void CP2SMPlusPlusPlugin::ClientDisconnect(Edict* edict) {}
+
+void CP2SMPlusPlusPlugin::ClientPutInServer(Edict* edict, char const* playerName) {}
+
+void CP2SMPlusPlusPlugin::SetCommandClient(int index) {}
+
+void CP2SMPlusPlusPlugin::ClientSettingsChanged(Edict* edict) {}
+
+PluginResult CP2SMPlusPlusPlugin::ClientConnect(bool* allowConnect, Edict* edict, const char* name, const char* ipAddress, char* reject, int maxRejectLen) { return PluginResult::Continue; }
+
+PluginResult CP2SMPlusPlusPlugin::ClientCommand(Edict* edict, const CCommand& args) { return PluginResult::Continue; }
+
+PluginResult CP2SMPlusPlusPlugin::NetworkIDValidated(const char* username, const char* networkID) { return PluginResult::Continue; }
+
+void CP2SMPlusPlusPlugin::OnQueryCvarValueFinished(QueryCvarCookie cookie, Edict* edict, QueryCvarValueStatus status, const char* cvarName, const char* cvarValue) {}
+
+void CP2SMPlusPlusPlugin::OnEdictAllocated(Edict* edict) {}
+
+void CP2SMPlusPlusPlugin::OnEdictFreed(const Edict* edict) {}
