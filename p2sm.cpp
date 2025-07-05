@@ -2,7 +2,7 @@
 //
 // Authors: Orsell & Nanoman2525 & NULLderef
 // Purpose: P2SourceMod++ Plugin
-// 
+//
 //===========================================================================//
 
 #include "p2sm.hpp"
@@ -40,6 +40,11 @@ const char* CP2SMPlusPlusPlugin::GetPluginDescription(void)
 	return "P2SourceModPlusPlus Plugin | Plugin Version: " P2SMPLUSPLUS_PLUGIN_VERSION;
 }
 
+// STOP THEM WORKSHOP DOWNLOADS!
+class CUGCFileRequestManager;
+void (__fastcall* CUGCFileRequestManager__Update_orig)(CUGCFileRequestManager* thisptr);
+void  __fastcall CUGCFileRequestManager__Update_hook(CUGCFileRequestManager* thisptr) { return; }
+
 //---------------------------------------------------------------------------------
 // Purpose: Called when the plugin is loaded, initialization process.
 //			Loads the interfaces we need from the engine and applies our patches.
@@ -65,14 +70,14 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		R"(|__/      |________/ \______/ |__/     |__/                    )""\n"\
 		"(========================== VERSION: %s ==========================)", P2SMPLUSPLUS_PLUGIN_VERSION
 	);
-	
+
 	Log(INFO, false, "Loading plugin...");
 
 	Log(INFO, true, "Grabbing game window handle...");
 	hWnd = FindWindow("Valve001", nullptr);
 	if (!hWnd)
 		Log(WARNING, false, "Failed to find game window!");
-	
+
 	// big ol' try catch because game has a TerminateProcess handler for exceptions...
 	// why this wasn't here is mystifying, - 10/2024 NULLderef
 	try {
@@ -94,7 +99,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		// MinHook initialization and hooking.
 		Log(INFO, true, "Initializing MinHook and hooking functions...");
 		MH_Initialize();
-		
+
 		// Hook the death think function so players can be spawned immediate when the p2sm_instantrespawn ConVar is on.
 		Log(INFO, true, "Hooking CPortal_Player::PlayerDeathThink...");
 		MH_CreateHook(
@@ -113,12 +118,19 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 			Memory::Scanner::Scan(SERVERDLL, "A1 ?? ?? ?? ?? 8B 50 ?? 83 7A ?? ?? 74 ?? 8B 81"),
 			&CPortal_Player__FlashlightTurnOff_hook, reinterpret_cast<void**>(&CPortal_Player__FlashlightTurnOff_orig)
 		);
-		
+
 		// Stop workshop map downloads by not returning false on the download request.
-		Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
+		// Log(INFO, true, "Hooking CWorkshopManager::CreateFileDownloadRequest...");
+		// MH_CreateHook(
+		// 	Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 8B 45 ?? 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45"),
+		// 	&CWorkshopManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CWorkshopManager__CreateFileDownloadRequest_orig)
+		// );
+		// Stop workshop map downloads by not returning false on the download request.
+		//!! TEMP TO FIX ORIGINAL HOOK THAT SUDDENLY BROKE
+		Log(INFO, true, "Hooking CUGCFileRequestManager::Update...");
 		MH_CreateHook(
-			Memory::Scanner::Scan(CLIENTDLL, "55 8B EC 8B 45 ?? 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45 ?? 52 8B 55 ?? 50 8B 45"),
-			&CWorkshopManager__CreateFileDownloadRequest_hook, reinterpret_cast<void**>(&CWorkshopManager__CreateFileDownloadRequest_orig)
+		    Memory::Scanner::Scan<void*>(Memory::Modules::Get("client"), "55 8B EC 81 EC 48 01 00 00 57"),
+		    &CUGCFileRequestManager__Update_hook, reinterpret_cast<void**>(&CUGCFileRequestManager__Update_orig)
 		);
 
 		// Stop env_projectedtexture entities from getting disabled when more than one is active.
@@ -178,7 +190,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		this->m_bNoUnload = true;
 		return false;
 	}
-	
+
 	Log(INFO, true, "Loading g_pGlobals...");
 	g_pGlobals = g_pPlayerInfoManager->GetGlobalVars();
 	if (!g_pGlobals)
@@ -196,7 +208,7 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(0);
-	
+
 	// Remove the cheat flag on r_drawscreenoverlay and enable it by default to allow maps to easily display screen overlays.
 	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
@@ -204,13 +216,13 @@ bool CP2SMPlusPlusPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfa
 		screenCVar->RemoveFlags(FCVAR_CHEAT);
 		screenCVar->SetValue(1);
 	}
-	
+
 	// Make switching between players in splitscreen when testing easier by removing
 	// the need for cheats to change the current player under control.
 	Log(INFO, true, "in_forceuser...");
 	if (ConVar* ifuCVar = g_pCVar->FindVar("in_forceuser"))
 		ifuCVar->RemoveFlags(FCVAR_CHEAT);
-	
+
 	Log(INFO, false, "Loaded plugin! Yay! :D");
 	m_bPluginLoaded = true;
 
@@ -231,18 +243,18 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	}
 
 	Log(INFO, false, "Unloading Plugin...");
-	
+
 	try
 	{
 #if _WIN32
 		Log(INFO, true, "Un-patching game patches...");
-		
+
 		Log(INFO, true, "Un-patching linked portal doors...");
 		Memory::ReplacePattern("server", "EB 14 87 04 05 00 00 8B 16", "0F B6 87 04 05 00 00 8B 16");
 
 		Log(INFO, true, "Un-patching max runtime for VScript...");
 		Memory::ReplacePattern("vscript", "00 00 00 00 00 00 E0 3F", "00 00 00 E0 51 B8 9E 3F");
-		
+
 		Log(INFO, true, "Disconnecting hooked functions and un-initializing MinHook...");
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();
@@ -263,7 +275,7 @@ void CP2SMPlusPlusPlugin::Unload(void)
 	Log(INFO, true, "cl_localnetworkbackdoor...");
 	if (ConVar* lnbCVar = g_pCVar->FindVar("cl_localnetworkbackdoor"))
 		lnbCVar->SetValue(1);
-	
+
 	// Cheats flag readded, disabled.
 	Log(INFO, true, "r_drawscreenoverlay...");
 	if (ConVar* screenCVar = g_pCVar->FindVar("r_drawscreenoverlay"))
