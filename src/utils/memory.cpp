@@ -45,8 +45,8 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 				if (!GetModuleFileName(hMods[i], buffer, sizeof(buffer)))
 					continue;
 
-				auto modinfo = MODULEINFO();
-				if (!GetModuleInformation(pHandle, hMods[i], &modinfo, sizeof(modinfo)))
+				auto modInfo = MODULEINFO();
+				if (!GetModuleInformation(pHandle, hMods[i], &modInfo, sizeof(modInfo)))
 					continue;
 
 				auto module = ModuleInfo();
@@ -56,8 +56,8 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 				temp = temp.substr(index + 1, temp.length() - index);
 
 				std::snprintf(module.name, sizeof(module.name), "%s", temp.c_str());
-				module.base = reinterpret_cast<uintptr_t>(modinfo.lpBaseOfDll);
-				module.size = static_cast<uintptr_t>(modinfo.SizeOfImage);
+				module.base = reinterpret_cast<uintptr_t>(modInfo.lpBaseOfDll);
+				module.size = static_cast<uintptr_t>(modInfo.SizeOfImage);
 				std::snprintf(module.path, sizeof(module.path), "%s", buffer);
 
 				Memory::moduleList.push_back(module);
@@ -75,7 +75,7 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 			{
 				// FIXME: we really want data segments too! but +x is more important
 				if (info->dlpi_phdr[i].p_flags & 1) // execute
-				{ 
+				{
 					Memory::ModuleInfo module;
 					module.base = info->dlpi_addr + info->dlpi_phdr[i].p_vaddr;
 					module.size = info->dlpi_phdr[i].p_memsz;
@@ -91,7 +91,7 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 #endif
 	}
 
-	for (Memory::ModuleInfo &item : Memory::moduleList)
+	for (const Memory::ModuleInfo& item : Memory::moduleList)
 	{
 		if (!std::strcmp(item.name, moduleName))
 		{
@@ -104,7 +104,7 @@ bool Memory::TryGetModule(const char* moduleName, Memory::ModuleInfo* info)
 
 	return false;
 }
-void* Memory::GetModuleHandleByName(const char *moduleName)
+void* Memory::GetModuleHandleByName(const char* moduleName)
 {
 	auto info = Memory::ModuleInfo();
 #ifdef _WIN32
@@ -113,7 +113,7 @@ void* Memory::GetModuleHandleByName(const char *moduleName)
 	return (TryGetModule(moduleName, &info)) ? dlopen(info.path, RTLD_NOLOAD | RTLD_NOW) : nullptr;
 #endif
 }
-void Memory::CloseModuleHandle(void *moduleHandle)
+void Memory::CloseModuleHandle(void* moduleHandle)
 {
 #ifndef _WIN32
 	dlclose(moduleHandle);
@@ -159,8 +159,8 @@ uintptr_t Memory::Scan(const char *moduleName, const char* pattern, const int of
 	auto info = Memory::ModuleInfo();
 	if (Memory::TryGetModule(moduleName, &info))
 	{
-		auto start = uintptr_t(info.base);
-		auto end = start + info.size;
+		const auto start = info.base;
+		const auto end = start + info.size;
 		result = Memory::FindAddress(start, end, pattern);
 		if (result)
 			result += offset;
@@ -189,7 +189,7 @@ std::vector<uintptr_t> Memory::MultiScan(const char* moduleName, const char* pat
 	auto info = Memory::ModuleInfo();
 	if (Memory::TryGetModule(moduleName, &info))
 	{
-		auto start = uintptr_t(info.base);
+		auto start = info.base;
 		const auto end = start + info.size;
 		while (true) {
 			if (auto addr = Memory::FindAddress(start, end, pattern))
@@ -211,7 +211,7 @@ std::vector<uintptr_t> Memory::Scan(const char* moduleName, const Memory::Patter
 	auto info = Memory::ModuleInfo();
 	if (Memory::TryGetModule(moduleName, &info))
 	{
-		const auto start = uintptr_t(info.base);
+		const auto start = info.base;
 		const auto end = start + info.size;
 		if (const auto addr = Memory::FindAddress(start, end, pattern->signature))
 		{
@@ -228,10 +228,10 @@ std::vector<std::vector<uintptr_t>> Memory::MultiScan(const char* moduleName, co
 	auto info = Memory::ModuleInfo();
 	if (Memory::TryGetModule(moduleName, &info))
 	{
-		const auto moduleStart = uintptr_t(info.base);
+		const auto moduleStart = info.base;
 		const auto moduleEnd = moduleStart + info.size;
 
-		for (const auto &pattern : *patterns)
+		for (const auto& pattern : *patterns)
 		{
 			const auto length = std::strlen(pattern->signature);
 			auto start = moduleStart;
@@ -241,7 +241,7 @@ std::vector<std::vector<uintptr_t>> Memory::MultiScan(const char* moduleName, co
 				if (const auto addr = Memory::FindAddress(start, moduleEnd, pattern->signature))
 				{
 					auto result = std::vector<uintptr_t>();
-					for (const auto &offset : pattern->offsets)
+					for (const auto& offset : pattern->offsets)
 						result.push_back(addr + offset);
 
 					results.push_back(result);
@@ -270,11 +270,12 @@ Memory::Patch::~Patch()
 	}
 	this->isPatched = false;
 }
+
 bool Memory::Patch::Execute()
 {
 	if (this->isPatched)
 		return true; // already executed
-	unsigned char *tmpPatch = new unsigned char[this->size];
+	unsigned char* tmpPatch = new unsigned char[this->size];
 	//	We create another patch, because this->patch is gonna be deleted
 	memcpy(tmpPatch, this->patch, this->size);
 	auto ret = this->Execute(this->location, tmpPatch, this->size);
@@ -282,11 +283,13 @@ bool Memory::Patch::Execute()
 	return ret;
 }
 
-bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, const size_t size_)
+bool Memory::Patch::Execute(const uintptr_t location_, unsigned char* bytes, const size_t size_)
 {
-	if (this->isPatched) return true; // already executed
-	this->location = location;
+	if (this->isPatched)
+		return true; // already executed
+	this->location = location_;
 	this->size = size_;
+
 	if (this->original)
 	{
 		delete[] this->original;
@@ -329,7 +332,7 @@ bool Memory::Patch::Execute(uintptr_t location, unsigned char* bytes, const size
 }
 bool Memory::Patch::Restore()
 {
-	if (!this || !this->location || !this->original)
+	if (!this->location || !this->original)
 		return false;
 
 	if (!this->isPatched)
@@ -340,8 +343,9 @@ bool Memory::Patch::Restore()
 #else
 	//	Should be already unprotected, but just in case
 	Memory::UnProtect(reinterpret_cast<void *>(this->location), this->size);
-	for (size_t i = 0; i < this->size; ++i) {
-		*(uint8_t *)(this->location + i) = this->original[i];
+	for (size_t i = 0; i < this->size; ++i)
+		{
+		*(uint8_t*)(this->location + i) = this->original[i];
 	}
 #endif
 	this->isPatched = false;

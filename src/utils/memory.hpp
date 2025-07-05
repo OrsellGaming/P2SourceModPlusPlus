@@ -55,7 +55,7 @@ namespace Memory
 		Patch() : location(0), original(nullptr), patch(nullptr), size(0), isPatched(false) {}
 		~Patch();
 		bool Execute();
-		bool Execute(uintptr_t location, unsigned char* bytes, size_t size_);
+		bool Execute(uintptr_t location_, unsigned char* bytes, size_t size_);
 		template <size_t size>
 		bool Execute(const uintptr_t location_, unsigned char (&bytes)[size])
 		{

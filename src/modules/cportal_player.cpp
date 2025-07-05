@@ -68,7 +68,6 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
  * @param playSound If flashlight sound should play. Coded to always pass as false.
  */
 DEFINE_HOOK(CPortal_Player, FlashlightTurnOff);
-//Hook* CPortal_Player::h_CPortal_Player_FlashlightTurnOff = nullptr;
 DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 {
 	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
