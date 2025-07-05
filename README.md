@@ -18,6 +18,8 @@
 >
 > I will, in the future, try to add custom elements involving interactions with Steam's API, like achievements, but for now, I don't expect this to work correctly with Steam mods. Plus, in the end, P2:CE will do this properly in the future.
 
+### The functionality of this plugin was made possible thanks to parts of the SAR plugin code base. This mainly consists of the memory scanner, platform macros, and math functions.
+
 ### Features Implemented/Potentially Plan to Implement:
 
 * ***CURRENTLY BROKEN!!! Sorry!*** Stopped workshop maps from being downloaded by the game because the base game's workshop folder isn't on path for SourceMods. Because of this, it tries to get ***ALL*** of them at once, which causes the game to be unstable and occasionally crash.
@@ -27,19 +29,21 @@
 * Fixed linked portal doors causing crashes on multiplayer when players enter them.
 * Increased the max VScript VM runtime so that VScript operations like `for` and `while` loops run without problems. This helps give more leeway in doing things in VScript without the engine complaining and shutting down the rest of the script, spewing errors in the console. While it depends on how the script was programmed and what it is doing, I occasionally notice this, and this fix helps eliminate it.
 * Fixed the player flashlight impulse ConCommand, so it no longer requires cheats to be enabled. All that is needed is a key bound to `impulse 100`. However, the flashlight doesn't work perfectly with portals, snapping to odd positions when moving through and unable to shine through portals.
+* Increased env_projectedtexture count from 1 to 8.
+* Added ConVar to enable volumetrics on projected textures. However their volumetric intensity defaults to max and not individually customizable.
 * **(NOT IMPLEMENTED)** Add a ConVar to disable multiplayer death icons.
-* **(NOT IMPLEMENTED)** Allow more than one env_projectedtexture to be on at once. However, the engine limit of eight is still enforced! That can not be fixed.
 * **(NOT IMPLEMENTED)** Option to turn on or off puzzle maker functionality. Most mods don't use the puzzle maker, but it still loads in. The plugin will try to disable as much of it as possible so the console is not filled with any puzzle-maker-related errors, messages, or other additional bloat.
 * **(NOT IMPLEMENTED)** Custom Discord RPC for Portal 2 SourceMods.
 * **(NOT IMPLEMENTED)** Additional achievement support and features. Like custom achievements that span multiple maps and have more parts than Door Prize and Smash TV.
 * **(NOT IMPLEMENTED)** As informed by MarvinG, `env_sun` disappears when over player crosshair. I have not been able to confirm this and have never noticed it in general.
-* **(NOT IMPLEMENTED)** When in water, the player is pushed to the world's origin.
-* **(NOT IMPLEMENTED)** Fix SourceMods only getting a small 2 MB of memory for material system render context allocation, increasing it to 6 MB. This could happen if this gets ported to SAR or P2SRM.
+* **(NOT IMPLEMENTED)** Fix SourceMods only getting a small 2 MB of memory for material system render context allocation, increasing it to 6 MB or possibly more. This could happen if this gets ported to SAR or P2SRM.
 * **(NOT IMPLEMENTED)** Linux support.
 * **(NOT IMPLEMENTED)** Implement some VScript functions and hooks to capture specific events, turn ConVars on or off, and fix and add new VScript functions.
 * **(NOT IMPLEMENTED)** Make main menu backgrounds switch accordingly to the act number indicated in the map name ("sp_a3").
 * **(NOT IMPLEMENTED)** Have a config file to turn specific fixes and features on or off.
 * **(NOT IMPLEMENTED)** Reimplement/fix map backgrounds for Portal 2.
+* **(NOT IMPLEMENTED)** Fix func_precipitation to default its origin to (0,0,0) to the brush entity works.
+* **(NOT IMPLEMENTED)** Be able to add custom maps to challenge mode portion of the game.
 
 ### Download and Install Instructions:
 
@@ -53,7 +57,7 @@ Download the latest `addons.zip` under the `Releases` tab on GitHub and extract 
 **Update 3/24/2025: I plan to move this over to a forked version of SAR using its code base as a base for this plugin. Its structure is much better, it has more engine functionality accessible in the plugin, and it compiles for Linux. However, do not expect this switch to happen anytime soon. Thank you for being so patient.**
 
 ***
-Please credit Orsell/OrsellGaming, Nanoman2525, NULLderef, and/or the `Portal 2: Multiplayer Mod Team` if you use this plugin or its code in any way with your SourceMod.
-You'll also need to include this repository and P2:MM's license file with the plugin.
-Both licenses will be included with the `addon.zip` file you download to get the plugin.
+Please credit the SAR Team, Orsell, Nanoman2525, NULLderef, and/or the `Portal 2: Multiplayer Mod Team` if you use this plugin or its code in any way with your SourceMod.
+You'll also need to include this repository, P2:MM's, and SAR's license file with the plugin.
+All licenses will be included with the `addon.zip` file you download to get the plugin.
 ***
