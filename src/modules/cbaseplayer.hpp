@@ -17,7 +17,7 @@ class CBasePlayer
 public: // MARK: CBasePlayer Public Members
 #pragma region Public Members
 
-    static void ShowViewPortPanel(int playerIndex, const char* name, bool bShow, KeyValues* data);
+    static void ShowViewPortPanel(CBasePlayer* player, const char* name, bool show, KeyValues* data);
 
 #pragma endregion
 

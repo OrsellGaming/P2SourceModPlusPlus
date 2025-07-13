@@ -14,6 +14,7 @@
 #include "utils.hpp"
 #include "commands.hpp"
 #include "globals.hpp"
+#include "signatures.hpp"
 
 // Redeclaration's for hooks.
 REDECL(CPortal_Player::PlayerDeathThink);
@@ -47,8 +48,8 @@ DETOUR_T(void, CPortal_Player::PlayerDeathThink)
 DEFINE_HOOK(CPortal_Player, FlashlightTurnOn);
 DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 {
-	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
-	const int playerIndex = Utils::EntityIndex(pEntity);
+	CBaseEntity* entity = static_cast<CBaseEntity*>(thisPtr);
+	const int playerIndex = Utils::EntityIndex(entity);
 	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
 	{
 		Log(WARNING, false, "CPortal_Player::FlashlightTurnOn was called with a invalid player!");
@@ -59,7 +60,7 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 
 	CPlayerFilter filter;
 	filter.AddPlayer(playerIndex);
-	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOn", nullptr, 0.0f);
+	CBaseEntity::EmitSound(entity, playerIndex, filter, "HL2Player.FlashLightOn", nullptr, 0.0f);
 	return true;
 }
 
@@ -70,7 +71,7 @@ DETOUR_T(bool, CPortal_Player::FlashlightTurnOn, bool playSound)
 DEFINE_HOOK(CPortal_Player, FlashlightTurnOff);
 DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 {
-	CBaseEntity* pEntity = static_cast<CBaseEntity*>(thisPtr);
+	CBaseEntity* entity = static_cast<CBaseEntity*>(thisPtr);
 	const int playerIndex = Utils::EntityIndex(static_cast<CBaseEntity*>(thisPtr));
 	if (playerIndex <= 0 || playerIndex > MAX_PLAYERS)
 	{
@@ -82,7 +83,7 @@ DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
 
 	CPlayerFilter filter;
 	filter.AddPlayer(playerIndex);
-	CBaseEntity::EmitSound(pEntity, playerIndex, filter, "HL2Player.FlashLightOff", nullptr, 0.0f);
+	CBaseEntity::EmitSound(entity, playerIndex, filter, "HL2Player.FlashLightOff", nullptr, 0.0f);
 }
 
 #pragma endregion
@@ -93,17 +94,18 @@ DETOUR_T(void, CPortal_Player::FlashlightTurnOff, bool playSound)
  * @brief Respawn a player where ever their spawn point is set.
  * @param playerEntityIndex Player entity index.
  */
+using RespawnPlayerT = void (__thiscall*)(CPortal_Player*);
 void CPortal_Player::RespawnPlayer(const int playerEntityIndex)
 {
-    const auto pPlayer = reinterpret_cast<CPortal_Player*>(Utils::PlayerByIndex(playerEntityIndex));
-    if (!pPlayer)
+    const auto player = reinterpret_cast<CPortal_Player*>(Utils::PlayerByIndex(playerEntityIndex));
+    if (!player)
     {
         Log(WARNING, false, "Couldn't get player to respawn! playerIndex: %i", playerEntityIndex);
         return;
     }
 
-    static auto respawnPlayer = reinterpret_cast<void(__thiscall*)(CPortal_Player*)>(Memory::Scan<void*>(MODULE_SERVER, "0F 57 C0 56 8B F1 57 8D 8E"));
-    respawnPlayer(pPlayer);
+    static auto respawnPlayer = Memory::Scan<RespawnPlayerT>(MODULE_SERVER, Signatures::RespawnPlayer);
+    respawnPlayer(player);
 }
 
 /**
@@ -114,19 +116,19 @@ void CPortal_Player::RespawnPlayer(const int playerEntityIndex)
  * @param playerEntityIndex Player entity index.
  * @param enabled Should flashlight be enabled or not.
  */
-void CPortal_Player::SetFlashlightState(int playerEntityIndex, bool enabled)
+void CPortal_Player::SetFlashlightState(const int playerEntityIndex, const bool enabled)
 {
-	CBasePlayer* pPlayer = Utils::PlayerByIndex(playerEntityIndex);
-	if (!pPlayer)
+	CBasePlayer* player = Utils::PlayerByIndex(playerEntityIndex);
+	if (!player)
 	{
 		Log(WARNING, true, "Couldn't get player to set flashlight state! playerIndex: %i enable: %i", playerEntityIndex, !!enabled);
 		return;
 	}
 
 	if (enabled)
-		CBaseEntity::AddEffects(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+		CBaseEntity::AddEffects(reinterpret_cast<CBaseEntity*>(player), EF_DIMLIGHT);
 	else
-		CBaseEntity::RemoveEffects(reinterpret_cast<CBaseEntity*>(pPlayer), EF_DIMLIGHT);
+		CBaseEntity::RemoveEffects(reinterpret_cast<CBaseEntity*>(player), EF_DIMLIGHT);
 }
 
 #pragma	endregion

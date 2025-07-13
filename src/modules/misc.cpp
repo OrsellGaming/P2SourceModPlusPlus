@@ -8,6 +8,7 @@
 #include "stdafx.hpp"
 #include "modules/misc.hpp"
 
+#include "math.hpp"
 #include "utils.hpp"
 
 // Redeclaration's for hooks.

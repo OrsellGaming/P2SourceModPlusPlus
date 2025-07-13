@@ -227,7 +227,7 @@ CBasePlayer* Utils::PlayerByIndex(const int playerEntityIndex)
  * @param player Player's CBasePlayer class.
  * @param msgDest Where message will be sent.
  * @param msg Message to send.
- * @attention The param# parameters are for formatting. Only four max due to hour the message is programmed to be networked. 
+ * @attention The param# parameters are for formatting. Only four max due to hour the message is programmed to be networked.
  * @param param1 Formatting. Defaults to nullptr.
  * @param param2 Formatting. Defaults to nullptr.
  * @param param3 Formatting. Defaults to nullptr.
@@ -288,13 +288,13 @@ void Utils::SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, const bool f
 
 /**
  * @brief CBaseEntity to entity index.
- * @param pEntity Pointer to entity.
+ * @param entity Pointer to entity.
  * @return Entity index of entity.
  */
-int Utils::EntityIndex(CBaseEntity* pEntity)
+int Utils::EntityIndex(CBaseEntity* entity)
 {
 	static auto entIndex = reinterpret_cast<int (__cdecl*)(CBaseEntity*)>(Memory::Scan<void*>(MODULE_SERVER, "55 8B EC 8B 45 ? 85 C0 74 ? 8B 40 ? 85 C0 74 ? 8B 0D"));
-	return entIndex(pEntity);
+	return entIndex(entity);
 }
 
 /**
@@ -331,12 +331,12 @@ Edict* Utils::IndexToEdict(const int entityIndex)
 
 /**
  * @brief Convert CBaseEntity to entity edict.
- * @param pEntity Pointer to entity.
+ * @param entity Pointer to entity.
  * @return Edict of CBaseEntity.
  */
-Edict* Utils::EntityToEdict(CBaseEntity* pEntity)
+Edict* Utils::EntityToEdict(CBaseEntity* entity)
 {
-	return IndexToEdict(EntityIndex(pEntity));
+	return IndexToEdict(EntityIndex(entity));
 }
 
 /**

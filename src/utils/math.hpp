@@ -20,15 +20,16 @@
 struct Vector
 {
 	float x, y, z;
-	inline Vector() : x(0), y(0), z(0) {}
-	inline Vector(const float x, const float y, const float z = 0) : x(x), y(y), z(z) {}
+	Vector() : x(0), y(0), z(0) {}
+	Vector(const float x_, const float y_, const float z_ = 0) : x(x_), y(y_), z(z_) {}
 
-	inline float SquaredLength() const { return x * x + y * y + z * z; }
-	inline float Length() const { return std::sqrt(x * x + y * y + z * z); }
-	inline float Length2D() const { return std::sqrt(x * x + y * y); }
-	inline float Dot(const Vector& vOther) const { return Vector::DotProduct(*this, vOther); }
-	static inline float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z;}
-	inline Vector Cross(const Vector& v) const
+	float SquaredLength() const { return x * x + y * y + z * z; }
+	float Length() const { return std::sqrt(x * x + y * y + z * z); }
+	float Length2D() const { return std::sqrt(x * x + y * y); }
+	float Dot(const Vector& vOther) const { return Vector::DotProduct(*this, vOther); }
+	static float DotProduct(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y + a.z * b.z;}
+
+	Vector Cross(const Vector& v) const
 	{
 		Vector out;
 		out.x = this->y * v.z - this->z * v.y;
@@ -36,126 +37,141 @@ struct Vector
 		out.z = this->x * v.y - this->y * v.x;
 		return out;
 	}
-	inline Vector Normalize() const { return *this / this->Length(); }
 
-	inline Vector operator*(const float fl) const
+	Vector Normalize() const { return *this / this->Length(); }
+
+	Vector operator*(const float flt) const
 	{
-		Vector res;
-		res.x = x * fl;
-		res.y = y * fl;
-		res.z = z * fl;
-		return res;
+		Vector result;
+		result.x = this->x * flt;
+		result.y = this->y * flt;
+		result.z = this->z * flt;
+		return result;
 	}
-	inline Vector& operator*=(const float fl)
+
+	Vector& operator*=(const float flt)
 	{
-		x = x * fl;
-		y = y * fl;
-		z = z * fl;
+		this->x = this->x * flt;
+		this->y = this->y * flt;
+		this->z = this->z * flt;
 		return *this;
 	}
-	inline Vector operator/(const float fl) const
+
+	Vector operator/(const float flt) const
 	{
-		return *this * (1 / fl);
+		return *this * (1 / flt);
 	}
-	inline Vector& operator+=(const Vector& vec)
+
+	Vector& operator+=(const Vector& vec)
 	{
-		x = x + vec.x;
-		y = y + vec.y;
-		z = z + vec.z;
+		this->x = this->x + vec.x;
+		this->y = this->y + vec.y;
+		this->z = this->z + vec.z;
 		return *this;
 	}
-	inline Vector operator+(const Vector vec) const
+
+	Vector operator+(const Vector vec) const
 	{
-		Vector res;
-		res.x = x + vec.x;
-		res.y = y + vec.y;
-		res.z = z + vec.z;
-		return res;
+		Vector result;
+		result.x = this->x + vec.x;
+		result.y = this->y + vec.y;
+		result.z = this->z + vec.z;
+		return result;
 	}
-	inline Vector& operator-=(const Vector& vec)
+
+	Vector& operator-=(const Vector& vec)
 	{
-		x -= vec.x;
-		y -= vec.y;
-		z -= vec.z;
+		this->x -= vec.x;
+		this->y -= vec.y;
+		this->z -= vec.z;
 		return *this;
 	}
-	inline Vector operator-(const Vector vec) const
+
+	Vector operator-(const Vector vec) const
 	{
-		Vector res;
-		res.x = x - vec.x;
-		res.y = y - vec.y;
-		res.z = z - vec.z;
-		return res;
+		Vector result;
+		result.x = this->x - vec.x;
+		result.y = this->y - vec.y;
+		result.z = this->z - vec.z;
+		return result;
 	}
-	inline Vector operator-() const { return Vector{0, 0, 0} - *this; }
-	inline float& operator[](const int i) { return ((float*)this)[i]; }
-	inline float operator[](const int i) const { return ((float*)this)[i]; }
-	inline bool operator==(const Vector vec) const { return x == vec.x && y == vec.y && z == vec.z; }
-	inline bool operator!=(const Vector vec) const { return !(*this == vec); }
+
+	Vector operator-() const { return Vector{0, 0, 0} - *this; }
+	float& operator[](const int i) { return reinterpret_cast<float*>(this)[i]; }
+	float operator[](const int i) const { return ((float*)this)[i]; }
+	bool operator==(const Vector vec) const { return x == vec.x && y == vec.y && z == vec.z; }
+	bool operator!=(const Vector vec) const { return !(*this == vec); }
 };
 
 template <typename T>
 struct Vector2
 {
 	T x, y;
-	inline Vector2() : x(0), y(0) {}
-	inline Vector2(const T& x, const T& y) : x(x), y(y) {}
+	Vector2() : x(0), y(0) {}
+	Vector2(const T& x, const T& y) : x(x), y(y) {}
 
-	inline float Length() const { return sqrt(x * x + y * y); }
-	inline T Dot(const Vector2& other) const { return x * other.x + y * other.y; }
-	inline T Cross(const Vector2& other) const { return x * other.y - y * other.x; }
-	inline Vector2 Normalize() { return *this / this->Length(); }
+	float Length() const { return sqrt(x * x + y * y); }
+	T Dot(const Vector2& other) const { return x * other.x + y * other.y; }
+	T Cross(const Vector2& other) const { return x * other.y - y * other.x; }
+	Vector2 Normalize() { return *this / this->Length(); }
 
-	inline Vector2 operator+(const Vector2& other) const
+	Vector2 operator+(const Vector2& other) const
 	{
-		Vector2 res;
-		res.x = x + other.x;
-		res.y = y + other.y;
-		return res;
+		Vector2 result;
+		result.x = this->x + other.x;
+		result.y = this->y + other.y;
+		return result;
 	}
-	inline Vector2 operator+=(const Vector2& other)
+
+	Vector2 operator+=(const Vector2& other)
 	{
-		x += other.x;
-		y += other.y;
+		this->x += other.x;
+		this->y += other.y;
 		return *this;
 	}
-	inline Vector2 operator-(const Vector2& other) const
+
+	Vector2 operator-(const Vector2& other) const
 	{
-		Vector2 res;
-		res.x = x - other.x;
-		res.y = y - other.y;
-		return res;
+		Vector2 result;
+		result.x = this->x - other.x;
+		result.y = this->y - other.y;
+		return result;
 	}
-	inline Vector2 operator-=(const Vector2& other)
+
+	Vector2 operator-=(const Vector2& other)
 	{
-		x -= other.x;
-		y -= other.y;
+		this->x -= other.x;
+		this->y -= other.y;
 		return *this;
 	}
-	inline Vector2 operator*(float val) const
+
+	Vector2 operator*(float val) const
 	{
-		Vector2 res;
-		res.x = x * val;
-		res.y = y * val;
-		return res;
+		Vector2 result;
+		result.x = this->x * val;
+		result.y = this->y * val;
+		return result;
 	}
-	inline Vector2 operator*=(float val)
+
+	Vector2 operator*=(float val)
 	{
-		x *= val;
-		y *= val;
+		this->x *= val;
+		this->y *= val;
 		return *this;
 	}
-	inline Vector2 operator/(float val) const
+
+	Vector2 operator/(float val) const
 	{
-		Vector2 res;
-		res.x = x / val;
-		res.y = y / val;
-		return res;
+		Vector2 result;
+		result.x = x / val;
+		result.y = y / val;
+		return result;
 	}
-	inline Vector2 operator/=(float val)
+
+	Vector2 operator/=(float val)
 	{
-		x /= val;
-		y /= val;
+		this->x /= val;
+		this->y /= val;
 		return *this;
 	}
 };
@@ -165,52 +181,58 @@ struct Bounds
 {
 	Vector2<T> vBegin, vEnd;
 
-	inline Bounds()
+	Bounds()
 		: vBegin(Vector2<T>(static_cast<T>(0), static_cast<T>(0)))
 		, vEnd(Vector2<T>(static_cast<T>(0), static_cast<T>(0))) {}
-	inline Bounds(const T& x0, const T& y0, const T& x1, const T& y1)
+
+	Bounds(const T& x0, const T& y0, const T& x1, const T& y1)
 		: vBegin(Vector2<T>(x0, y0))
 		, vEnd(Vector2<T>(x1, y1)) {}
-	inline Bounds(const Vector2<T>& v0, const Vector2<T>& v1)
+
+	Bounds(const Vector2<T>& v0, const Vector2<T>& v1)
 		: vBegin(v0)
 		, vEnd(v1) {}
 
-	inline Bounds Scale(const Vector2<T>& stretchPoint, const float amp)
+	Bounds Scale(const Vector2<T>& stretchPoint, const float amp)
 	{
-		vBegin = stretchPoint - (stretchPoint - vBegin) * amp;
-		vEnd = stretchPoint + (vEnd - stretchPoint) * amp;
-		return *this;
-	}
-	inline Bounds Scale(const float amp)
-	{
-		Scale(vBegin, amp);
+		this->vBegin = stretchPoint - (stretchPoint - this->vBegin) * amp;
+		this->vEnd = stretchPoint + (this->vEnd - stretchPoint) * amp;
 		return *this;
 	}
 
-	inline Bounds operator+(const Bounds& other) const
+	Bounds Scale(const float amp)
 	{
-		Bounds<T> res;
-		res.vBegin = vBegin + other.vBegin;
-		res.vEnd = vEnd + other.vEnd;
-		return res;
-	}
-	inline Bounds operator+=(const Bounds& other)
-	{
-		vBegin += other.vBegin;
-		vEnd += other.vEnd;
+		Scale(this->vBegin, amp);
 		return *this;
 	}
-	inline Bounds operator-(const Bounds& other) const
+
+	Bounds operator+(const Bounds& other) const
 	{
-		Bounds<T> res;
-		res.vBegin = vBegin - other.vBegin;
-		res.vEnd = vEnd - other.vEnd;
-		return res;
+		Bounds<T> result;
+		result.vBegin = this->vBegin + other.vBegin;
+		result.vEnd = this->vEnd + other.vEnd;
+		return result;
 	}
-	inline Bounds operator-=(const Bounds& other)
+
+	Bounds operator+=(const Bounds& other)
 	{
-		vBegin -= other.vBegin;
-		vEnd -= other.vEnd;
+		this->vBegin += other.vBegin;
+		this->vEnd += other.vEnd;
+		return *this;
+	}
+
+	Bounds operator-(const Bounds& other) const
+	{
+		Bounds<T> result;
+		result.vBegin = this->vBegin - other.vBegin;
+		result.vEnd = this->vEnd - other.vEnd;
+		return result;
+	}
+
+	Bounds operator-=(const Bounds& other)
+	{
+		this->vBegin -= other.vBegin;
+		this->vEnd -= other.vEnd;
 		return *this;
 	}
 };
@@ -260,8 +282,8 @@ public:
 
 	void Print() const;
 
-	int GetRows() const { return rows; }
-	int GetCols() const { return cols; }
+	int GetRows() const { return this->rows; }
+	int GetCols() const { return this->cols; }
 
 private:
 	std::vector<std::vector<double>> mat;
@@ -272,11 +294,11 @@ private:
 
 struct Matrix3X4
 {
-	float m_flMatVal[3][4];
+	float matrix[3][4];
 
-	inline Vector VectorTransform(const Vector& v) const
+	Vector VectorTransform(const Vector& v) const
 	{
-		const float(*m)[4] = m_flMatVal;
+		const float(*m)[4] = matrix;
 		return Vector{
 			m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3],
 			m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3],
@@ -287,22 +309,22 @@ struct Matrix3X4
 
 struct VMatrix
 {
-	float m[4][4];
+	float matrix[4][4];
 
-	inline Vector VectorTransform(const Vector& vVec) const
+	Vector VectorTransform(const Vector& vVec) const
 	{
-		return Vector(
-			m[0][0] * vVec.x + m[0][1] * vVec.y + m[0][2] * vVec.z,
-			m[1][0] * vVec.x + m[1][1] * vVec.y + m[1][2] * vVec.z,
-			m[2][0] * vVec.x + m[2][1] * vVec.y + m[2][2] * vVec.z);
+		return {
+			this->matrix[0][0] * vVec.x +this->matrix[0][1] * vVec.y + this->matrix[0][2] * vVec.z,
+			this->matrix[1][0] * vVec.x +this->matrix[1][1] * vVec.y + this->matrix[1][2] * vVec.z,
+			this->matrix[2][0] * vVec.x +this->matrix[2][1] * vVec.y + this->matrix[2][2] * vVec.z};
 	}
 
-	inline Vector PointTransform(const Vector& vVec) const
+	Vector PointTransform(const Vector& vVec) const
 	{
-		return Vector(
-			m[0][0] * vVec.x + m[0][1] * vVec.y + m[0][2] * vVec.z + m[0][3],
-			m[1][0] * vVec.x + m[1][1] * vVec.y + m[1][2] * vVec.z + m[1][3],
-			m[2][0] * vVec.x + m[2][1] * vVec.y + m[2][2] * vVec.z + m[2][3]);
+		return {
+			this->matrix[0][0] * vVec.x + this->matrix[0][1] * vVec.y + this->matrix[0][2] * vVec.z + this->matrix[0][3],
+			this->matrix[1][0] * vVec.x + this->matrix[1][1] * vVec.y + this->matrix[1][2] * vVec.z + this->matrix[1][3],
+			this->matrix[2][0] * vVec.x + this->matrix[2][1] * vVec.y + this->matrix[2][2] * vVec.z + this->matrix[2][3]};
 	}
 };
 
@@ -323,7 +345,7 @@ namespace Math
 	double	Distance(const Vector& a, const Vector& b);
 	double	Distance(const QAngle& a, const QAngle& b);
 	void	Lerp(const Vector& oldPos, const Vector& newPos, float time, Vector& outPut);
-	float	LerpAngle(const float oldAngle, const float newAngle, float time);
+	float	LerpAngle(float oldAngle, float newAngle, float time);
 	void	LerpAngles(const QAngle& oldAngles, const QAngle& newAngles, float time, QAngle& outPut);
 }
 

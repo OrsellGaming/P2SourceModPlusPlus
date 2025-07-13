@@ -91,10 +91,10 @@ namespace Utils
     CBasePlayer* GetCommandClient();
     int          GetCommandClientIndex();
     void         SetOrigin(CBaseEntity* entity, const Vector& vecOrigin, bool fireTriggers);
-	int			 EntityIndex(CBaseEntity* pEntity);
+	int			 EntityIndex(CBaseEntity* entity);
 	int			 EdictIndex(const Edict* pEdict);
 	Edict*	 IndexToEdict(const int entityIndex);
-	Edict*	 EntityToEdict(CBaseEntity* pEntity);
+	Edict*	 EntityToEdict(CBaseEntity* entity);
 	const char*  GetGameMainDir();
 	const char*	 GetGameRootDir();
 	bool		 IsGameActive();
