@@ -2,6 +2,10 @@
 
 ## ***A Source Engine Plugin for Portal 2 SourceMods that fixes and adds some QoL features for them!***
 
+> [CAUTION]
+> This has been a repeating pattern where I fix the plugin and it breaks itself later for no reason.
+> Please just use version `1.0` until this plugin has been more optimized and cleanly implemented.
+
 > [!NOTE]
 > I originally planned `WorkshopStopper9000` to fix the workshop downloading issue, but I hope to add more features and fixes, so now it has become `P2SourceModPlusPlus`. I plan to implement some good features the community will use until the fated day Portal 2: Community Edition (P2:CE) is released. This plugin will act as a temporary solution for mod makers. Once P2:CE's public beta and/or release occurs, I will probably not work on this anymore, as most of the stuff here is fixed over there.
 
