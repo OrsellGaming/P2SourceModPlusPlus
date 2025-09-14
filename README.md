@@ -2,7 +2,7 @@
 
 ## ***A Source Engine Plugin for Portal 2 SourceMods that fixes and adds some QoL features for them!***
 
-> [CAUTION]
+> [!CAUTION]
 > This has been a repeating pattern where I fix the plugin and it breaks itself later for no reason.
 > Please just use version `1.0` until this plugin has been more optimized and cleanly implemented.
 
